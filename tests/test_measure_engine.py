@@ -135,3 +135,88 @@ def test_harfbuzz_length_is_the_pen_advance_it_draws():
     assert ink[0][2] > ink[1][2]  # the second glyph is drawn after the first
     emb = resolve_face(EMBEDDED, size=40)
     assert eng.length(emb, "abc") == pytest.approx(emb.length("abc"))
+
+
+# --- the remaining measurers (tituli#12) -----------------------------------
+
+from tituli import Credits, Frame, Run, along_path, calligram, credits_cards
+from tituli.geometry import Box, Path
+from tituli.layout import fill_shape, glyph_columns
+from tituli.outlines import run_outline
+
+
+def _frame():
+    return Frame.blank((1920, 1080))
+
+
+def test_along_path_follows_the_engine():
+    path = Path.line((0, 500), (1800, 500))
+    plain = along_path("hello", path, STYLE, FH)
+    wide = along_path("hello", path, STYLE, FH, engine=Doubling())
+    span = lambda lay: lay.runs[-1].x - lay.runs[0].x
+    assert span(wide) > 1.5 * span(plain)
+    assert all(r.advance is not None for r in wide.runs)
+    assert all(r.advance is None for r in plain.runs)
+
+
+def test_glyph_columns_centres_by_the_engine():
+    kw = dict(box=Box(0, 0, 600, 600), slants=[0.0], head_offsets=[0.0])
+    plain = glyph_columns(["ab"], STYLE, FH, **kw)
+    wide = glyph_columns(["ab"], STYLE, FH, engine=Doubling(), **kw)
+    assert wide.runs[0].x < plain.runs[0].x  # wider glyph, smaller left margin
+    assert all(r.advance is not None for r in wide.runs)
+
+
+def test_fill_shape_packs_fewer_words_for_a_wider_engine():
+    from PIL import Image
+
+    mask = Image.new("L", (400, 200), 255)
+    text = "aa bb cc dd ee ff gg hh"
+    plain = fill_shape(text, mask, STYLE, FH, box=Box(0, 0, 400, 200), repeat=False)
+    wide = fill_shape(
+        text, mask, STYLE, FH, box=Box(0, 0, 400, 200), repeat=False, engine=Doubling()
+    )
+    assert len(wide.meta["unplaced"]) > len(plain.meta["unplaced"])
+    assert all(r.advance is not None for r in wide.runs)
+
+
+def _mask():
+    from PIL import Image
+
+    return Image.new("L", (400, 200), 255)
+
+
+def test_calligram_wrappers_pass_the_engine():
+    frame = _frame()
+    kw = dict(frame=frame, style=STYLE.with_(size=0.12), fit_text=False)
+    plain = calligram.on_path("hello world", **kw)
+    wide = calligram.on_path("hello world", engine=Doubling(), **kw)
+    assert all(r.advance is not None for r in wide.runs)
+    assert all(r.advance is None for r in plain.runs)
+    assert (
+        calligram.rain("ab", frame=frame, style=STYLE, engine=Doubling())
+        .runs[0]
+        .advance
+    )
+    assert (
+        calligram.in_shape("ab", _mask(), frame=frame, style=STYLE, engine=Doubling())
+        .runs[0]
+        .advance
+    )
+
+
+def test_credits_follow_the_engine():
+    frame = _frame()
+    cr = Credits.from_lines(["Director: A. Person", "Editor: B. Person"])
+    plain = credits_cards(cr, frame=frame)
+    wide = credits_cards(cr, frame=frame, engine=Doubling())
+    assert all(r.advance is None for lay in plain for r in lay.runs)
+    assert all(r.advance is not None for lay in wide for r in lay.runs)
+
+
+def test_run_outline_advances_with_the_engine():
+    pytest.importorskip("fontTools")
+    face = STYLE.face(FH)
+    run = Run("ab", 0, 100, face, (0, 0, 0, 255))
+    plain, wide = run_outline(run), run_outline(run, engine=Doubling())
+    assert wide.bbox.x1 > plain.bbox.x1

@@ -10,7 +10,10 @@ instance (thorwhalen/an#155: *glyphs as SVG sprites, converted at compile
 time*).
 
 >>> from tituli.fonts import EMBEDDED, resolve_face
->>> from tituli.layout import Run
+>>> from tituli.layout import Run, _length
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 >>> run = Run("Hi", 10.0, 50.0, resolve_face(EMBEDDED, size=40), (0, 0, 0, 255))
 >>> out = run_outline(run)
 >>> out.d.startswith("M")
@@ -35,10 +38,14 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from tituli.fonts import glyph_set, ttfont
 from tituli.geometry import Box
-from tituli.layout import Run
+from tituli.layout import Run, _length
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 #: Decimal places kept in the path data. Two is a hundredth of a pixel —
 #: invisible, and it keeps the string short and byte-stable.
@@ -88,12 +95,15 @@ def _glyph_names(face, text: str, font) -> list:
     return [cmap.get(ord(ch)) for ch in text]
 
 
-def run_outline(run: Run, *, precision: int = DFLT_PRECISION) -> Outline:
+def run_outline(
+    run: Run, *, precision: int = DFLT_PRECISION, engine: "Engine | None" = None
+) -> Outline:
     """The contours of ``run`` as one SVG path, placed where the run is drawn.
 
     Glyph ``i`` starts at ``face.length(text[:i]) + i * tracking`` along the
     baseline — the same advances the layout measured with, kerning included,
     so the outline and the layout cannot disagree about where a glyph is.
+    ``engine`` is the one the layout was measured with (default: the face).
     """
     _require()
     from fontTools.pens.boundsPen import BoundsPen
@@ -116,7 +126,7 @@ def run_outline(run: Run, *, precision: int = DFLT_PRECISION) -> Outline:
                 f"{face.family!r} {face.style} has no glyph for {ch!r} "
                 f"(U+{ord(ch):04X})"
             )
-        pen_x = face.length(run.text[:i]) + run.tracking * i
+        pen_x = _length(engine, face, run.text[:i]) + run.tracking * i
         # Font units are y-up; the frame is y-down and the run is rotated
         # clockwise on screen by `angle` about its baseline origin.
         transform = (

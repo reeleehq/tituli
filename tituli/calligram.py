@@ -21,12 +21,15 @@ True
 
 from __future__ import annotations
 
-from typing import Literal, Sequence
+from typing import TYPE_CHECKING, Literal, Sequence
 
 from tituli.frame import Frame
 from tituli.geometry import Box, Path
 from tituli.layout import Layout, along_path, fill_shape, glyph_columns
 from tituli.style import CALLIGRAM, TextStyle
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 # Measured from the 1918 Mercure de France setting of "Il pleut".
 IL_PLEUT_SLANTS: tuple[float, ...] = (0.186, 0.220, 0.257, 0.298, 0.353)
@@ -90,6 +93,7 @@ def on_path(
     upright: bool = False,
     align: Literal["start", "center", "end"] = "center",
     fit_text: bool = True,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Set ``text`` along a shape inside ``box`` (default: the safe area, inset).
 
@@ -101,10 +105,12 @@ def on_path(
     )
     path = resolve_shape(shape, box)
     st = style
-    lay = along_path(text, path, st, frame, upright=upright, align=align)
+    lay = along_path(text, path, st, frame, upright=upright, align=align, engine=engine)
     while fit_text and lay.meta.get("overflow", 0) > 0 and st.size > 0.008:
         st = st.with_(size=st.size * 0.92)
-        lay = along_path(text, path, st, frame, upright=upright, align=align)
+        lay = along_path(
+            text, path, st, frame, upright=upright, align=align, engine=engine
+        )
     return Layout(
         lay.runs, lay.plates, {**lay.meta, "size": st.size, "path_length": path.length}
     )
@@ -119,6 +125,7 @@ def rain(
     slants: Sequence[float] = IL_PLEUT_SLANTS,
     head_offsets: Sequence[float] = IL_PLEUT_HEAD_OFFSETS,
     size_ratio: float = IL_PLEUT_SIZE_RATIO,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """*Il pleut*: each line a streak of upright letters falling across the frame.
 
@@ -137,6 +144,7 @@ def rain(
         slants=slants,
         head_offsets=head_offsets,
         size_ratio=size_ratio,
+        engine=engine,
     )
 
 
@@ -148,10 +156,11 @@ def in_shape(
     style: TextStyle = CALLIGRAM,
     box: Box | None = None,
     repeat: bool = True,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Pour prose into a silhouette (light = inside). See :func:`tituli.layout.fill_shape`."""
     box = box or frame.safe
-    return fill_shape(text, mask, style, frame, box=box, repeat=repeat)
+    return fill_shape(text, mask, style, frame, box=box, repeat=repeat, engine=engine)
 
 
 __all__ = [
