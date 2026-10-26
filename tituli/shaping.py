@@ -17,6 +17,7 @@ from functools import lru_cache
 
 from PIL import Image
 
+from tituli.fonts import variation_coords, variation_key
 from tituli.layout import Run
 
 _HB_SCALE = 64  # 26.6 fixed point
@@ -37,32 +38,45 @@ def _require():
 
 
 @lru_cache(maxsize=64)
-def _hb_font(path: str, index: int, size: int):
+def _hb_font(path: str, index: int, size: int, variations: tuple = ()):
     import uharfbuzz as hb
 
     blob = hb.Blob.from_file_path(path)
     face = hb.Face(blob, index)
     font = hb.Font(face)
     font.scale = (size * _HB_SCALE, size * _HB_SCALE)
+    if variations:
+        font.set_variations(dict(variations))
     return font
 
 
 @lru_cache(maxsize=64)
-def _ft_face(path: str, index: int, size: int):
+def _ft_face(path: str, index: int, size: int, variations: tuple = ()):
     import freetype
 
     face = freetype.Face(path, index)
     face.set_char_size(size * _HB_SCALE)
+    if variations:
+        face.set_var_design_coords(variation_coords(path, index, dict(variations)))
     return face
 
 
 def shape(
-    text: str, path: str, index: int, size: int, *, features: dict | None = None
+    text: str,
+    path: str,
+    index: int,
+    size: int,
+    *,
+    features: dict | None = None,
+    variations: dict | None = None,
 ) -> list[tuple[int, float, float, float, float]]:
-    """``[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]`` in pixels."""
+    """``[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]`` in pixels.
+
+    ``variations`` are variable-font axis values by tag (``{"wght": 700}``).
+    """
     import uharfbuzz as hb
 
-    font = _hb_font(path, index, size)
+    font = _hb_font(path, index, size, variation_key(variations or {}))
     buf = hb.Buffer()
     buf.add_str(text)
     buf.guess_segment_properties()
@@ -101,7 +115,8 @@ class HarfBuzzEngine:
         alpha = max(0.0, min(1.0, (a / 255) * run.opacity * opacity))
         if alpha == 0 or not run.text:
             return
-        ft = _ft_face(face.path, face.index, face.size)
+        variations = face.applied_variations
+        ft = _ft_face(face.path, face.index, face.size, variation_key(variations))
         ang = math.radians(-run.angle)  # FreeType's y points up
         cos, sin = math.cos(ang), math.sin(ang)
         matrix = freetype.Matrix(
@@ -113,7 +128,12 @@ class HarfBuzzEngine:
         pen_x, pen_y = 0.0, 0.0  # along the (rotated) baseline, in unrotated px
         features = {**_DEFAULT_FEATURES, **{tag: True for tag in face.features}}
         for gid, xa, ya, xo, yo in shape(
-            run.text, face.path, face.index, face.size, features=features
+            run.text,
+            face.path,
+            face.index,
+            face.size,
+            features=features,
+            variations=variations,
         ):
             ft.set_transform(matrix, freetype.Vector(0, 0))
             ft.load_glyph(gid, freetype.FT_LOAD_RENDER | freetype.FT_LOAD_TARGET_NORMAL)

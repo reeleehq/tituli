@@ -33,12 +33,10 @@ rest of the package never pays for it.
 
 from __future__ import annotations
 
-import io
 import math
 from dataclasses import dataclass
-from functools import lru_cache
 
-from tituli.fonts import Face, face_bytes
+from tituli.fonts import glyph_set, ttfont
 from tituli.geometry import Box
 from tituli.layout import Run
 
@@ -69,16 +67,6 @@ def _require():
         raise ImportError(
             "glyph outlines need fontTools: `pip install tituli[outlines]`"
         ) from e
-
-
-@lru_cache(maxsize=32)
-def _font(path: str | None, index: int):
-    """The parsed font behind a face, cached per file (not per size)."""
-    _require()
-    from fontTools.ttLib import TTFont
-
-    probe = Face("", "", 1, path, index)
-    return TTFont(io.BytesIO(face_bytes(probe)), fontNumber=index, lazy=True)
 
 
 def _number_formatter(precision: int):
@@ -114,8 +102,8 @@ def run_outline(run: Run, *, precision: int = DFLT_PRECISION) -> Outline:
     from fontTools.pens.transformPen import TransformPen
 
     face = run.face
-    font = _font(face.path, face.index)
-    glyphs = font.getGlyphSet()
+    font = ttfont(face.path, face.index)
+    glyphs = glyph_set(face)  # at the face's variation instance
     names = _glyph_names(face, run.text, font)
     scale = face.size / font["head"].unitsPerEm
     a = math.radians(run.angle)
