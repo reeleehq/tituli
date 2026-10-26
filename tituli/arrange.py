@@ -277,7 +277,8 @@ def glossed(
     ``pairs`` is ``[(glyph, gloss), ...]`` — ``[("カ", "ka"), ("ス", "su")]``.
     Columns share one pitch (the widest column), so readings line up under
     their glyphs and the row reads as a row. ``columns`` wraps a long row into
-    several. ``engine`` is the one that will draw it (it measures the columns). Runs are tagged ``glyph:i`` / ``gloss:i`` (for staggered reveals).
+    several. Runs are tagged ``glyph:i`` / ``gloss:i`` (for staggered reveals).
+    ``engine`` is the one that will draw it; it measures the columns.
 
     >>> lay = glossed([("カ", "ka"), ("ス", "su")], frame=1080)
     >>> [r.text for r in lay.runs]

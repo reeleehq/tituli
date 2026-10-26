@@ -75,23 +75,63 @@ def test_glossed_pitch_follows_the_engine():
     assert wide.bbox().width > plain.bbox().width
 
 
-def test_harfbuzz_length_is_the_sum_of_what_it_draws():
+class Kerning:
+    """An engine that kerns "AV" pairs tighter across characters, as a shaper does."""
+
+    def length(self, face, text):
+        return face.length(text) - 0.1 * face.size * text.count("AV")
+
+    def draw_run(self, canvas, run, opacity):  # pragma: no cover
+        raise AssertionError
+
+
+@pytest.mark.parametrize("align", ["left", "center", "right"])
+def test_glyph_layout_measures_what_its_glyphs_occupy(align):
+    """Glyph runs advance by single characters, so the line's width (alignment,
+    block_width) is the sum of those, not a kerned whole-line measure."""
+    style = STYLE.with_(align=align)
+    lay = block("AVAV", style, FH, unit="glyph", max_width=800, engine=Kerning())
+    face = style.face(FH)
+    occupied = sum(face.length(c) for c in "AVAV")
+    x0 = min(r.bbox().x0 for r in lay.runs)
+    x1 = max(r.bbox().x1 for r in lay.runs)
+    assert x1 - x0 == pytest.approx(occupied, abs=1.0)
+    if align == "right":
+        assert x1 == pytest.approx(800, abs=1.0)
+
+
+def test_an_engine_that_cannot_measure_says_so():
+    class DrawOnly:
+        def draw_run(self, canvas, run, opacity):  # pragma: no cover
+            ...
+
+    with pytest.raises(TypeError, match="length"):
+        measure("abc", STYLE, FH, engine=DrawOnly())
+
+
+def test_harfbuzz_length_is_the_pen_advance_it_draws():
     pytest.importorskip("uharfbuzz")
     pytest.importorskip("freetype")
+    from PIL import Image
+
+    from tituli import Run
     from tituli.fonts import resolve_face
-    from tituli.shaping import HarfBuzzEngine, shape
+    from tituli.shaping import HarfBuzzEngine
 
     face = resolve_face("Helvetica", size=100)
     if face.path is None:
         pytest.skip("no installed font to shape with")
     eng = HarfBuzzEngine()
-    want = sum(
-        a[1]
-        for a in shape(
-            "AVA fi", face.path, face.index, face.size, features=eng._features(face)
-        )
+    ink = []
+    for text in ("AV", "A"):
+        canvas = Image.new("RGBA", (400, 200))
+        eng.draw_run(canvas, Run(text, 10, 120, face, (0, 0, 0, 255)), 1.0)
+        ink.append(canvas.getchannel("A").getbbox())
+    # drawn right edge of "AV" = pen advance of "A" (shaped, kerned) + V's own ink
+    assert eng.length(face, "AV") <= eng.length(face, "A") + eng.length(face, "V")
+    assert eng.length(face, "AV") == pytest.approx(
+        sum(eng.length(face, c) for c in "AV"), abs=face.size * 0.2
     )
-    assert eng.length(face, "AVA fi") == pytest.approx(want)
-    assert eng.length(resolve_face(EMBEDDED, size=40), "abc") == pytest.approx(
-        resolve_face(EMBEDDED, size=40).length("abc")
-    )
+    assert ink[0][2] > ink[1][2]  # the second glyph is drawn after the first
+    emb = resolve_face(EMBEDDED, size=40)
+    assert eng.length(emb, "abc") == pytest.approx(emb.length("abc"))

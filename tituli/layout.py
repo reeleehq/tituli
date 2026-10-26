@@ -12,9 +12,6 @@ estimate.
 
 >>> from tituli.frame import Frame
 >>> from tituli.style import TextStyle
-
-if TYPE_CHECKING:  # pragma: no cover
-    from tituli.render import Engine
 >>> lay = block("Hello\\nWorld", TextStyle(size=0.05), Frame.blank((1920, 1080)))
 >>> len(lay.runs)                      # one run per line (a tracked style would give one per glyph)
 2
@@ -33,6 +30,9 @@ from tituli.color import RGBA, parse_color, with_alpha
 from tituli.frame import Frame
 from tituli.geometry import Box, Path
 from tituli.style import TextStyle
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 Unit = Literal["line", "word", "glyph"]
 PlateKind = Literal[
@@ -69,6 +69,8 @@ class Run:
     tags: tuple[str, ...] = ()
     #: Width the drawing engine measured for this run (tituli#7); ``None`` means
     #: measure with the face (Pillow), which is what a hand-built run does.
+    #: Valid only for the ``text`` and ``face`` it was measured with: build a
+    #: run by hand, or drop it (``replace(run, advance=None)``) after changing either.
     advance: float | None = None
 
     @property
@@ -178,10 +180,33 @@ def _tracking_px(style: TextStyle, face: fonts.Face) -> float:
     return style.tracking * face.size
 
 
-def _length(engine: "Engine | None", face: fonts.Face, text: str) -> float:
+def _length(
+    engine: "Engine | None", face: fonts.Face, text: str, *, per_glyph: bool = False
+) -> float:
     """Advance of ``text``: the engine that will draw it measures it (tituli#7);
-    with no engine, the face does (what :class:`~tituli.render.PillowEngine` does)."""
-    return face.length(text) if engine is None else engine.length(face, text)
+    with no engine, the face does (what :class:`~tituli.render.PillowEngine` does).
+
+    ``per_glyph`` sums the characters one by one — how a glyph-by-glyph layout
+    (``unit="glyph"``, a tracked style) places them, so the line measures what
+    its glyphs occupy even for an engine that kerns across characters.
+    """
+    if per_glyph:
+        return sum(_length(engine, face, ch) for ch in text)
+    if engine is None:
+        return face.length(text)
+    try:
+        measure_text = engine.length
+    except AttributeError:
+        raise TypeError(
+            f"{type(engine).__name__} cannot measure text: an engine needs "
+            "length(face, text) as well as draw_run (see tituli.render.Engine)"
+        ) from None
+    return measure_text(face, text)
+
+
+def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> float | None:
+    """The width a run keeps (``Run.advance``): the engine's, else ``None``."""
+    return None if engine is None else _length(engine, face, text)
 
 
 def measure(
@@ -199,9 +224,9 @@ def measure(
     """
     face = style.face(frame_height)
     text = style.apply_case(text)
-    return _length(engine, face, text) + _tracking_px(style, face) * max(
-        0, len(text) - 1
-    )
+    return _length(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
+        style, face
+    ) * max(0, len(text) - 1)
 
 
 def _words(text: str) -> list[str]:
@@ -431,12 +456,15 @@ def block(
         lines = list(text)
     lines = [style.apply_case(l) for l in lines]
     tracking = _tracking_px(style, face)
-    widths = [_length(engine, face, l) + tracking * max(0, len(l) - 1) for l in lines]
+    per_glyph = unit == "glyph" or tracking != 0
+    widths = [
+        _length(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
+        for l in lines
+    ]
     box_w = max_width if max_width else (max(widths) if widths else 0.0)
     line_h = face.size * style.leading
     runs: list[Run] = []
     baseline = y + face.ascent + (line_h - face.line_height) / 2
-    per_glyph = unit == "glyph" or tracking != 0
     idx = 0
     for i, (line, w) in enumerate(zip(lines, widths)):
         if style.align == "center":
@@ -476,7 +504,7 @@ def block(
                         unit="word",
                         index=idx,
                         tags=tags,
-                        advance=None if engine is None else _length(engine, face, word),
+                        advance=_advance(engine, face, word),
                     )
                 )
                 cx += _length(engine, face, word + _WORD_SEP)
@@ -492,7 +520,7 @@ def block(
                     unit="line",
                     index=i,
                     tags=tags,
-                    advance=None if engine is None else w,
+                    advance=_advance(engine, face, line),
                 )
             )
         baseline += line_h
