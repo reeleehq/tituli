@@ -18,7 +18,7 @@ off its own backdrop.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from tituli.color import (
     WCAG_NORMAL_MIN,
@@ -44,6 +44,9 @@ from tituli.style import (
     TITLE,
     TextStyle,
 )
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 # Scrim tuning. Opacity is what a dark scrim needs to carry white text over
 # white paper (the worst case a found-image film throws at it) — the corner
@@ -144,18 +147,22 @@ def truncate(
     *,
     max_width: float,
     max_lines: int,
+    engine: "Engine | None" = None,
 ) -> str:
     """Wrap and hard-truncate with an ellipsis at ``max_lines`` lines.
 
     For text whose length you do not control (a licence template blob pasted
     into an artist field). The result always fits.
     """
-    lines = wrap(text, style, frame_height, max_width=max_width)
+    lines = wrap(text, style, frame_height, max_width=max_width, engine=engine)
     if len(lines) <= max_lines:
         return "\n".join(lines)
     kept = lines[:max_lines]
     last = kept[-1]
-    while last and measure(last + _ELLIPSIS, style, frame_height) > max_width:
+    while (
+        last
+        and measure(last + _ELLIPSIS, style, frame_height, engine=engine) > max_width
+    ):
         last = last[:-1].rstrip()
     kept[-1] = last + _ELLIPSIS
     return "\n".join(kept)
@@ -189,6 +196,7 @@ def _set_within(
     max_width: float,
     max_lines: int,
     on_overflow: str,
+    engine: "Engine | None" = None,
 ) -> tuple[str, TextStyle]:
     """Apply an :data:`OVERFLOW_POLICIES` policy, returning (text, style)."""
     if on_overflow not in OVERFLOW_POLICIES:
@@ -198,11 +206,23 @@ def _set_within(
     if on_overflow == "truncate":
         return (
             truncate(
-                text, style, frame_height, max_width=max_width, max_lines=max_lines
+                text,
+                style,
+                frame_height,
+                max_width=max_width,
+                max_lines=max_lines,
+                engine=engine,
             ),
             style,
         )
-    return fit(text, style, frame_height, max_width=max_width, max_lines=max_lines)
+    return fit(
+        text,
+        style,
+        frame_height,
+        max_width=max_width,
+        max_lines=max_lines,
+        engine=engine,
+    )
 
 
 class TextDoesNotFit(ValueError):
@@ -243,6 +263,7 @@ def fit(
     max_width: float,
     max_lines: int,
     min_size: float = MIN_LEGIBLE_SIZE,
+    engine: "Engine | None" = None,
 ) -> tuple[str, TextStyle]:
     """Wrap ``text`` complete, shrinking the type until it fits — never cutting it.
 
@@ -266,6 +287,7 @@ def fit(
         max_width: pixels available.
         max_lines: how many lines the design allows.
         min_size: legibility floor, as a fraction of frame height.
+        engine: the engine that will draw the text (default: measure with the face).
 
     Raises:
         TextDoesNotFit: when even ``min_size`` needs more than ``max_lines``.
@@ -281,7 +303,7 @@ def fit(
     last_lines = 1
     while True:
         st = style.with_(size=size)
-        lines = wrap(text, st, frame_height, max_width=max_width)
+        lines = wrap(text, st, frame_height, max_width=max_width, engine=engine)
         last_lines = len(lines)
         if last_lines <= max_lines:
             return "\n".join(lines), st
@@ -298,6 +320,7 @@ def _stack(
     *,
     max_width: float,
     align: str | None = None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Lay out several (text, style) blocks top-to-bottom with style-sized gaps."""
     y = 0.0
@@ -306,7 +329,7 @@ def _stack(
         if not text:
             continue
         st = style.with_(align=align) if align else style
-        lay = block(text, st, frame, max_width=max_width, y=y)
+        lay = block(text, st, frame, max_width=max_width, y=y, engine=engine)
         out = out + lay
         y += (
             len(text.split("\n")) * lay.meta["line_height"]
@@ -327,6 +350,7 @@ def title_card(
     kicker_style: TextStyle = KICKER,
     ink: RGBA | None = None,
     scrim: bool | None = None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """An opening card: optional kicker, title, optional subtitle.
 
@@ -338,7 +362,12 @@ def title_card(
     safe = frame.safe
     max_w = safe.width * _TITLE_MAX_WIDTH
     tstyle = fit_size(
-        title, title_style, frame.height, max_width=max_w, max_height=safe.height * 0.6
+        title,
+        title_style,
+        frame.height,
+        max_width=max_w,
+        max_height=safe.height * 0.6,
+        engine=engine,
     )
     parts = [(kicker, kicker_style), (title, tstyle), (subtitle, subtitle_style)]
     align = (
@@ -346,7 +375,7 @@ def title_card(
         if anchor in ("top", "center", "bottom")
         else ("left" if "left" in anchor else "right")
     )
-    lay = _stack(parts, frame, max_width=max_w, align=align)
+    lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
     bb = lay.bbox()
     where, box = frame.place((bb.width, bb.height), anchor=anchor)
     lay = lay.moved_to(box)
@@ -375,6 +404,7 @@ def caption(
     scrim: bool | None = None,
     accent: bool = True,
     on_overflow: str = "fit",
+    engine: "Engine | None" = None,
 ) -> Layout:
     """A museum label over a picture: what is on screen, plus a tiny credit line.
 
@@ -396,6 +426,7 @@ def caption(
         max_width=max_w,
         max_lines=max_lines,
         on_overflow=on_overflow,
+        engine=engine,
     )
     credit, attribution_style = (
         _set_within(
@@ -405,6 +436,7 @@ def caption(
             max_width=max_w,
             max_lines=2,
             on_overflow=on_overflow,
+            engine=engine,
         )
         if attribution
         else ("", attribution_style)
@@ -415,6 +447,7 @@ def caption(
         frame,
         max_width=max_w,
         align="left",
+        engine=engine,
     )
     bb = lay.bbox()
     where, box = frame.place((bb.width, bb.height), anchor=anchor)
@@ -424,6 +457,7 @@ def caption(
             frame,
             max_width=max_w,
             align="right",
+            engine=engine,
         )
     elif where in ("top", "center", "bottom"):
         lay = _stack(
@@ -431,6 +465,7 @@ def caption(
             frame,
             max_width=max_w,
             align="center",
+            engine=engine,
         )
     bb = lay.bbox()
     lay = lay.moved_to(box)
@@ -460,6 +495,7 @@ def lower_third(
     ink: RGBA | None = None,
     scrim: bool | None = None,
     on_overflow: str = "fit",
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Who is speaking: a name and a role, left-anchored, scrimmed if needed.
 
@@ -479,6 +515,7 @@ def lower_third(
         max_width=max_w,
         max_lines=1,
         on_overflow=on_overflow,
+        engine=engine,
     )
     role_t, role_style = (
         _set_within(
@@ -488,6 +525,7 @@ def lower_third(
             max_width=max_w,
             max_lines=1,
             on_overflow=on_overflow,
+            engine=engine,
         )
         if role
         else ("", role_style)
@@ -497,6 +535,7 @@ def lower_third(
         frame,
         max_width=max_w,
         align="left",
+        engine=engine,
     )
     bb = lay.bbox()
     where, box = frame.place((bb.width, bb.height), anchor=anchor)
@@ -527,6 +566,7 @@ def note(
     scrim: bool | None = None,
     accent: bool = True,
     on_overflow: str = "fit",
+    engine: "Engine | None" = None,
 ) -> Layout:
     """An editorial context card: an optional headline over equal-weight lines.
 
@@ -552,6 +592,7 @@ def note(
             max_width=max_w,
             max_lines=max_lines,
             on_overflow=on_overflow,
+            engine=engine,
         )
 
     fitted = [_set(l, line_style, _NOTE_MAX_LINES) for l in lines]
@@ -564,12 +605,12 @@ def note(
     )
     parts = [(head, headline_style)] + [(b, line_style) for b in body]
     align = "left"
-    lay = _stack(parts, frame, max_width=max_w, align=align)
+    lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
     bb = lay.bbox()
     where, box = frame.place((bb.width, bb.height), anchor=anchor)
     if "right" in where or where in ("top", "center", "bottom"):
         align = "right" if "right" in where else "center"
-        lay = _stack(parts, frame, max_width=max_w, align=align)
+        lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
     lay = lay.moved_to(box)
     em = (headline_style if head else line_style).face(frame.height).size
     out = _finish(
@@ -627,16 +668,27 @@ def _finish(
     return lay
 
 
-def intertitle(text: str, *, frame: Frame, style: TextStyle | None = None) -> Layout:
+def intertitle(
+    text: str,
+    *,
+    frame: Frame,
+    style: TextStyle | None = None,
+    engine: "Engine | None" = None,
+) -> Layout:
     """A silent-film style card: serif italic prose, centred on the frame."""
     from tituli.style import INTERTITLE
 
     st = style or INTERTITLE
     safe = frame.safe
     st = fit_size(
-        text, st, frame.height, max_width=safe.width * 0.7, max_height=safe.height * 0.7
+        text,
+        st,
+        frame.height,
+        max_width=safe.width * 0.7,
+        max_height=safe.height * 0.7,
+        engine=engine,
     )
-    lay = block(text, st, frame, max_width=safe.width * 0.7)
+    lay = block(text, st, frame, max_width=safe.width * 0.7, engine=engine)
     bb = lay.bbox()
     _, box = frame.place((bb.width, bb.height), anchor="center")
     lay = lay.moved_to(box)

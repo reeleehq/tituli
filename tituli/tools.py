@@ -65,6 +65,13 @@ def _avoid(spec: str | None):
     return [tuple(parts)]
 
 
+def _engine(name: str | None):
+    """An engine by name (``"pillow"``/``"harfbuzz"``); None keeps the default."""
+    from tituli.render import make_engine
+
+    return make_engine(name) if name else None
+
+
 def _save(img, out: str | Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -95,20 +102,23 @@ def title_card(
     anchor: str = "center",
     avoid: str | None = None,
     duration: float | None = None,
+    engine: str | None = None,
 ) -> dict:
     """Render a title card to ``out`` (PNG, or MP4 when ``duration`` is given).
 
     ``background`` is a colour (``#101014``), an image path, or nothing (a
     transparent overlay). ``anchor`` is a grid position; ``avoid`` is
     ``"saliency"`` or ``"x,y,w,h"`` to keep the title off the subject.
+    ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"`` (``tituli[shaping]``).
     """
     from tituli.compose import title_card as _title
     from tituli.render import render
 
     sz = _size(size)
     frame = _frame(background, sz, avoid=avoid, delivery=None)
-    lay = _title(title, subtitle, kicker=kicker, frame=frame, anchor=anchor)
-    img = render(lay, frame)
+    eng = _engine(engine)
+    lay = _title(title, subtitle, kicker=kicker, frame=frame, anchor=anchor, engine=eng)
+    img = render(lay, frame, engine=eng)
     if duration:
         from tituli.video import still
 
@@ -128,13 +138,15 @@ def caption(
     delivery: str | None = "youtube",
     size: str | None = None,
     overlay_only: bool = False,
+    engine: str | None = None,
 ) -> dict:
     """Put a museum-label caption and a tiny attribution on ``image``.
 
     Placement avoids the subject (``avoid="saliency"`` uses ``burns`` when
     installed, otherwise nothing is avoided) and the delivery target's
     reserved zones. ``overlay_only`` writes a transparent PNG to composite
-    onto motion video instead of the flattened picture.
+    onto motion video instead of the flattened picture. ``engine`` is
+    ``"pillow"`` (default) or ``"harfbuzz"``.
     """
     from tituli.compose import caption as _caption
     from tituli.render import render, render_overlay
@@ -145,8 +157,13 @@ def caption(
     except ImportError:
         avoid_fn = None
     frame = Frame.from_image(image, size=sz, avoid=avoid_fn, delivery=delivery)
-    lay = _caption(text, attribution, frame=frame, anchor=anchor)
-    img = render_overlay(lay, frame.size) if overlay_only else render(lay, frame)
+    eng = _engine(engine)
+    lay = _caption(text, attribution, frame=frame, anchor=anchor, engine=eng)
+    img = (
+        render_overlay(lay, frame.size, engine=eng)
+        if overlay_only
+        else render(lay, frame, engine=eng)
+    )
     return _emit(_save(img, out), lay, avoided=len(frame.avoid))
 
 
@@ -158,15 +175,20 @@ def lower_third(
     background: str | None = None,
     size: str | None = None,
     delivery: str | None = "youtube",
+    engine: str | None = None,
 ) -> dict:
-    """A name + role block, bottom-left, as a transparent overlay (or on a picture)."""
+    """A name + role block, bottom-left, as a transparent overlay (or on a picture).
+
+    ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"``.
+    """
     from tituli.compose import lower_third as _lt
     from tituli.render import render
 
     sz = _size(size)
     frame = _frame(background, sz, avoid=None, delivery=delivery)
-    lay = _lt(name, role, frame=frame)
-    return _emit(_save(render(lay, frame), out), lay)
+    eng = _engine(engine)
+    lay = _lt(name, role, frame=frame, engine=eng)
+    return _emit(_save(render(lay, frame, engine=eng), out), lay)
 
 
 def credits(
@@ -310,6 +332,7 @@ def overlay_video(
     out: str = "overlaid.mp4",
     delivery: str | None = "youtube",
     pad_start: float = 0.0,
+    engine: str | None = None,
 ) -> dict:
     """Composite captions/lower thirds/images onto a finished video in one ffmpeg pass.
 
@@ -321,6 +344,7 @@ def overlay_video(
     the picture under each overlay is not sampled (pass a still through
     ``caption`` for that). ``pad_start`` seconds are added at the head (first
     frame held, audio delayed); overlay times are on the padded timeline.
+    ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"``: it measures and draws.
     """
     from tituli.compose import caption as _caption
     from tituli.compose import lower_third as _lt
@@ -332,6 +356,7 @@ def overlay_video(
     items = json.loads(raw)
     size = probe_size(video)
     frame = Frame.blank(size).with_delivery(delivery)
+    eng = _engine(engine)
     timed = []
     for it in items:
         if "image" in it:
@@ -355,6 +380,7 @@ def overlay_video(
                 it.get("role", ""),
                 frame=frame,
                 anchor=it.get("anchor", "bottom-left"),
+                engine=eng,
             )
             weight = 2
         else:
@@ -363,6 +389,7 @@ def overlay_video(
                 it.get("attribution", ""),
                 frame=frame,
                 anchor=it.get("anchor", "top-left"),
+                engine=eng,
             )
             weight = 1
         timed.append(
@@ -375,7 +402,7 @@ def overlay_video(
             )
         )
     kept = resolve(timed)
-    _overlay(video, kept, out, size=size, pad_start=pad_start)
+    _overlay(video, kept, out, size=size, pad_start=pad_start, engine=eng)
     return {"out": out, "overlays": len(kept), "dropped": len(timed) - len(kept)}
 
 
