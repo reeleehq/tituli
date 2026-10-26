@@ -29,7 +29,8 @@
   <meta property="og:title" content="tituli.calligram | tituli" />
   <meta name="twitter:title" content="tituli.calligram | tituli" />
   <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
-  <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=d6d7c91b" />
+  <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=009055c6" />
+  <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
   <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
   <link rel="stylesheet" type="text/css" href="../../_static/epythet.css?v=f751b766" />
   <link rel="search" title="Search" href="../../search.html" />
@@ -200,159 +201,168 @@
 </span><span id="line-21">
 </span><span id="line-22"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="line-23">
-</span><span id="line-24"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Sequence</span>
+</span><span id="line-24"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Sequence</span>
 </span><span id="line-25">
 </span><span id="line-26"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.frame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
 </span><span id="line-27"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Box</span><span class="p">,</span> <span class="n">Path</span>
 </span><span id="line-28"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.layout</span><span class="w"> </span><span class="kn">import</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">along_path</span><span class="p">,</span> <span class="n">fill_shape</span><span class="p">,</span> <span class="n">glyph_columns</span>
 </span><span id="line-29"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.style</span><span class="w"> </span><span class="kn">import</span> <span class="n">CALLIGRAM</span><span class="p">,</span> <span class="n">TextStyle</span>
 </span><span id="line-30">
-</span><span id="line-31"><span class="c1"># Measured from the 1918 Mercure de France setting of "Il pleut".</span>
-</span><span id="line-32"><span class="n">IL_PLEUT_SLANTS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.186</span><span class="p">,</span> <span class="mf">0.220</span><span class="p">,</span> <span class="mf">0.257</span><span class="p">,</span> <span class="mf">0.298</span><span class="p">,</span> <span class="mf">0.353</span><span class="p">)</span>
-</span><span id="line-33"><span class="n">IL_PLEUT_HEAD_OFFSETS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">11.7</span><span class="p">,</span> <span class="mf">16.4</span><span class="p">,</span> <span class="mf">19.3</span><span class="p">)</span>
-</span><span id="line-34"><span class="n">IL_PLEUT_SIZE_RATIO</span> <span class="o">=</span> <span class="mf">0.86</span>
-</span><span id="line-35">
-</span><span id="line-36"><span class="n">_SHAPE_INSET</span> <span class="o">=</span> <span class="mf">0.12</span>  <span class="c1"># fraction of the safe box kept clear around a shape</span>
-</span><span id="line-37"><span class="n">_WAVE_AMPLITUDE</span> <span class="o">=</span> <span class="mf">0.12</span>  <span class="c1"># of the box height</span>
-</span><span id="line-38"><span class="n">_ARC_SWEEP</span> <span class="o">=</span> <span class="p">(</span><span class="mf">200.0</span><span class="p">,</span> <span class="mf">340.0</span><span class="p">)</span>  <span class="c1"># a gentle smile-shaped arc, degrees (screen coords)</span>
-</span><span id="line-39">
-</span><span id="line-40"><span class="n">ShapeSpec</span> <span class="o">=</span> <span class="s2">"str | Path"</span>
-</span><span id="line-41">
+</span><span id="line-31"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+</span><span id="line-32">    <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">Engine</span>
+</span><span id="line-33">
+</span><span id="line-34"><span class="c1"># Measured from the 1918 Mercure de France setting of "Il pleut".</span>
+</span><span id="line-35"><span class="n">IL_PLEUT_SLANTS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.186</span><span class="p">,</span> <span class="mf">0.220</span><span class="p">,</span> <span class="mf">0.257</span><span class="p">,</span> <span class="mf">0.298</span><span class="p">,</span> <span class="mf">0.353</span><span class="p">)</span>
+</span><span id="line-36"><span class="n">IL_PLEUT_HEAD_OFFSETS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">11.7</span><span class="p">,</span> <span class="mf">16.4</span><span class="p">,</span> <span class="mf">19.3</span><span class="p">)</span>
+</span><span id="line-37"><span class="n">IL_PLEUT_SIZE_RATIO</span> <span class="o">=</span> <span class="mf">0.86</span>
+</span><span id="line-38">
+</span><span id="line-39"><span class="n">_SHAPE_INSET</span> <span class="o">=</span> <span class="mf">0.12</span>  <span class="c1"># fraction of the safe box kept clear around a shape</span>
+</span><span id="line-40"><span class="n">_WAVE_AMPLITUDE</span> <span class="o">=</span> <span class="mf">0.12</span>  <span class="c1"># of the box height</span>
+</span><span id="line-41"><span class="n">_ARC_SWEEP</span> <span class="o">=</span> <span class="p">(</span><span class="mf">200.0</span><span class="p">,</span> <span class="mf">340.0</span><span class="p">)</span>  <span class="c1"># a gentle smile-shaped arc, degrees (screen coords)</span>
 </span><span id="line-42">
+</span><span id="line-43"><span class="n">ShapeSpec</span> <span class="o">=</span> <span class="s2">"str | Path"</span>
+</span><span id="line-44">
+</span><span id="line-45">
 <div class="viewcode-block" id="resolve_shape">
 <a class="viewcode-back" href="../../_autosummary/tituli.calligram.html#tituli.resolve_shape">[docs]</a>
-</span><span id="line-43"><span class="k">def</span><span class="w"> </span><span class="nf">resolve_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="s2">"str | Path"</span><span class="p">,</span> <span class="n">box</span><span class="p">:</span> <span class="n">Box</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-</span><span id="line-44"><span class="w">    </span><span class="sd">"""Turn a name, an SVG ``d`` string or a Path into a Path fitted to ``box``.</span>
-</span><span id="line-45">
-</span><span id="line-46"><span class="sd">    Names: ``"line"``, ``"circle"``, ``"arc"``, ``"wave"``, ``"diagonal"``,</span>
-</span><span id="line-47"><span class="sd">    ``"s-curve"``. Anything starting with ``M``/``m`` is parsed as SVG.</span>
-</span><span id="line-48"><span class="sd">    """</span>
-</span><span id="line-49">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-</span><span id="line-50">        <span class="k">return</span> <span class="n">shape</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
-</span><span id="line-51">    <span class="n">name</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span id="line-52">    <span class="k">if</span> <span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">"Mm"</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span><span class="p">):</span>
-</span><span id="line-53">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">from_svg</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
-</span><span id="line-54">    <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">center</span>
-</span><span id="line-55">    <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-</span><span id="line-56">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"line"</span><span class="p">:</span>
-</span><span id="line-57">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">cy</span><span class="p">))</span>
-</span><span id="line-58">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"circle"</span><span class="p">:</span>
-</span><span id="line-59">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="n">r</span><span class="p">)</span>
-</span><span id="line-60">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"arc"</span><span class="p">:</span>
-</span><span id="line-61">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">arc</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">0.6</span><span class="p">),</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span> <span class="o">*</span><span class="n">_ARC_SWEEP</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
-</span><span id="line-62">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"wave"</span><span class="p">:</span>
-</span><span id="line-63">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">wave</span><span class="p">(</span>
-</span><span id="line-64">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span>
-</span><span id="line-65">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span>
-</span><span id="line-66">            <span class="n">amplitude</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">_WAVE_AMPLITUDE</span><span class="p">,</span>
-</span><span id="line-67">            <span class="n">cycles</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-</span><span id="line-68">        <span class="p">)</span>
-</span><span id="line-69">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"diagonal"</span><span class="p">:</span>
-</span><span id="line-70">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span><span class="p">),</span> <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y1</span><span class="p">))</span>
-</span><span id="line-71">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"s-curve"</span><span class="p">:</span>
-</span><span id="line-72">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">bezier</span><span class="p">(</span>
-</span><span id="line-73">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y1</span><span class="p">),</span>
-</span><span id="line-74">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">),</span>
-</span><span id="line-75">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span> <span class="o">-</span> <span class="n">box</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">),</span>
-</span><span id="line-76">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span><span class="p">),</span>
-</span><span id="line-77">        <span class="p">)</span>
-</span><span id="line-78">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="line-79">        <span class="sa">f</span><span class="s2">"unknown shape </span><span class="si">{</span><span class="n">shape</span><span class="si">!r}</span><span class="s2">; use a preset name, an SVG path string, or a Path"</span>
-</span><span id="line-80">    <span class="p">)</span></div>
+</span><span id="line-46"><span class="k">def</span><span class="w"> </span><span class="nf">resolve_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="s2">"str | Path"</span><span class="p">,</span> <span class="n">box</span><span class="p">:</span> <span class="n">Box</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+</span><span id="line-47"><span class="w">    </span><span class="sd">"""Turn a name, an SVG ``d`` string or a Path into a Path fitted to ``box``.</span>
+</span><span id="line-48">
+</span><span id="line-49"><span class="sd">    Names: ``"line"``, ``"circle"``, ``"arc"``, ``"wave"``, ``"diagonal"``,</span>
+</span><span id="line-50"><span class="sd">    ``"s-curve"``. Anything starting with ``M``/``m`` is parsed as SVG.</span>
+</span><span id="line-51"><span class="sd">    """</span>
+</span><span id="line-52">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+</span><span id="line-53">        <span class="k">return</span> <span class="n">shape</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+</span><span id="line-54">    <span class="n">name</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="line-55">    <span class="k">if</span> <span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">"Mm"</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span><span class="p">):</span>
+</span><span id="line-56">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">from_svg</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+</span><span id="line-57">    <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">center</span>
+</span><span id="line-58">    <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="line-59">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"line"</span><span class="p">:</span>
+</span><span id="line-60">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">cy</span><span class="p">))</span>
+</span><span id="line-61">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"circle"</span><span class="p">:</span>
+</span><span id="line-62">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span> <span class="n">r</span><span class="p">)</span>
+</span><span id="line-63">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"arc"</span><span class="p">:</span>
+</span><span id="line-64">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">arc</span><span class="p">((</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">0.6</span><span class="p">),</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span> <span class="o">*</span><span class="n">_ARC_SWEEP</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+</span><span id="line-65">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"wave"</span><span class="p">:</span>
+</span><span id="line-66">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">wave</span><span class="p">(</span>
+</span><span id="line-67">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span>
+</span><span id="line-68">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">cy</span><span class="p">),</span>
+</span><span id="line-69">            <span class="n">amplitude</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">_WAVE_AMPLITUDE</span><span class="p">,</span>
+</span><span id="line-70">            <span class="n">cycles</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="line-71">        <span class="p">)</span>
+</span><span id="line-72">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"diagonal"</span><span class="p">:</span>
+</span><span id="line-73">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span><span class="p">),</span> <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y1</span><span class="p">))</span>
+</span><span id="line-74">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"s-curve"</span><span class="p">:</span>
+</span><span id="line-75">        <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">bezier</span><span class="p">(</span>
+</span><span id="line-76">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y1</span><span class="p">),</span>
+</span><span id="line-77">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">),</span>
+</span><span id="line-78">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span> <span class="o">-</span> <span class="n">box</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">),</span>
+</span><span id="line-79">            <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span><span class="p">),</span>
+</span><span id="line-80">        <span class="p">)</span>
+</span><span id="line-81">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="line-82">        <span class="sa">f</span><span class="s2">"unknown shape </span><span class="si">{</span><span class="n">shape</span><span class="si">!r}</span><span class="s2">; use a preset name, an SVG path string, or a Path"</span>
+</span><span id="line-83">    <span class="p">)</span></div>
 
-</span><span id="line-81">
-</span><span id="line-82">
+</span><span id="line-84">
+</span><span id="line-85">
 <div class="viewcode-block" id="on_path">
 <a class="viewcode-back" href="../../_autosummary/tituli.calligram.html#tituli.on_path">[docs]</a>
-</span><span id="line-83"><span class="k">def</span><span class="w"> </span><span class="nf">on_path</span><span class="p">(</span>
-</span><span id="line-84">    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="line-85">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-86">    <span class="n">shape</span><span class="p">:</span> <span class="s2">"str | Path"</span> <span class="o">=</span> <span class="s2">"wave"</span><span class="p">,</span>
-</span><span id="line-87">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
-</span><span id="line-88">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
-</span><span id="line-89">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-90">    <span class="n">upright</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="line-91">    <span class="n">align</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"center"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"center"</span><span class="p">,</span>
-</span><span id="line-92">    <span class="n">fit_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="line-93"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
-</span><span id="line-94"><span class="w">    </span><span class="sd">"""Set ``text`` along a shape inside ``box`` (default: the safe area, inset).</span>
-</span><span id="line-95">
-</span><span id="line-96"><span class="sd">    With ``fit_text`` the type is shrunk until the whole string fits the path</span>
-</span><span id="line-97"><span class="sd">    length (never clipped); the resulting size is in ``meta["size"]``.</span>
-</span><span id="line-98"><span class="sd">    """</span>
-</span><span id="line-99">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">inset</span><span class="p">(</span>
-</span><span id="line-100">        <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">_SHAPE_INSET</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">_SHAPE_INSET</span>
-</span><span id="line-101">    <span class="p">)</span>
-</span><span id="line-102">    <span class="n">path</span> <span class="o">=</span> <span class="n">resolve_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">box</span><span class="p">)</span>
-</span><span id="line-103">    <span class="n">st</span> <span class="o">=</span> <span class="n">style</span>
-</span><span id="line-104">    <span class="n">lay</span> <span class="o">=</span> <span class="n">along_path</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="n">upright</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">)</span>
-</span><span id="line-105">    <span class="k">while</span> <span class="n">fit_text</span> <span class="ow">and</span> <span class="n">lay</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"overflow"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mf">0.008</span><span class="p">:</span>
-</span><span id="line-106">        <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">with_</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mf">0.92</span><span class="p">)</span>
-</span><span id="line-107">        <span class="n">lay</span> <span class="o">=</span> <span class="n">along_path</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="n">upright</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">)</span>
-</span><span id="line-108">    <span class="k">return</span> <span class="n">Layout</span><span class="p">(</span>
-</span><span id="line-109">        <span class="n">lay</span><span class="o">.</span><span class="n">runs</span><span class="p">,</span> <span class="n">lay</span><span class="o">.</span><span class="n">plates</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">lay</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">"path_length"</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">length</span><span class="p">}</span>
-</span><span id="line-110">    <span class="p">)</span></div>
+</span><span id="line-86"><span class="k">def</span><span class="w"> </span><span class="nf">on_path</span><span class="p">(</span>
+</span><span id="line-87">    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="line-88">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-89">    <span class="n">shape</span><span class="p">:</span> <span class="s2">"str | Path"</span> <span class="o">=</span> <span class="s2">"wave"</span><span class="p">,</span>
+</span><span id="line-90">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
+</span><span id="line-91">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
+</span><span id="line-92">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-93">    <span class="n">upright</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="line-94">    <span class="n">align</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"center"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"center"</span><span class="p">,</span>
+</span><span id="line-95">    <span class="n">fit_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="line-96">    <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-97"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
+</span><span id="line-98"><span class="w">    </span><span class="sd">"""Set ``text`` along a shape inside ``box`` (default: the safe area, inset).</span>
+</span><span id="line-99">
+</span><span id="line-100"><span class="sd">    With ``fit_text`` the type is shrunk until the whole string fits the path</span>
+</span><span id="line-101"><span class="sd">    length (never clipped); the resulting size is in ``meta["size"]``.</span>
+</span><span id="line-102"><span class="sd">    """</span>
+</span><span id="line-103">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">inset</span><span class="p">(</span>
+</span><span id="line-104">        <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">_SHAPE_INSET</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">_SHAPE_INSET</span>
+</span><span id="line-105">    <span class="p">)</span>
+</span><span id="line-106">    <span class="n">path</span> <span class="o">=</span> <span class="n">resolve_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">box</span><span class="p">)</span>
+</span><span id="line-107">    <span class="n">st</span> <span class="o">=</span> <span class="n">style</span>
+</span><span id="line-108">    <span class="n">lay</span> <span class="o">=</span> <span class="n">along_path</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="n">upright</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+</span><span id="line-109">    <span class="k">while</span> <span class="n">fit_text</span> <span class="ow">and</span> <span class="n">lay</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"overflow"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mf">0.008</span><span class="p">:</span>
+</span><span id="line-110">        <span class="n">st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">with_</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mf">0.92</span><span class="p">)</span>
+</span><span id="line-111">        <span class="n">lay</span> <span class="o">=</span> <span class="n">along_path</span><span class="p">(</span>
+</span><span id="line-112">            <span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="n">upright</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span>
+</span><span id="line-113">        <span class="p">)</span>
+</span><span id="line-114">    <span class="k">return</span> <span class="n">Layout</span><span class="p">(</span>
+</span><span id="line-115">        <span class="n">lay</span><span class="o">.</span><span class="n">runs</span><span class="p">,</span> <span class="n">lay</span><span class="o">.</span><span class="n">plates</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">lay</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">"path_length"</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">length</span><span class="p">}</span>
+</span><span id="line-116">    <span class="p">)</span></div>
 
-</span><span id="line-111">
-</span><span id="line-112">
+</span><span id="line-117">
+</span><span id="line-118">
 <div class="viewcode-block" id="rain">
 <a class="viewcode-back" href="../../_autosummary/tituli.calligram.html#tituli.rain">[docs]</a>
-</span><span id="line-113"><span class="k">def</span><span class="w"> </span><span class="nf">rain</span><span class="p">(</span>
-</span><span id="line-114">    <span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="line-115">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-116">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
-</span><span id="line-117">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
-</span><span id="line-118">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-119">    <span class="n">slants</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">IL_PLEUT_SLANTS</span><span class="p">,</span>
-</span><span id="line-120">    <span class="n">head_offsets</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">IL_PLEUT_HEAD_OFFSETS</span><span class="p">,</span>
-</span><span id="line-121">    <span class="n">size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">IL_PLEUT_SIZE_RATIO</span><span class="p">,</span>
-</span><span id="line-122"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
-</span><span id="line-123"><span class="w">    </span><span class="sd">"""*Il pleut*: each line a streak of upright letters falling across the frame.</span>
-</span><span id="line-124">
-</span><span id="line-125"><span class="sd">    Wants a portrait frame. ``slants`` (dx per step down) and ``head_offsets``</span>
-</span><span id="line-126"><span class="sd">    (where each streak starts, in slot units) are shape parameters, not</span>
-</span><span id="line-127"><span class="sd">    coordinates — the defaults are Apollinaire's.</span>
-</span><span id="line-128"><span class="sd">    """</span>
-</span><span id="line-129">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="line-130">        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-</span><span id="line-131">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span>
-</span><span id="line-132">    <span class="k">return</span> <span class="n">glyph_columns</span><span class="p">(</span>
-</span><span id="line-133">        <span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span>
-</span><span id="line-134">        <span class="n">style</span><span class="p">,</span>
-</span><span id="line-135">        <span class="n">frame</span><span class="p">,</span>
-</span><span id="line-136">        <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span>
-</span><span id="line-137">        <span class="n">slants</span><span class="o">=</span><span class="n">slants</span><span class="p">,</span>
-</span><span id="line-138">        <span class="n">head_offsets</span><span class="o">=</span><span class="n">head_offsets</span><span class="p">,</span>
-</span><span id="line-139">        <span class="n">size_ratio</span><span class="o">=</span><span class="n">size_ratio</span><span class="p">,</span>
-</span><span id="line-140">    <span class="p">)</span></div>
+</span><span id="line-119"><span class="k">def</span><span class="w"> </span><span class="nf">rain</span><span class="p">(</span>
+</span><span id="line-120">    <span class="n">lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="line-121">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-122">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
+</span><span id="line-123">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
+</span><span id="line-124">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-125">    <span class="n">slants</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">IL_PLEUT_SLANTS</span><span class="p">,</span>
+</span><span id="line-126">    <span class="n">head_offsets</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">IL_PLEUT_HEAD_OFFSETS</span><span class="p">,</span>
+</span><span id="line-127">    <span class="n">size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">IL_PLEUT_SIZE_RATIO</span><span class="p">,</span>
+</span><span id="line-128">    <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-129"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
+</span><span id="line-130"><span class="w">    </span><span class="sd">"""*Il pleut*: each line a streak of upright letters falling across the frame.</span>
+</span><span id="line-131">
+</span><span id="line-132"><span class="sd">    Wants a portrait frame. ``slants`` (dx per step down) and ``head_offsets``</span>
+</span><span id="line-133"><span class="sd">    (where each streak starts, in slot units) are shape parameters, not</span>
+</span><span id="line-134"><span class="sd">    coordinates — the defaults are Apollinaire's.</span>
+</span><span id="line-135"><span class="sd">    """</span>
+</span><span id="line-136">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="line-137">        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+</span><span id="line-138">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span>
+</span><span id="line-139">    <span class="k">return</span> <span class="n">glyph_columns</span><span class="p">(</span>
+</span><span id="line-140">        <span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span>
+</span><span id="line-141">        <span class="n">style</span><span class="p">,</span>
+</span><span id="line-142">        <span class="n">frame</span><span class="p">,</span>
+</span><span id="line-143">        <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span>
+</span><span id="line-144">        <span class="n">slants</span><span class="o">=</span><span class="n">slants</span><span class="p">,</span>
+</span><span id="line-145">        <span class="n">head_offsets</span><span class="o">=</span><span class="n">head_offsets</span><span class="p">,</span>
+</span><span id="line-146">        <span class="n">size_ratio</span><span class="o">=</span><span class="n">size_ratio</span><span class="p">,</span>
+</span><span id="line-147">        <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+</span><span id="line-148">    <span class="p">)</span></div>
 
-</span><span id="line-141">
-</span><span id="line-142">
+</span><span id="line-149">
+</span><span id="line-150">
 <div class="viewcode-block" id="in_shape">
 <a class="viewcode-back" href="../../_autosummary/tituli.calligram.html#tituli.in_shape">[docs]</a>
-</span><span id="line-143"><span class="k">def</span><span class="w"> </span><span class="nf">in_shape</span><span class="p">(</span>
-</span><span id="line-144">    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="line-145">    <span class="n">mask</span><span class="p">,</span>
-</span><span id="line-146">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-147">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
-</span><span id="line-148">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
-</span><span id="line-149">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-150">    <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="line-151"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
-</span><span id="line-152"><span class="w">    </span><span class="sd">"""Pour prose into a silhouette (light = inside). See :func:`tituli.layout.fill_shape`."""</span>
-</span><span id="line-153">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span>
-</span><span id="line-154">    <span class="k">return</span> <span class="n">fill_shape</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span></div>
+</span><span id="line-151"><span class="k">def</span><span class="w"> </span><span class="nf">in_shape</span><span class="p">(</span>
+</span><span id="line-152">    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="line-153">    <span class="n">mask</span><span class="p">,</span>
+</span><span id="line-154">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-155">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
+</span><span id="line-156">    <span class="n">style</span><span class="p">:</span> <span class="n">TextStyle</span> <span class="o">=</span> <span class="n">CALLIGRAM</span><span class="p">,</span>
+</span><span id="line-157">    <span class="n">box</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-158">    <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="line-159">    <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-160"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Layout</span><span class="p">:</span>
+</span><span id="line-161"><span class="w">    </span><span class="sd">"""Pour prose into a silhouette (light = inside). See :func:`tituli.layout.fill_shape`."""</span>
+</span><span id="line-162">    <span class="n">box</span> <span class="o">=</span> <span class="n">box</span> <span class="ow">or</span> <span class="n">frame</span><span class="o">.</span><span class="n">safe</span>
+</span><span id="line-163">    <span class="k">return</span> <span class="n">fill_shape</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span></div>
 
-</span><span id="line-155">
-</span><span id="line-156">
-</span><span id="line-157"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="line-158">    <span class="s2">"on_path"</span><span class="p">,</span>
-</span><span id="line-159">    <span class="s2">"rain"</span><span class="p">,</span>
-</span><span id="line-160">    <span class="s2">"in_shape"</span><span class="p">,</span>
-</span><span id="line-161">    <span class="s2">"resolve_shape"</span><span class="p">,</span>
-</span><span id="line-162">    <span class="s2">"IL_PLEUT_SLANTS"</span><span class="p">,</span>
-</span><span id="line-163">    <span class="s2">"IL_PLEUT_HEAD_OFFSETS"</span><span class="p">,</span>
-</span><span id="line-164"><span class="p">]</span>
+</span><span id="line-164">
+</span><span id="line-165">
+</span><span id="line-166"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="line-167">    <span class="s2">"on_path"</span><span class="p">,</span>
+</span><span id="line-168">    <span class="s2">"rain"</span><span class="p">,</span>
+</span><span id="line-169">    <span class="s2">"in_shape"</span><span class="p">,</span>
+</span><span id="line-170">    <span class="s2">"resolve_shape"</span><span class="p">,</span>
+</span><span id="line-171">    <span class="s2">"IL_PLEUT_SLANTS"</span><span class="p">,</span>
+</span><span id="line-172">    <span class="s2">"IL_PLEUT_HEAD_OFFSETS"</span><span class="p">,</span>
+</span><span id="line-173"><span class="p">]</span>
 </span></code></pre></div>
     </div></div>
           </main>
@@ -366,12 +376,12 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=f7cdbf68"></script>
+    <script src="../../_static/documentation_options.js?v=0c446633"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=fd10adb8"></script>
-    <script defer="defer" src="../../_static/theme.js?v=5db23cf8"></script>
+    <script defer="defer" src="../../_static/theme.js?v=49cc6205"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
 
 

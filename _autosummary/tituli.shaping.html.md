@@ -13,8 +13,8 @@ optional at top level.
 
 ### Functions
 
-| [`shape`](#tituli.shaping.shape)(text, path, index, size, \*[, features])   | `[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]` in pixels.   |
-|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| [`shape`](#tituli.shaping.shape)(text, path, index, size, \*[, ...])   | `[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]` in pixels.   |
+|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
 
 ### Classes
 
@@ -27,9 +27,18 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Draw runs through HarfBuzz + FreeType. Falls back to Pillow for the embedded font.
 
-### tituli.shaping.shape(text, path, index, size, , features=None)
+#### length(face, text)
+
+Advance of `text` as this engine shapes it (kerning, ligatures).
+
+* **Return type:**
+  [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
+### tituli.shaping.shape(text, path, index, size, , features=None, variations=None)
 
 `[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]` in pixels.
+
+`variations` are variable-font axis values by tag (`{"wght": 700}`).
 
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]]

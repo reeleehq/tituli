@@ -22,11 +22,11 @@ Needs fontTools (`tituli[outlines]`), like the outlines.
 
 ### Functions
 
-| [`font_features`](#tituli.features.font_features)(path[, index])   | The GSUB feature tags a font declares.                                                                                               |
-|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| [`applied_features`](#tituli.features.applied_features)(face)         | The face's requested features that its font has, in request order.                                                                   |
-| [`featured_glyphs`](#tituli.features.featured_glyphs)(face, text)    | The glyph name each character of `text` draws with the face's applied features (`None` where the font has no glyph for it).          |
-| [`featured_length`](#tituli.features.featured_length)(face, text)    | Advance width of `text` in pixels, from the substituted glyphs' own advances (the font's design metrics, scaled to the face's size). |
+| [`font_features`](#tituli.features.font_features)(path[, index])   | The GSUB feature tags a font declares.                                                                                                                                |
+|---------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`applied_features`](#tituli.features.applied_features)(face)         | The face's requested features that its font has, in request order.                                                                                                    |
+| [`featured_glyphs`](#tituli.features.featured_glyphs)(face, text)    | The glyph name each character of `text` draws with the face's applied features (`None` where the font has no glyph for it).                                           |
+| [`featured_length`](#tituli.features.featured_length)(face, text)    | Advance width of `text` in pixels, from the substituted glyphs' own advances (the font's design metrics at the face's variation instance, scaled to the face's size). |
 
 ### Exceptions
 
@@ -57,7 +57,8 @@ features (`None` where the font has no glyph for it).
 ### tituli.features.featured_length(face, text)
 
 Advance width of `text` in pixels, from the substituted glyphs’ own
-advances (the font’s design metrics, scaled to the face’s size).
+advances (the font’s design metrics at the face’s variation instance,
+scaled to the face’s size).
 
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
@@ -66,11 +67,11 @@ advances (the font’s design metrics, scaled to the face’s size).
 
 The GSUB feature tags a font declares.
 
-* **Return type:**
-  [`frozenset`](https://docs.python.org/3/builtins/stdtypes.html#frozenset)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
-
 ```pycon
 >>> from tituli import EMBEDDED, resolve_face
 >>> "tnum" in font_features(resolve_face(EMBEDDED, size=12).path)
 False
 ```
+
+* **Return type:**
+  [`frozenset`](https://docs.python.org/3/builtins/stdtypes.html#frozenset)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]

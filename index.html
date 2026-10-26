@@ -29,7 +29,8 @@
 <meta content="tituli" property="og:title"/>
 <meta content="tituli" name="twitter:title"/>
 <link href="_static/pygments.css?v=d75fae25" rel="stylesheet" type="text/css"/>
-<link href="_static/theme.css?v=d6d7c91b" rel="stylesheet" type="text/css"/>
+<link href="_static/theme.css?v=009055c6" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx_autodoc_typehints.css?v=057ac668" rel="stylesheet" type="text/css"/>
 <link href="_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="_static/epythet.css?v=f751b766" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
@@ -270,7 +271,7 @@
 <tr class="row-odd"><td><p>2</p></td>
 <td><p>the rasteriser — <code class="docutils literal notranslate"><span class="pre">render(engine=)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">PillowEngine</span></code> (FreeType via Pillow, bitmap rotation)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">HarfBuzzEngine</span></code> — shaping + outline transforms (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tituli[shaping]</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HarfBuzzEngine</span></code> — shaping + outline transforms (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tituli[shaping]</span></code>) Pass the same <code class="docutils literal notranslate"><span class="pre">engine=</span></code> to <code class="docutils literal notranslate"><span class="pre">block</span></code>/<code class="docutils literal notranslate"><span class="pre">wrap</span></code>/<code class="docutils literal notranslate"><span class="pre">measure</span></code>/<code class="docutils literal notranslate"><span class="pre">fit_size</span></code>/<code class="docutils literal notranslate"><span class="pre">glossed</span></code>/<code class="docutils literal notranslate"><span class="pre">along_path</span></code>/<code class="docutils literal notranslate"><span class="pre">glyph_columns</span></code>/<code class="docutils literal notranslate"><span class="pre">fill_shape</span></code>/<code class="docutils literal notranslate"><span class="pre">on_path</span></code>/<code class="docutils literal notranslate"><span class="pre">rain</span></code>/<code class="docutils literal notranslate"><span class="pre">in_shape</span></code>/<code class="docutils literal notranslate"><span class="pre">credits_cards</span></code>/<code class="docutils literal notranslate"><span class="pre">credits_crawl</span></code>/<code class="docutils literal notranslate"><span class="pre">run_outline</span></code> so the engine that draws a text also measures it (the <code class="docutils literal notranslate"><span class="pre">compose</span></code> builders — <code class="docutils literal notranslate"><span class="pre">title_card</span></code>, <code class="docutils literal notranslate"><span class="pre">caption</span></code>, <code class="docutils literal notranslate"><span class="pre">lower_third</span></code>, <code class="docutils literal notranslate"><span class="pre">note</span></code>, <code class="docutils literal notranslate"><span class="pre">intertitle</span></code> — and <code class="docutils literal notranslate"><span class="pre">video.overlay</span></code> do not take <code class="docutils literal notranslate"><span class="pre">engine=</span></code> yet) (<code class="docutils literal notranslate"><span class="pre">stack</span></code>/<code class="docutils literal notranslate"><span class="pre">grid</span></code> place by the runs’ measured widths).</p></td>
 </tr>
 <tr class="row-even"><td><p>3</p></td>
 <td><p>the shape — <code class="docutils literal notranslate"><span class="pre">on_path(shape=)</span></code></p></td>
@@ -345,7 +346,7 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 
 </section>
 </section>
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-10 14:47 UTC from <a href="https://github.com/reeleehq/tituli/commit/23c59af40473fd8928fdad032cc2c0622f68a951">23c59af</a> (main) · tituli 0.0.9 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-26 18:17 UTC from <a href="https://github.com/reeleehq/tituli/commit/de32abda6a850c32c13c544703d742f535ccef8f">de32abd</a> (main) · tituli 0.0.11 · <a href="about-this-build.html">about this build</a></p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
@@ -379,11 +380,11 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=f7cdbf68"></script>
+<script src="_static/documentation_options.js?v=0c446633"></script>
 <script src="_static/doctools.js?v=fd6eb6e6"></script>
 <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="_static/copybutton.js?v=fd10adb8"></script>
-<script defer="defer" src="_static/theme.js?v=5db23cf8"></script>
+<script defer="defer" src="_static/theme.js?v=49cc6205"></script>
 </body>
 </html>

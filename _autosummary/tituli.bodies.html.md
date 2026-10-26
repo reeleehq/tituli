@@ -23,9 +23,6 @@ never touches lacing.
 
 The body dict for a rendered layout — plain data, no lacing needed.
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> from tituli.frame import Frame
 >>> from tituli.compose import caption
@@ -34,6 +31,9 @@ The body dict for a rendered layout — plain data, no lacing needed.
 >>> b["kind"], b["anchor"], len(b["box"])
 ('caption', 'bottom-left', 4)
 ```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### tituli.bodies.register()
 

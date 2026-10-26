@@ -115,14 +115,14 @@ Where to put a block of `size`: a named anchor and its pixel box.
 order). With rung (d) knowledge the candidate that least covers the
 subject wins; ties fall to preference order.
 
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](tituli.geometry.html.md#tituli.geometry.Box)]
-
 ```pycon
 >>> f = Frame.blank((1000, 500))
 >>> f.place((200, 50), anchor="bottom")[0]
 'bottom'
 ```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](tituli.geometry.html.md#tituli.geometry.Box)]
 
 #### *property* safe *: [Box](tituli.geometry.html.md#tituli.geometry.Box)*
 
@@ -146,20 +146,17 @@ Same frame, placement keeping clear of that target’s reserved zones.
 
 Scale `img` to fill `size` and crop the overflow, centred.
 
-* **Return type:**
-  `Image`
-
 ```pycon
 >>> cover_fit(Image.new("RGB", (100, 50)), (50, 50)).size
 (50, 50)
 ```
 
+* **Return type:**
+  `Image`
+
 ### tituli.frame.reserved_zones(delivery)
 
 Normalised boxes a delivery target keeps for itself.
-
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)], [`...`](https://docs.python.org/3/builtins/constants.html#Ellipsis)]
 
 ```pycon
 >>> reserved_zones("youtube")
@@ -167,3 +164,6 @@ Normalised boxes a delivery target keeps for itself.
 >>> reserved_zones(None)
 ()
 ```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)], [`...`](https://docs.python.org/3/builtins/constants.html#Ellipsis)]

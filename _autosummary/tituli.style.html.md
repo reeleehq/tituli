@@ -37,7 +37,7 @@ The resolved, sized font for this style.
 * **Return type:**
   [`Face`](tituli.fonts.html.md#tituli.fonts.Face)
 
-#### features *: [Sequence](https://docs.python.org/3/library/typing.html#typing.Sequence)[[str](https://docs.python.org/3/builtins/stdtypes.html#str)] | [Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/builtins/stdtypes.html#str), [bool](https://docs.python.org/3/builtins/functions.html#bool)]* *= ()*
+#### features *: [Union](https://docs.python.org/3/library/typing.html#typing.Union)[[Sequence](https://docs.python.org/3/library/typing.html#typing.Sequence)[[str](https://docs.python.org/3/builtins/stdtypes.html#str)], [Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/builtins/stdtypes.html#str), [bool](https://docs.python.org/3/builtins/functions.html#bool)]]* *= ()*
 
 `("tnum",)` or `{"tnum": True}`
 (tituli#4). Kept as a tuple of tags; `fonts.Face.applied_features`
@@ -57,10 +57,10 @@ Font size in pixels for a frame of that height.
 
 A copy with some fields replaced.
 
-* **Return type:**
-  [`TextStyle`](#tituli.style.TextStyle)
-
 ```pycon
 >>> TextStyle().with_(weight=700).weight
 700
 ```
+
+* **Return type:**
+  [`TextStyle`](#tituli.style.TextStyle)

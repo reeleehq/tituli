@@ -38,13 +38,13 @@ Contrast of `ink` over a background of known relative luminance.
 
 WCAG contrast ratio between two colours (1..21).
 
-* **Return type:**
-  [`float`](https://docs.python.org/3/builtins/functions.html#float)
-
 ```pycon
 >>> round(contrast_ratio("#777", "#fff"), 2)
 4.48
 ```
+
+* **Return type:**
+  [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
 ### tituli.color.ink_for(, luminance, light=(255, 255, 255), dark=(17, 17, 17))
 
@@ -71,9 +71,6 @@ Linear blend, `t=0` -> `a`, `t=1` -> `b`.
 
 Whether `ink` over that background falls short of `minimum` contrast.
 
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
-
 ```pycon
 >>> needs_scrim((255, 255, 255), luminance=0.5)
 True
@@ -81,12 +78,12 @@ True
 False
 ```
 
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
 ### tituli.color.parse_color(color)
 
 Accept `"#rgb"`, `"#rrggbb"`, `"#rrggbbaa"`, a Pillow name or a tuple.
-
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
 
 ```pycon
 >>> parse_color("#fff")
@@ -95,12 +92,12 @@ Accept `"#rgb"`, `"#rrggbb"`, `"#rrggbbaa"`, a Pillow name or a tuple.
 (10, 20, 30, 255)
 ```
 
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
+
 ### tituli.color.relative_luminance(color)
 
 WCAG relative luminance in 0..1.
-
-* **Return type:**
-  [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
 ```pycon
 >>> round(relative_luminance((255, 255, 255)), 3)
@@ -109,14 +106,17 @@ WCAG relative luminance in 0..1.
 0.0
 ```
 
+* **Return type:**
+  [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
 ### tituli.color.with_alpha(color, alpha)
 
 Same colour with opacity `alpha` in 0..1.
-
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
 
 ```pycon
 >>> with_alpha("#000", 0.5)
 (0, 0, 0, 128)
 ```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]

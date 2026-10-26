@@ -58,7 +58,7 @@ A time range of the cut showing one picture. `key` identifies the picture.
 (Named `Span` rather than `Panel` so it never collides with
 `braidio.video.Panel`, which callers of both will import alongside it.)
 
-### *class* tituli.schedule.TimedOverlay(layout, start, end, slot='top-left', weight=1, fade=0.45, payload=None, meta=<factory>, image=None, fade_in=None, fade_out=None)
+### *class* tituli.schedule.TimedOverlay(layout, start, end, slot='top-left', weight=1, fade=0.45, payload=None, meta=dict(), image=None, fade_in=None, fade_out=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 

@@ -43,8 +43,8 @@ rest of the package never pays for it.
 
 ### Functions
 
-| [`run_outline`](#tituli.outlines.run_outline)(run, \*[, precision])   | The contours of `run` as one SVG path, placed where the run is drawn.   |
-|--------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| [`run_outline`](#tituli.outlines.run_outline)(run, \*[, precision, engine])   | The contours of `run` as one SVG path, placed where the run is drawn.   |
+|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 
 ### Classes
 
@@ -75,13 +75,16 @@ A run’s contours as SVG path data, in frame pixels.
 
 `bbox` is the ink’s bounds (`None` when nothing is inked, e.g. a space).
 
-### tituli.outlines.run_outline(run, , precision=2)
+### tituli.outlines.run_outline(run, , precision=2, engine=None)
 
 The contours of `run` as one SVG path, placed where the run is drawn.
 
 Glyph `i` starts at `face.length(text[:i]) + i * tracking` along the
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
+`engine` is the one the layout was measured with (default: the face). A
+run that carries an `advance` from another engine’s measure is refused
+when `engine` is not given, rather than outlined with the face’s advances.
 
 * **Return type:**
   [`Outline`](#tituli.outlines.Outline)

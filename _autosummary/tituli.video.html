@@ -29,7 +29,8 @@
 <meta content="tituli.video | tituli" property="og:title"/>
 <meta content="tituli.video | tituli" name="twitter:title"/>
 <link href="../_static/pygments.css?v=d75fae25" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=d6d7c91b" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=009055c6" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx_autodoc_typehints.css?v=057ac668" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/epythet.css?v=f751b766" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
@@ -148,7 +149,7 @@ onto the finished motion video, which is what <a class="reference internal" href
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.video.materialize" title="tituli.video.materialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">materialize</span></code></a>(overlays, *, frame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.video.materialize" title="tituli.video.materialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">materialize</span></code></a>(overlays, *, frame[, engine])</p></td>
 <td><p>Give every overlay a layout, rendering payloads; raise naming any that can't be.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.video.ffmpeg_path" title="tituli.video.ffmpeg_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ffmpeg_path</span></code></a>()</p></td>
@@ -262,13 +263,9 @@ an empty frame. Duration is <code class="docutils literal notranslate"><span cla
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.video.materialize">
-<span class="sig-prename descclassname"><span class="pre">tituli.video.</span></span><span class="sig-name descname"><span class="pre">materialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overlays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/video.html#materialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.video.materialize" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.video.materialize'">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tituli.video.</span></span><span class="sig-name descname"><span class="pre">materialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overlays</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/video.html#materialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.video.materialize" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.video.materialize'">¶</a></dt>
 <dd><p>Give every overlay a layout, rendering payloads; raise naming any that can’t be.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference internal" href="tituli.schedule.html#tituli.schedule.TimedOverlay" title="tituli.schedule.TimedOverlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a>]</span></p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">engine</span></code> is the one that will draw them: payloads are measured with it.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.frame</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
 </span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.schedule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Label</span><span class="p">,</span> <span class="n">TimedOverlay</span>
 </span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Frame</span><span class="o">.</span><span class="n">blank</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">360</span><span class="p">))</span>
@@ -277,6 +274,11 @@ an empty frame. Duration is <code class="docutils literal notranslate"><span cla
 </span><span id="line-6"><span class="go">True</span>
 </span></code></pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference internal" href="tituli.schedule.html#tituli.schedule.TimedOverlay" title="tituli.schedule.TimedOverlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.video.overlay">
@@ -298,7 +300,7 @@ Overlay times are on the <strong>padded</strong> timeline — <code class="docut
 the intro, the song starting under it 0.8 s in”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">Path</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -318,7 +320,7 @@ the intro, the song starting under it 0.8 s in”.</p>
 <dd><p>Raise <a class="reference internal" href="#tituli.video.FfmpegError" title="tituli.video.FfmpegError"><code class="xref py py-class docutils literal notranslate"><span class="pre">FfmpegError</span></code></a> naming any missing filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><span class="highlight sphinx_autodoc_typehints-value"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -362,11 +364,11 @@ the intro, the song starting under it 0.8 s in”.</p>
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=f7cdbf68"></script>
+<script src="../_static/documentation_options.js?v=0c446633"></script>
 <script src="../_static/doctools.js?v=fd6eb6e6"></script>
 <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=fd10adb8"></script>
-<script defer="defer" src="../_static/theme.js?v=5db23cf8"></script>
+<script defer="defer" src="../_static/theme.js?v=49cc6205"></script>
 </body>
 </html>

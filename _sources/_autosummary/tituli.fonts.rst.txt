@@ -8,6 +8,7 @@ tituli.fonts
 
    .. autosummary::
    
+      WEIGHT_AXIS
       EMBEDDED
    
    .. rubric:: Functions
@@ -20,7 +21,12 @@ tituli.fonts
       find_font
       font_dirs
       font_index
+      glyph_set
       resolve_face
+      ttfont
+      variation_axes
+      variation_coords
+      variation_key
    
    .. rubric:: Classes
 
@@ -28,4 +34,5 @@ tituli.fonts
    
       Face
       FontFile
+      VariationAxis
    

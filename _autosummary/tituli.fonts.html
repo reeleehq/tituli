@@ -29,7 +29,8 @@
 <meta content="tituli.fonts | tituli" property="og:title"/>
 <meta content="tituli.fonts | tituli" name="twitter:title"/>
 <link href="../_static/pygments.css?v=d75fae25" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=d6d7c91b" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=009055c6" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx_autodoc_typehints.css?v=057ac668" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/epythet.css?v=f751b766" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
@@ -148,7 +149,10 @@ runner; it just looks better on a machine with Helvetica Neue.</p>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.EMBEDDED" title="tituli.fonts.EMBEDDED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMBEDDED</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.WEIGHT_AXIS" title="tituli.fonts.WEIGHT_AXIS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEIGHT_AXIS</span></code></a></p></td>
+<td><p>The registered tag of the weight axis of a variable font.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.EMBEDDED" title="tituli.fonts.EMBEDDED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMBEDDED</span></code></a></p></td>
 <td><p>A family request that means <em>Pillow's embedded face, and never the system</em>.</p></td>
 </tr>
 </tbody>
@@ -160,7 +164,7 @@ runner; it just looks better on a machine with Helvetica Neue.</p>
 <td><p>The bytes of the font file behind <code class="docutils literal notranslate"><span class="pre">face</span></code> — the embedded face's too.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.face_digest" title="tituli.fonts.face_digest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_digest</span></code></a>(face)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code> of <a class="reference internal" href="#tituli.fonts.face_bytes" title="tituli.fonts.face_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">face_bytes()</span></code></a> — what makes two faces the same face.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code> of <a class="reference internal" href="#tituli.fonts.face_bytes" title="tituli.fonts.face_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">face_bytes()</span></code></a> and the <a class="reference internal" href="#tituli.fonts.Face.applied_variations" title="tituli.fonts.Face.applied_variations"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a> — what makes two faces the same face.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.families" title="tituli.fonts.families"><code class="xref py py-obj docutils literal notranslate"><span class="pre">families</span></code></a>()</p></td>
 <td><p>Sorted family names installed on this machine.</p></td>
@@ -174,8 +178,23 @@ runner; it just looks better on a machine with Helvetica Neue.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.font_index" title="tituli.fonts.font_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font_index</span></code></a>()</p></td>
 <td><p>Installed faces grouped by family name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.resolve_face" title="tituli.fonts.resolve_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_face</span></code></a>([family, weight, italic, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.glyph_set" title="tituli.fonts.glyph_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">glyph_set</span></code></a>(face)</p></td>
+<td><p>The glyphs of <code class="docutils literal notranslate"><span class="pre">face</span></code>'s font at its <a class="reference internal" href="#tituli.fonts.Face.applied_variations" title="tituli.fonts.Face.applied_variations"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a>: outlines to draw and <code class="docutils literal notranslate"><span class="pre">.width</span></code> advances (in font units) to measure with.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.resolve_face" title="tituli.fonts.resolve_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_face</span></code></a>([family, weight, italic, ...])</p></td>
 <td><p>Resolve a typeface request to a sized <code class="docutils literal notranslate"><span class="pre">Face</span></code>; never fails.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.ttfont" title="tituli.fonts.ttfont"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttfont</span></code></a>(path[, index])</p></td>
+<td><p>fontTools' parsed font behind <code class="docutils literal notranslate"><span class="pre">(path,</span> <span class="pre">index)</span></code>: opened lazily, cached per file (not per size or instance).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.variation_axes" title="tituli.fonts.variation_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variation_axes</span></code></a>(path[, index])</p></td>
+<td><p>The variation axes of a font file, in <code class="docutils literal notranslate"><span class="pre">fvar</span></code> order (the order FreeType and Pillow take coordinates in); empty for a static font or one this cannot read.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.variation_coords" title="tituli.fonts.variation_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variation_coords</span></code></a>(path, index, variations)</p></td>
+<td><p>One coordinate per axis, in <code class="docutils literal notranslate"><span class="pre">fvar</span></code> order, as FreeType and Pillow take them: the value in <code class="docutils literal notranslate"><span class="pre">variations</span></code> for its tag, the axis default otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.variation_key" title="tituli.fonts.variation_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variation_key</span></code></a>(variations)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">variations</span></code> as a hashable, canonical (tag-sorted) tuple — a cache key.</p></td>
 </tr>
 </tbody>
 </table>
@@ -187,6 +206,9 @@ runner; it just looks better on a machine with Helvetica Neue.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.fonts.FontFile" title="tituli.fonts.FontFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FontFile</span></code></a>(path, index, family, style)</p></td>
 <td><p>One face inside a font file (a <code class="docutils literal notranslate"><span class="pre">.ttc</span></code> holds several).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fonts.VariationAxis" title="tituli.fonts.VariationAxis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariationAxis</span></code></a>(tag, minimum, default, maximum)</p></td>
+<td><p>One axis of a variable font's <code class="docutils literal notranslate"><span class="pre">fvar</span></code> table, in design units.</p></td>
 </tr>
 </tbody>
 </table>
@@ -204,7 +226,7 @@ Aileron installed would resolve to <em>that</em> file.)</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.fonts.Face">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">Face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#Face"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.Face" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.Face'">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">Face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wght</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#Face"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.Face" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.Face'">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
 <p>A resolved, sized font ready to measure and draw with Pillow.</p>
 <dl class="field-list simple">
@@ -218,6 +240,13 @@ outlined with; a requested tag missing here was not applied.</p>
 </span><span id="line-2"><span class="go">()</span>
 </span></code></pre></div>
 </div>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.fonts.Face.applied_variations">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">applied_variations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">dict</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">]</span></span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.Face.applied_variations" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.Face.applied_variations'">¶</a></dt>
+<dd><p>The variable-font axis values applied (<code class="docutils literal notranslate"><span class="pre">{"wght":</span> <span class="pre">700.0}</span></code>); empty for
+a static face. Every engine reads this, never <a class="reference internal" href="#tituli.fonts.Face.wght" title="tituli.fonts.Face.wght"><code class="xref py py-attr docutils literal notranslate"><span class="pre">wght</span></code></a> itself; an
+axis not named here stays at its default.</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="tituli.fonts.Face.ascent">
@@ -256,7 +285,14 @@ without hinting or kerning, which is what tabular figures are for.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="tituli.fonts.Face.pil">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">pil</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FreeTypeFont</span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.Face.pil" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.Face.pil'">¶</a></dt>
-<dd><p>The Pillow font object (cached per <code class="docutils literal notranslate"><span class="pre">(path,</span> <span class="pre">index,</span> <span class="pre">size)</span></code>).</p>
+<dd><p>The Pillow font object (cached per <code class="docutils literal notranslate"><span class="pre">(path,</span> <span class="pre">index,</span> <span class="pre">size,</span> <span class="pre">variations)</span></code>).</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tituli.fonts.Face.wght">
+<span class="sig-name descname"><span class="pre">wght</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">None</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.Face.wght" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.Face.wght'">¶</a></dt>
+<dd><p>Value of the <code class="docutils literal notranslate"><span class="pre">wght</span></code> axis when the file is a variable font with one
+(tituli#9), clamped to the axis range; <code class="docutils literal notranslate"><span class="pre">None</span></code> for a static face. A face
+at the axis default still differs from <code class="docutils literal notranslate"><span class="pre">None</span></code> in <a class="reference internal" href="#tituli.fonts.face_digest" title="tituli.fonts.face_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">face_digest()</span></code></a>.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.fonts.Face.with_size">
@@ -292,28 +328,45 @@ without hinting or kerning, which is what tabular figures are for.</p>
 <dd><p>CSS-style weight parsed from the style name (<code class="docutils literal notranslate"><span class="pre">"Bold"</span></code> -&gt; 700).</p>
 </dd></dl>
 </dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="tituli.fonts.VariationAxis">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">VariationAxis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#VariationAxis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.VariationAxis" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.VariationAxis'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
+<p>One axis of a variable font’s <code class="docutils literal notranslate"><span class="pre">fvar</span></code> table, in design units.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="tituli.fonts.WEIGHT_AXIS">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">WEIGHT_AXIS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wght'</span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.WEIGHT_AXIS" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.WEIGHT_AXIS'">¶</a></dt>
+<dd><p>The registered tag of the weight axis of a variable font.</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.fonts.face_bytes">
 <span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">face_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#face_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.face_bytes" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.face_bytes'">¶</a></dt>
 <dd><p>The bytes of the font file behind <code class="docutils literal notranslate"><span class="pre">face</span></code> — the embedded face’s too.</p>
 <p>Pillow keeps the embedded face’s bytes on the font object it builds
 (<code class="docutils literal notranslate"><span class="pre">font_bytes</span></code>), so the fallback has an identity like any file does.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">face_bytes</span><span class="p">(</span><span class="n">resolve_face</span><span class="p">(</span><span class="n">EMBEDDED</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">))[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="sa">b</span><span class="s2">"</span><span class="se">\x00\x01\x00\x00</span><span class="s2">"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"true"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"OTTO"</span><span class="p">)</span>
+</span><span id="line-2"><span class="go">True</span>
+</span></code></pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">face_bytes</span><span class="p">(</span><span class="n">resolve_face</span><span class="p">(</span><span class="n">EMBEDDED</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">))[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="sa">b</span><span class="s2">"</span><span class="se">\x00\x01\x00\x00</span><span class="s2">"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"true"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"OTTO"</span><span class="p">)</span>
-</span><span id="line-2"><span class="go">True</span>
-</span></code></pre></div>
-</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.fonts.face_digest">
 <span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">face_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#face_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.face_digest" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.face_digest'">¶</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code> of <a class="reference internal" href="#tituli.fonts.face_bytes" title="tituli.fonts.face_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">face_bytes()</span></code></a> — what makes two faces the same face.</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code> of <a class="reference internal" href="#tituli.fonts.face_bytes" title="tituli.fonts.face_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">face_bytes()</span></code></a> and the <a class="reference internal" href="#tituli.fonts.Face.applied_variations" title="tituli.fonts.Face.applied_variations"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a> —
+what makes two faces the same face.</p>
 <p>A family name is not an identity (two machines can install different files
-under one name, and the embedded face can change with Pillow); the bytes are.</p>
+under one name, and the embedded face can change with Pillow); the bytes are,
+together with the instance a variable font is drawn at. A static face’s digest
+is the hash of its bytes alone. Cached per <code class="docutils literal notranslate"><span class="pre">(path,</span> <span class="pre">variations)</span></code>, so a file
+rewritten in place during the process keeps its first digest.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
@@ -336,15 +389,15 @@ under one name, and the embedded face can change with Pillow); the bytes are.</p
 <dd><p>First installed family in the preference list, at the closest style.</p>
 <p><code class="docutils literal notranslate"><span class="pre">family</span></code> may be one name or a preference list. A path to a font file is
 accepted too, and wins outright.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.fonts.FontFile" title="tituli.fonts.FontFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">FontFile</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">find_font</span><span class="p">(</span><span class="s2">"definitely-not-installed-xyz"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 </span><span id="line-2"><span class="go">True</span>
 </span></code></pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.fonts.FontFile" title="tituli.fonts.FontFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">FontFile</span></code></a> | <span class="highlight sphinx_autodoc_typehints-value"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></span></p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.fonts.font_dirs">
@@ -362,16 +415,24 @@ separated), which is also how a project supplies its own licensed fonts.</p>
 <dt class="sig sig-object py" id="tituli.fonts.font_index">
 <span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">font_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#font_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.font_index" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.font_index'">¶</a></dt>
 <dd><p>Installed faces grouped by family name. Scanned once per process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference internal" href="#tituli.fonts.FontFile" title="tituli.fonts.FontFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">FontFile</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]]</span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">font_index</span><span class="p">()</span>
 </span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">)</span>
 </span><span id="line-3"><span class="go">True</span>
 </span></code></pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference internal" href="#tituli.fonts.FontFile" title="tituli.fonts.FontFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">FontFile</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.fonts.glyph_set">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">glyph_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#glyph_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.glyph_set" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.glyph_set'">¶</a></dt>
+<dd><p>The glyphs of <code class="docutils literal notranslate"><span class="pre">face</span></code>’s font at its <a class="reference internal" href="#tituli.fonts.Face.applied_variations" title="tituli.fonts.Face.applied_variations"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a>:
+outlines to draw and <code class="docutils literal notranslate"><span class="pre">.width</span></code> advances (in font units) to measure with.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.fonts.resolve_face">
@@ -382,17 +443,65 @@ the face; see <a class="reference internal" href="#tituli.fonts.Face.applied_fea
 <p>Falls back to Pillow’s embedded Aileron when nothing in the list is installed,
 so a render on a fontless CI box still produces a real (if plainer) result.
 <a class="reference internal" href="#tituli.fonts.EMBEDDED" title="tituli.fonts.EMBEDDED"><code class="xref py py-data docutils literal notranslate"><span class="pre">EMBEDDED</span></code></a> in the list stops the search there (see its comment):</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.fonts.Face" title="tituli.fonts.Face"><code class="xref py py-class docutils literal notranslate"><span class="pre">Face</span></code></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_face</span><span class="p">(</span><span class="n">EMBEDDED</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span>
 </span><span id="line-2"><span class="go">True</span>
 </span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_face</span><span class="p">([</span><span class="s2">"definitely-not-installed-xyz"</span><span class="p">,</span> <span class="n">EMBEDDED</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">family</span>
 </span><span id="line-4"><span class="go">'Aileron'</span>
 </span></code></pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.fonts.Face" title="tituli.fonts.Face"><code class="xref py py-class docutils literal notranslate"><span class="pre">Face</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.fonts.ttfont">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">ttfont</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#ttfont"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.ttfont" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.ttfont'">¶</a></dt>
+<dd><p>fontTools’ parsed font behind <code class="docutils literal notranslate"><span class="pre">(path,</span> <span class="pre">index)</span></code>: opened lazily, cached per
+file (not per size or instance). The one opener outlines and features share;
+a variable instance is read through <a class="reference internal" href="#tituli.fonts.glyph_set" title="tituli.fonts.glyph_set"><code class="xref py py-func docutils literal notranslate"><span class="pre">glyph_set()</span></code></a>.</p>
+<p>Needs fontTools (<code class="docutils literal notranslate"><span class="pre">tituli[outlines]</span></code>).</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.fonts.variation_axes">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">variation_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#variation_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.variation_axes" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.variation_axes'">¶</a></dt>
+<dd><p>The variation axes of a font file, in <code class="docutils literal notranslate"><span class="pre">fvar</span></code> order (the order FreeType
+and Pillow take coordinates in); empty for a static font or one this cannot
+read. Parsed from the file’s tables directly, so it needs no fontTools and
+keeps the exact (unrounded) axis values.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">variation_axes</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-2"><span class="go">()</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference internal" href="#tituli.fonts.VariationAxis" title="tituli.fonts.VariationAxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">VariationAxis</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.fonts.variation_coords">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">variation_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#variation_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.variation_coords" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.variation_coords'">¶</a></dt>
+<dd><p>One coordinate per axis, in <code class="docutils literal notranslate"><span class="pre">fvar</span></code> order, as FreeType and Pillow take
+them: the value in <code class="docutils literal notranslate"><span class="pre">variations</span></code> for its tag, the axis default otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.fonts.variation_key">
+<span class="sig-prename descclassname"><span class="pre">tituli.fonts.</span></span><span class="sig-name descname"><span class="pre">variation_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/fonts.html#variation_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.fonts.variation_key" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.fonts.variation_key'">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">variations</span></code> as a hashable, canonical (tag-sorted) tuple — a cache key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>], <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
@@ -401,12 +510,14 @@ so a render on a fontless CI box still produces a real (if plainer) result.
 <li><a :data-current="activeSection === '#tituli.fonts.EMBEDDED'" class="reference internal" href="#tituli.fonts.EMBEDDED"><code class="docutils literal notranslate"><span class="pre">EMBEDDED</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face'" class="reference internal" href="#tituli.fonts.Face"><code class="docutils literal notranslate"><span class="pre">Face</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.applied_features'" class="reference internal" href="#tituli.fonts.Face.applied_features"><code class="docutils literal notranslate"><span class="pre">Face.applied_features</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.Face.applied_variations'" class="reference internal" href="#tituli.fonts.Face.applied_variations"><code class="docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.ascent'" class="reference internal" href="#tituli.fonts.Face.ascent"><code class="docutils literal notranslate"><span class="pre">Face.ascent</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.descent'" class="reference internal" href="#tituli.fonts.Face.descent"><code class="docutils literal notranslate"><span class="pre">Face.descent</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.features'" class="reference internal" href="#tituli.fonts.Face.features"><code class="docutils literal notranslate"><span class="pre">Face.features</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.length'" class="reference internal" href="#tituli.fonts.Face.length"><code class="docutils literal notranslate"><span class="pre">Face.length()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.line_height'" class="reference internal" href="#tituli.fonts.Face.line_height"><code class="docutils literal notranslate"><span class="pre">Face.line_height</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.pil'" class="reference internal" href="#tituli.fonts.Face.pil"><code class="docutils literal notranslate"><span class="pre">Face.pil</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.Face.wght'" class="reference internal" href="#tituli.fonts.Face.wght"><code class="docutils literal notranslate"><span class="pre">Face.wght</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.Face.with_size'" class="reference internal" href="#tituli.fonts.Face.with_size"><code class="docutils literal notranslate"><span class="pre">Face.with_size()</span></code></a></li>
 </ul>
 </li>
@@ -416,13 +527,20 @@ so a render on a fontless CI box still produces a real (if plainer) result.
 <li><a :data-current="activeSection === '#tituli.fonts.FontFile.weight'" class="reference internal" href="#tituli.fonts.FontFile.weight"><code class="docutils literal notranslate"><span class="pre">FontFile.weight</span></code></a></li>
 </ul>
 </li>
+<li><a :data-current="activeSection === '#tituli.fonts.VariationAxis'" class="reference internal" href="#tituli.fonts.VariationAxis"><code class="docutils literal notranslate"><span class="pre">VariationAxis</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.WEIGHT_AXIS'" class="reference internal" href="#tituli.fonts.WEIGHT_AXIS"><code class="docutils literal notranslate"><span class="pre">WEIGHT_AXIS</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.face_bytes'" class="reference internal" href="#tituli.fonts.face_bytes"><code class="docutils literal notranslate"><span class="pre">face_bytes()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.face_digest'" class="reference internal" href="#tituli.fonts.face_digest"><code class="docutils literal notranslate"><span class="pre">face_digest()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.families'" class="reference internal" href="#tituli.fonts.families"><code class="docutils literal notranslate"><span class="pre">families()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.find_font'" class="reference internal" href="#tituli.fonts.find_font"><code class="docutils literal notranslate"><span class="pre">find_font()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.font_dirs'" class="reference internal" href="#tituli.fonts.font_dirs"><code class="docutils literal notranslate"><span class="pre">font_dirs()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.font_index'" class="reference internal" href="#tituli.fonts.font_index"><code class="docutils literal notranslate"><span class="pre">font_index()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.glyph_set'" class="reference internal" href="#tituli.fonts.glyph_set"><code class="docutils literal notranslate"><span class="pre">glyph_set()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.fonts.resolve_face'" class="reference internal" href="#tituli.fonts.resolve_face"><code class="docutils literal notranslate"><span class="pre">resolve_face()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.ttfont'" class="reference internal" href="#tituli.fonts.ttfont"><code class="docutils literal notranslate"><span class="pre">ttfont()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.variation_axes'" class="reference internal" href="#tituli.fonts.variation_axes"><code class="docutils literal notranslate"><span class="pre">variation_axes()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.variation_coords'" class="reference internal" href="#tituli.fonts.variation_coords"><code class="docutils literal notranslate"><span class="pre">variation_coords()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.fonts.variation_key'" class="reference internal" href="#tituli.fonts.variation_key"><code class="docutils literal notranslate"><span class="pre">variation_key()</span></code></a></li>
 </ul>
 </div>
 </aside>
@@ -436,11 +554,11 @@ so a render on a fontless CI box still produces a real (if plainer) result.
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=f7cdbf68"></script>
+<script src="../_static/documentation_options.js?v=0c446633"></script>
 <script src="../_static/doctools.js?v=fd6eb6e6"></script>
 <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=fd10adb8"></script>
-<script defer="defer" src="../_static/theme.js?v=5db23cf8"></script>
+<script defer="defer" src="../_static/theme.js?v=49cc6205"></script>
 </body>
 </html>

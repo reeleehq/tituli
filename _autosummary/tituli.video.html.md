@@ -20,7 +20,7 @@ onto the finished motion video, which is what [`overlay()`](#tituli.video.overla
 
 ### Functions
 
-| [`materialize`](#tituli.video.materialize)(overlays, \*, frame)                   | Give every overlay a layout, rendering payloads; raise naming any that can't be.              |
+| [`materialize`](#tituli.video.materialize)(overlays, \*, frame[, engine])         | Give every overlay a layout, rendering payloads; raise naming any that can't be.              |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [`ffmpeg_path`](#tituli.video.ffmpeg_path)()                                      | The ffmpeg binary: `$TITULI_FFMPEG` or the first on PATH.                                     |
 | [`available_filters`](#tituli.video.available_filters)([binary])                        | Names of the filters this ffmpeg build has.                                                   |
@@ -90,12 +90,11 @@ Whether `video` has an audio stream, via ffprobe.
 * **Return type:**
   [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
-### tituli.video.materialize(overlays, , frame)
+### tituli.video.materialize(overlays, , frame, engine=None)
 
 Give every overlay a layout, rendering payloads; raise naming any that can’t be.
 
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`TimedOverlay`](tituli.schedule.html.md#tituli.schedule.TimedOverlay)]
+`engine` is the one that will draw them: payloads are measured with it.
 
 ```pycon
 >>> from tituli.frame import Frame
@@ -105,6 +104,9 @@ Give every overlay a layout, rendering payloads; raise naming any that can’t b
 >>> done[0].layout is not None
 True
 ```
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`TimedOverlay`](tituli.schedule.html.md#tituli.schedule.TimedOverlay)]
 
 ### tituli.video.overlay(video, overlays, dst, , size=None, frame=None, delivery='youtube', workdir=None, crf=18, preset='medium', engine=None, pad_start=0.0, pad_mode='clone')
 
@@ -127,7 +129,7 @@ image="title.png", fade_in=0)` with `pad_start=0.8` is “the title over
 the intro, the song starting under it 0.8 s in”.
 
 * **Return type:**
-  Path
+  [`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path)
 
 ### tituli.video.probe_size(video)
 

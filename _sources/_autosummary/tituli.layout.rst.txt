@@ -15,6 +15,7 @@ tituli.layout
       glyph_columns
       measure
       merge
+      text_advance
       wrap
    
    .. rubric:: Classes

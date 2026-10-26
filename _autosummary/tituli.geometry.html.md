@@ -69,13 +69,13 @@ Shrink by `dx` horizontally and `dy` (default `dx`) vertically.
 
 Fraction of *this* box’s area covered by `other`.
 
-* **Return type:**
-  [`float`](https://docs.python.org/3/builtins/functions.html#float)
-
 ```pycon
 >>> Box(0, 0, 10, 10).overlap_fraction(Box(5, 0, 20, 10))
 0.5
 ```
+
+* **Return type:**
+  [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
 #### to_norm(width, height)
 
@@ -155,13 +155,13 @@ Parse an SVG path `d` string (M L H V C S Q T Z, absolute or relative).
 
 Arcs (`A`) are not supported — approximate them with a Bézier.
 
-* **Return type:**
-  [`Path`](#tituli.geometry.Path)
-
 ```pycon
 >>> Path.from_svg("M 0 0 L 10 0 L 10 10").length
 20.0
 ```
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
 
 #### point(s)
 
@@ -181,22 +181,22 @@ A sine wave along the segment `start -> end`.
 
 Place a block of `size` inside `region` at a named anchor.
 
-* **Return type:**
-  [`Box`](#tituli.geometry.Box)
-
 ```pycon
 >>> anchor_box(Box(0, 0, 100, 100), (20, 10), "bottom-right")
 Box(x0=80.0, y0=90.0, x1=100.0, y1=100.0)
 ```
 
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)
+
 ### tituli.geometry.safe_area(width, height, , fraction=0.9)
 
 The centred box holding `fraction` of each dimension.
-
-* **Return type:**
-  [`Box`](#tituli.geometry.Box)
 
 ```pycon
 >>> safe_area(1000, 500)
 Box(x0=50.0, y0=25.0, x1=950.0, y1=475.0)
 ```
+
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)

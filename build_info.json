@@ -1,39 +1,39 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-10T14:47:50Z",
+  "built_at": "2026-10-26T18:17:38Z",
   "package": {
     "name": "tituli",
-    "version": "0.0.9",
+    "version": "0.0.11",
     "display_name": "tituli",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "23c59af40473fd8928fdad032cc2c0622f68a951",
-    "short_commit": "23c59af",
+    "commit": "de32abda6a850c32c13c544703d742f535ccef8f",
+    "short_commit": "de32abd",
     "branch": "main",
     "tags": [
-      "0.0.9"
+      "0.0.11"
     ],
     "dirty": false,
     "remote_url": "https://github.com/reeleehq/tituli",
-    "commit_url": "https://github.com/reeleehq/tituli/commit/23c59af40473fd8928fdad032cc2c0622f68a951",
+    "commit_url": "https://github.com/reeleehq/tituli/commit/de32abda6a850c32c13c544703d742f535ccef8f",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "reeleehq/tituli",
-    "sha": "6035cd7c2949659fba8fbf36b91aceb0a54c3233",
+    "sha": "9d62a146594e3a8db5e487e9b385b5f13625c75e",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "38060863621",
-    "run_url": "https://github.com/reeleehq/tituli/actions/runs/38060863621",
+    "run_id": "40375951074",
+    "run_url": "https://github.com/reeleehq/tituli/actions/runs/40375951074",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.12",
-    "sphinx": "9.1.0",
+    "epythet": "0.2.22",
+    "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.15"
   },
@@ -58,18 +58,20 @@
   },
   "site": {
     "modules_documented": 18,
-    "objects_documented": 253
+    "objects_documented": 268
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.9",
-    "relation": "same",
+    "latest": "0.0.10",
+    "relation": "ahead",
     "error": null
   },
-  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout 23c59af40473fd8928fdad032cc2c0622f68a951\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout de32abda6a850c32c13c544703d742f535ccef8f\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": true,
-    "notes": []
+    "aligned": false,
+    "notes": [
+      "The documented version (0.0.11) is ahead of the latest release on PyPI (0.0.10): these docs describe unreleased code."
+    ]
   }
 }
