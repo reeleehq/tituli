@@ -17,12 +17,14 @@ True
 
 from __future__ import annotations
 
+import io
 import os
+import struct
 import sys
 from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
-from typing import Iterable, Iterator, Sequence
+from typing import Iterable, Iterator, Mapping, Sequence
 
 from PIL import ImageFont
 
@@ -30,6 +32,10 @@ _FONT_SUFFIXES = (".ttf", ".ttc", ".otf")
 _MAX_TTC_INDEX = 32  # sanity bound when probing a collection's faces
 _TTC_FIRST_INDEX = 0
 _EMBEDDED_PROBE_SIZE = 12  # any size: the bytes do not depend on it
+#: Pixel size a font file is opened at when only its tables are read (names).
+_PROBE_SIZE = 12
+#: The registered tag of the weight axis of a variable font.
+WEIGHT_AXIS = "wght"
 
 # The working set the style research settled on, most-preferred first. Every
 # entry is a family name as the font's own ``name`` table reports it.
@@ -138,10 +144,19 @@ class Face:
     #: (tituli#9), clamped to the axis range; ``None`` for a static face.
     wght: float | None = None
 
+    def __post_init__(self):
+        if self.wght is not None and _axis(self.path, self.index, WEIGHT_AXIS) is None:
+            raise ValueError(
+                f"wght={self.wght} needs a variable font with a {WEIGHT_AXIS!r} axis, "
+                f"and {self.path or FALLBACK_FAMILY!r} (index {self.index}) has none: "
+                "leave wght=None (resolve_face sets it only where the font has the axis)"
+            )
+
     @property
     def pil(self) -> ImageFont.FreeTypeFont:
-        """The Pillow font object (cached per ``(path, index, size, wght)``)."""
-        return _load_pil(self.path, self.index, self.size, self.wght)
+        """The Pillow font object (cached per ``(path, index, size, variations)``)."""
+        key = variation_key(self.applied_variations)
+        return _load_pil(self.path, self.index, self.size, key)
 
     def with_size(self, size: int) -> "Face":
         """Same face at another pixel size."""
@@ -164,8 +179,9 @@ class Face:
     @property
     def applied_variations(self) -> dict[str, float]:
         """The variable-font axis values applied (``{"wght": 700.0}``); empty for
-        a static face."""
-        return {} if self.wght is None else {"wght": self.wght}
+        a static face. Every engine reads this, never :attr:`wght` itself; an
+        axis not named here stays at its default."""
+        return {} if self.wght is None else {WEIGHT_AXIS: self.wght}
 
     def length(self, text: str) -> float:
         """Advance width of ``text`` in pixels.
@@ -246,7 +262,7 @@ def _iter_font_paths(dirs: Iterable[Path]) -> Iterator[Path]:
 def _faces_in(path: Path) -> Iterator[FontFile]:
     for index in range(_MAX_TTC_INDEX):
         try:
-            f = ImageFont.truetype(str(path), 12, index=index)
+            f = ImageFont.truetype(str(path), _PROBE_SIZE, index=index)
         except (OSError, ValueError, IndexError):
             break
         family, style = f.getname()
@@ -382,21 +398,39 @@ def face_bytes(face: Face) -> bytes:
     >>> face_bytes(resolve_face(EMBEDDED, size=12))[:4] in (b"\\x00\\x01\\x00\\x00", b"true", b"OTTO")
     True
     """
-    if face.path is None:
-        return _embedded_bytes()
-    data = Path(face.path).read_bytes()
-    return instance_bytes(data, face.index, face.wght)
+    return _file_bytes(face.path)
 
 
 def face_digest(face: Face) -> str:
-    """``sha256`` of :func:`face_bytes` — what makes two faces the same face.
+    """``sha256`` of :func:`face_bytes` and the :attr:`Face.applied_variations` —
+    what makes two faces the same face.
 
     A family name is not an identity (two machines can install different files
-    under one name, and the embedded face can change with Pillow); the bytes are.
+    under one name, and the embedded face can change with Pillow); the bytes are,
+    together with the instance a variable font is drawn at. A static face's digest
+    is the hash of its bytes alone. Cached per ``(path, variations)``, so a file
+    rewritten in place during the process keeps its first digest.
     """
-    import hashlib
+    return _digest(face.path, variation_key(face.applied_variations))
 
-    return hashlib.sha256(face_bytes(face)).hexdigest()
+
+#: Separates a variable face's axis values from the file bytes in its digest.
+_VARIATIONS_SALT = b"\0tituli:variations:"
+
+
+@lru_cache(maxsize=256)
+def _digest(path: str | None, variations: tuple[tuple[str, float], ...]) -> str:
+    import hashlib
+    import json
+
+    h = hashlib.sha256(_file_bytes(path))
+    if variations:
+        h.update(_VARIATIONS_SALT + json.dumps(variations).encode())
+    return h.hexdigest()
+
+
+def _file_bytes(path: str | None) -> bytes:
+    return _embedded_bytes() if path is None else Path(path).read_bytes()
 
 
 @lru_cache(maxsize=1)
@@ -410,64 +444,147 @@ def _embedded_bytes() -> bytes:
     return data
 
 
-@lru_cache(maxsize=256)
-def _weight_axis(path: str, index: int) -> tuple[int, list[dict]] | None:
-    """``(position, axes)`` of the ``wght`` axis of a variable font, else ``None``."""
+@lru_cache(maxsize=32)
+def ttfont(path: str | None, index: int = 0):
+    """fontTools' parsed font behind ``(path, index)``: opened lazily, cached per
+    file (not per size or instance). The one opener outlines and features share;
+    a variable instance is read through :func:`glyph_set`.
+
+    Needs fontTools (``tituli[outlines]``).
+    """
     try:
-        axes = ImageFont.truetype(path, 12, index=index).get_variation_axes()
-    except (OSError, ValueError, AttributeError):  # static font, or no FreeType MM
-        return None
-    for i, axis in enumerate(axes):
-        name = axis["name"]
-        name = name.decode("latin-1") if isinstance(name, bytes) else name
-        if name.lower() == "weight":
-            return i, axes
-    return None
+        from fontTools.ttLib import TTFont
+    except ImportError as e:  # pragma: no cover - depends on the extra
+        raise ImportError(
+            "outlines and OpenType features need fontTools: "
+            "`pip install tituli[outlines]`"
+        ) from e
+    return TTFont(io.BytesIO(_file_bytes(path)), fontNumber=index, lazy=True)
+
+
+def glyph_set(face: Face):
+    """The glyphs of ``face``'s font at its :attr:`Face.applied_variations`:
+    outlines to draw and ``.width`` advances (in font units) to measure with."""
+    return _glyph_set(face.path, face.index, variation_key(face.applied_variations))
+
+
+@lru_cache(maxsize=64)
+def _glyph_set(path: str | None, index: int, variations: tuple):
+    font = ttfont(path, index)
+    if not variations:
+        return font.getGlyphSet()
+    return font.getGlyphSet(location=dict(variations), normalized=False)
+
+
+# --- variable fonts: the axes, read by tag from the file's own `fvar` -------
+
+
+@dataclass(frozen=True)
+class VariationAxis:
+    """One axis of a variable font's ``fvar`` table, in design units."""
+
+    tag: str
+    minimum: float
+    default: float
+    maximum: float
+
+
+_TTC_TAG = b"ttcf"
+_FVAR_TAG = b"fvar"
+_SFNT_HEADER = ">4sH"  # sfntVersion, numTables
+_TTC_HEADER = ">4sHHI"  # ttcTag, majorVersion, minorVersion, numFonts
+_TABLE_RECORDS_AT = 12  # after the sfnt header's search fields
+_TABLE_RECORD = ">4sIII"  # tag, checksum, offset, length
+_FVAR_HEADER = ">6H"  # version, version, axesArrayOffset, reserved, axisCount, axisSize
+_AXIS_RECORD = ">4siii"  # tag, minValue, defaultValue, maxValue (16.16 Fixed)
+_FIXED_ONE = 1 << 16
+
+
+@lru_cache(maxsize=256)
+def variation_axes(path: str | None, index: int = 0) -> tuple[VariationAxis, ...]:
+    """The variation axes of a font file, in ``fvar`` order (the order FreeType
+    and Pillow take coordinates in); empty for a static font or one this cannot
+    read. Parsed from the file's tables directly, so it needs no fontTools and
+    keeps the exact (unrounded) axis values.
+
+    >>> variation_axes(None)
+    ()
+    """
+    if path is None:
+        return ()
+    try:
+        with open(path, "rb") as f:
+            return _read_fvar(f, index)
+    except (OSError, struct.error):
+        return ()
+
+
+def _read_fvar(f, index: int) -> tuple[VariationAxis, ...]:
+    def read(offset: int, fmt: str) -> tuple:
+        f.seek(offset)
+        return struct.unpack(fmt, f.read(struct.calcsize(fmt)))
+
+    base = 0
+    tag, *_, num_fonts = read(0, _TTC_HEADER)
+    if tag == _TTC_TAG:
+        if index >= num_fonts:
+            return ()
+        (base,) = read(struct.calcsize(_TTC_HEADER) + 4 * index, ">I")
+    _, num_tables = read(base, _SFNT_HEADER)
+    record = struct.calcsize(_TABLE_RECORD)
+    for i in range(num_tables):
+        tag, _, fvar, _ = read(base + _TABLE_RECORDS_AT + i * record, _TABLE_RECORD)
+        if tag == _FVAR_TAG:
+            break
+    else:
+        return ()
+    *_, axes_at, _, count, size = read(fvar, _FVAR_HEADER)
+    axes = []
+    for i in range(count):
+        tag, lo, default, hi = read(fvar + axes_at + i * size, _AXIS_RECORD)
+        axes.append(
+            VariationAxis(
+                tag.decode("latin-1"),
+                lo / _FIXED_ONE,
+                default / _FIXED_ONE,
+                hi / _FIXED_ONE,
+            )
+        )
+    return tuple(axes)
+
+
+def _axis(path: str | None, index: int, tag: str) -> VariationAxis | None:
+    return next((a for a in variation_axes(path, index) if a.tag == tag), None)
 
 
 def _wght_for(path: str | None, index: int, weight: int) -> float | None:
     """The ``wght`` to set for a requested ``weight``: clamped to the axis range."""
-    found = _weight_axis(path, index) if path else None
-    if found is None:
+    axis = _axis(path, index, WEIGHT_AXIS)
+    if axis is None:
         return None
-    axis = found[1][found[0]]
-    return float(min(max(weight, axis["minimum"]), axis["maximum"]))
+    return float(min(max(weight, axis.minimum), axis.maximum))
 
 
-def instance_bytes(data: bytes, index: int, wght: float | None) -> bytes:
-    """``data`` as a static font at ``wght`` (itself when ``wght`` is ``None``).
+def variation_key(variations: Mapping[str, float]) -> tuple[tuple[str, float], ...]:
+    """``variations`` as a hashable, canonical (tag-sorted) tuple — a cache key."""
+    return tuple(sorted(variations.items()))
 
-    The identity of a variable face is the file *and* the instance drawn from it.
-    """
-    if wght is None:
-        return data
-    import io
 
-    try:
-        from fontTools.ttLib import TTFont
-        from fontTools.varLib.instancer import instantiateVariableFont
-    except ImportError as e:  # pragma: no cover - depends on the extra
-        raise ImportError(
-            "a variable font's weight needs fontTools here: "
-            "`pip install tituli[outlines]`"
-        ) from e
-    font = TTFont(io.BytesIO(data), fontNumber=index)
-    instantiateVariableFont(font, {"wght": wght}, inplace=True)
-    out = io.BytesIO()
-    font.save(out)
-    return out.getvalue()
+def variation_coords(
+    path: str | None, index: int, variations: Mapping[str, float]
+) -> list[float]:
+    """One coordinate per axis, in ``fvar`` order, as FreeType and Pillow take
+    them: the value in ``variations`` for its tag, the axis default otherwise."""
+    return [variations.get(a.tag, a.default) for a in variation_axes(path, index)]
 
 
 @lru_cache(maxsize=256)
 def _load_pil(
-    path: str | None, index: int, size: int, wght: float | None = None
+    path: str | None, index: int, size: int, variations: tuple = ()
 ) -> ImageFont.FreeTypeFont:
     if path is None:
         return ImageFont.load_default(size=size)
     font = ImageFont.truetype(path, size, index=index)
-    if wght is not None:
-        pos, axes = _weight_axis(path, index)
-        font.set_variation_by_axes(
-            [wght if i == pos else a["default"] for i, a in enumerate(axes)]
-        )
+    if variations:
+        font.set_variation_by_axes(variation_coords(path, index, dict(variations)))
     return font

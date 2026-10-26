@@ -15,3 +15,7 @@ Packaging: the shipped skill now actually ships. hatchling's followlinks walk ma
 ## 2026-10-06
 
 OpenType features on a style (tituli#4): `TextStyle(features=("tnum",))` (or `{"tnum": True}`) reaches the `Face`, which records the ones its font has (`applied_features`). Single-substitution features are applied by `Face.length` and `run_outline` from the font's GSUB and hmtx (`tituli.features`, needs `tituli[outlines]`), `HarfBuzzEngine` passes them to HarfBuzz, and `PillowEngine` raises `FeatureError` for a run they change instead of drawing other glyphs than were measured.
+
+## 2026-10-26
+
+Variable fonts (tituli#9): `TextStyle.weight` sets the `wght` axis of a variable-font file (`Face.wght`, clamped to the axis; other axes stay at their defaults), read by tag from the file's own `fvar` (`tituli.fonts.variation_axes`, no fontTools). Every engine reads `Face.applied_variations`: Pillow and FreeType through one ordered coordinate list, HarfBuzz and fontTools glyph sets (outlines, `featured_length` advances) as is. **`face_digest` of a variable face changes**: it is now the sha256 of the file bytes plus the applied axis values, so two instances of one file are two faces; a static face's digest is unchanged (the hash of its bytes alone). A hand-built `Face(wght=...)` on a font without a `wght` axis raises `ValueError`.

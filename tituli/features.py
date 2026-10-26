@@ -21,9 +21,10 @@ Needs fontTools (``tituli[outlines]``), like the outlines.
 
 from __future__ import annotations
 
-import io
 from functools import lru_cache
 from typing import TYPE_CHECKING
+
+from tituli.fonts import glyph_set, ttfont
 
 if TYPE_CHECKING:  # pragma: no cover
     from tituli.fonts import Face
@@ -46,20 +47,6 @@ class FeatureError(ValueError):
     """A requested feature cannot be applied as asked; the message says what would."""
 
 
-@lru_cache(maxsize=32)
-def _ttfont(path: str | None, index: int, wght: float | None = None):
-    try:
-        from fontTools.ttLib import TTFont
-    except ImportError as e:  # pragma: no cover - depends on the extra
-        raise ImportError(
-            "OpenType features need fontTools: `pip install tituli[outlines]`"
-        ) from e
-    from tituli.fonts import Face, face_bytes
-
-    probe = Face("", "", 1, path, index, wght=wght)
-    return TTFont(io.BytesIO(face_bytes(probe)), fontNumber=index, lazy=True)
-
-
 @lru_cache(maxsize=64)
 def font_features(path: str | None, index: int = 0) -> frozenset[str]:
     """The GSUB feature tags a font declares.
@@ -68,7 +55,7 @@ def font_features(path: str | None, index: int = 0) -> frozenset[str]:
     >>> "tnum" in font_features(resolve_face(EMBEDDED, size=12).path)
     False
     """
-    font = _ttfont(path, index)
+    font = ttfont(path, index)
     if "GSUB" not in font:
         return frozenset()
     records = font["GSUB"].table.FeatureList.FeatureRecord
@@ -87,7 +74,7 @@ def applied_features(face: "Face") -> tuple[str, ...]:
 def _substitutions(
     path: str | None, index: int, tags: tuple[str, ...]
 ) -> dict[str, str]:
-    font = _ttfont(path, index)
+    font = ttfont(path, index)
     table = font["GSUB"].table
     lookups = sorted(
         {
@@ -119,8 +106,7 @@ def _substitutions(
 def featured_glyphs(face: "Face", text: str) -> list[str | None]:
     """The glyph name each character of ``text`` draws with the face's applied
     features (``None`` where the font has no glyph for it)."""
-    font = _ttfont(face.path, face.index, face.wght)
-    cmap = font.getBestCmap() or {}
+    cmap = ttfont(face.path, face.index).getBestCmap() or {}
     subs = _substitutions(face.path, face.index, applied_features(face))
     return [
         subs.get(name, name) if name else None
@@ -130,12 +116,12 @@ def featured_glyphs(face: "Face", text: str) -> list[str | None]:
 
 def featured_length(face: "Face", text: str) -> float:
     """Advance width of ``text`` in pixels, from the substituted glyphs' own
-    advances (the font's design metrics, scaled to the face's size)."""
-    font = _ttfont(face.path, face.index, face.wght)
-    scale = face.size / font["head"].unitsPerEm
-    hmtx = font["hmtx"]
-    total = 0.0
-    for name in featured_glyphs(face, text):
-        if name is not None:
-            total += hmtx[name][0] * scale
-    return total
+    advances (the font's design metrics at the face's variation instance,
+    scaled to the face's size)."""
+    scale = face.size / ttfont(face.path, face.index)["head"].unitsPerEm
+    glyphs = glyph_set(face)
+    return sum(
+        glyphs[name].width * scale
+        for name in featured_glyphs(face, text)
+        if name is not None
+    )
