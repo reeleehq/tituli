@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tituli"
-version = "0.0.10"
+version = "0.0.11"
 description = "Text in video: title cards, credits, captions and calligrams with tasteful defaults"
 readme = "README.md"
 requires-python = ">=3.10"
