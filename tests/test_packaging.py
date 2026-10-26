@@ -35,7 +35,9 @@ def test_skill_ships_in_wheel_built_from_sdist(tmp_path):
         names = tf.getnames()
         tf.extractall(tmp_path / "src", filter="data")
     assert any(n.endswith(SKILL) for n in names), names
-    assert not any("/.claude/" in n for n in names), "the symlink bridge leaked into the sdist"
+    assert not any("/.claude/" in n for n in names), (
+        "the symlink bridge leaked into the sdist"
+    )
     (src_dir,) = (tmp_path / "src").iterdir()
     wheel = _build("wheel", src_dir, tmp_path / "wheel")
     with zipfile.ZipFile(wheel) as zf:

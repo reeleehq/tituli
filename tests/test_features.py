@@ -34,7 +34,13 @@ def digits_font(tmp_path_factory):
     from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
     from fontTools.fontBuilder import FontBuilder
 
-    widths = {".notdef": WIDE, "one": NARROW, "eight": WIDE, "one.tnum": WIDE, "eight.tnum": WIDE}
+    widths = {
+        ".notdef": WIDE,
+        "one": NARROW,
+        "eight": WIDE,
+        "one.tnum": WIDE,
+        "eight.tnum": WIDE,
+    }
     fb = FontBuilder(UPM, isTTF=True)
     fb.setupGlyphOrder(list(widths))
     fb.setupCharacterMap({ord("1"): "one", ord("8"): "eight"})
@@ -42,7 +48,9 @@ def digits_font(tmp_path_factory):
     fb.setupHorizontalMetrics({name: (w, 50) for name, w in widths.items()})
     fb.setupHorizontalHeader(ascent=800, descent=-200)
     fb.setupNameTable({"familyName": "Digits Test", "styleName": "Regular"})
-    fb.setupOS2(sTypoAscender=800, sTypoDescender=-200, usWinAscent=800, usWinDescent=200)
+    fb.setupOS2(
+        sTypoAscender=800, sTypoDescender=-200, usWinAscent=800, usWinDescent=200
+    )
     fb.setupPost()
     addOpenTypeFeaturesFromString(
         fb.font, "feature tnum { sub one by one.tnum; sub eight by eight.tnum; } tnum;"
@@ -59,7 +67,9 @@ def _face(path, *features, size=UPM):
 def test_a_style_carries_its_features_to_the_face():
     assert TextStyle(features={"tnum": True}).features == ("tnum",)
     assert TextStyle(features=("tnum", "zero")).face(1080).features == ("tnum", "zero")
-    assert resolve_face(EMBEDDED, size=20, features=("tnum",)).with_size(40).features == ("tnum",)
+    assert resolve_face(EMBEDDED, size=20, features=("tnum",)).with_size(
+        40
+    ).features == ("tnum",)
     with pytest.raises(ValueError, match="turned off"):
         TextStyle(features={"liga": False})
 
@@ -94,7 +104,9 @@ def test_pillow_refuses_to_draw_glyphs_it_cannot_substitute(digits_font):
     PillowEngine().draw_run(canvas, Run("11", 0.0, 100.0, _face(digits_font), INK), 1.0)
     with pytest.raises(FeatureError, match="HarfBuzzEngine"):
         PillowEngine().draw_run(
-            canvas, Run("11", 0.0, 100.0, _face(digits_font, "tnum", size=100), INK), 1.0
+            canvas,
+            Run("11", 0.0, 100.0, _face(digits_font, "tnum", size=100), INK),
+            1.0,
         )
 
 
@@ -109,4 +121,6 @@ def test_harfbuzz_draws_the_substituted_glyphs(digits_font):
         x0, _, x1, _ = canvas.getbbox()
         return x1 - x0
 
-    assert ink_width(_face(digits_font, "tnum", size=100)) > ink_width(_face(digits_font, size=100))
+    assert ink_width(_face(digits_font, "tnum", size=100)) > ink_width(
+        _face(digits_font, size=100)
+    )

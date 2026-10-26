@@ -75,8 +75,13 @@ class Run:
     advance: float | None = None
     #: Name of the engine that measured ``advance`` (``None``: unrecorded);
     #: :func:`check_measured_by` refuses a run used with another engine.
-    #: Dropped with the advance: ``replace(run, advance=None, measured_by=None)``.
+    #: Cleared whenever ``advance`` is ``None``.
     measured_by: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.advance is None and self.measured_by is not None:
+            # ``replace(run, advance=None)`` drops the width, and with it the claim.
+            object.__setattr__(self, "measured_by", None)
 
     @property
     def width(self) -> float:

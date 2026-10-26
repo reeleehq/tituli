@@ -20,6 +20,7 @@ onto the finished motion video, which is what :func:`overlay` does.
 from __future__ import annotations
 
 import os
+from dataclasses import replace
 import shutil
 import subprocess
 from functools import lru_cache
@@ -463,7 +464,8 @@ def materialize(
                 f"#{i} [{o.start:.2f}, {o.end:.2f}] slot={o.slot!r} payload={p!r}"
             )
         else:
-            out.append(o.with_layout(lay))
+            # The slot it occupies is where it was placed ("auto" resolves to a corner).
+            out.append(replace(o.with_layout(lay), slot=lay.meta.get("anchor", o.slot)))
     if unrenderable:
         raise ValueError(
             "overlay(): these overlays cannot be rendered as given (each needs exactly "

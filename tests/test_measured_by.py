@@ -89,7 +89,23 @@ def test_credits_and_calligram_take_an_engine(tmp_path, monkeypatch):
     assert seen == ["pillow", "pillow"]
 
 
-def test_overlay_video_goes_through_materialize(tmp_path, monkeypatch):
+def test_overlay_video_resolves_auto_anchors_to_the_corner_they_land_in(
+    tmp_path, monkeypatch
+):
+    """An "auto" caption occupies a real corner, so it contends with a named one."""
+    import tituli.video as video
+
+    monkeypatch.setattr(video, "probe_size", lambda v: (640, 360))
+    monkeypatch.setattr(video, "overlay", lambda *a, **k: None)
+    items = [
+        {"start": 0, "end": 2, "text": "Hello", "anchor": "auto"},
+        {"start": 1, "end": 3, "text": "Again", "anchor": "top-left"},
+    ]
+    with pytest.raises(ValueError, match="collide"):
+        tools.overlay_video("v.mp4", json.dumps(items), out="o.mp4")
+
+
+def test_overlay_video_lays_out_with_the_engine(monkeypatch):
     import tituli.video as video
 
     got = {}
@@ -104,6 +120,12 @@ def test_overlay_video_goes_through_materialize(tmp_path, monkeypatch):
     res = tools.overlay_video("v.mp4", json.dumps(items), out="o.mp4", engine="pillow")
     assert res["overlays"] == 2 and res["dropped"] == 0
     assert [o.slot for o in got["kept"]] == ["top-left", "bottom-left"]
-    assert all(o.layout is not None for o in got["kept"])
-    assert got["engine"].name == "pillow"
     assert {r.measured_by for o in got["kept"] for r in o.layout.runs} == {"pillow"}
+
+
+def test_dropping_the_advance_drops_the_engine_claim():
+    run = _runs(Other())[0]
+    assert run.measured_by == "Other"
+    bare = replace(run, advance=None)
+    assert bare.measured_by is None
+    check_measured_by(bare, PillowEngine())
