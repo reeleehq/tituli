@@ -6,7 +6,15 @@ import re
 import pytest
 from PIL import Image, ImageDraw
 
-from tituli import EMBEDDED, Run, TextStyle, block, face_digest, resolve_face, run_outline
+from tituli import (
+    EMBEDDED,
+    Run,
+    TextStyle,
+    block,
+    face_digest,
+    resolve_face,
+    run_outline,
+)
 from tituli.fonts import FALLBACK_FAMILY, face_bytes
 from tituli.outlines import MissingGlyphError
 
@@ -36,7 +44,9 @@ def test_embedded_never_consults_the_system(monkeypatch):
 
 def test_embedded_is_a_stop_in_a_preference_list():
     # names BEFORE it are still looked up; nothing after it is
-    face = resolve_face(["definitely-not-installed-xyz", EMBEDDED, "DejaVu Sans"], size=20)
+    face = resolve_face(
+        ["definitely-not-installed-xyz", EMBEDDED, "DejaVu Sans"], size=20
+    )
     assert face.path is None
 
 
@@ -55,7 +65,9 @@ def test_outline_lands_where_pillow_draws_the_run():
     run = _run("Wave AVo")
     out = run_outline(run)
     im = Image.new("L", (800, 200), 0)
-    ImageDraw.Draw(im).text((run.x, run.y), run.text, font=run.face.pil, fill=255, anchor="ls")
+    ImageDraw.Draw(im).text(
+        (run.x, run.y), run.text, font=run.face.pil, fill=255, anchor="ls"
+    )
     x0, y0, x1, y1 = im.getbbox()
     b = out.bbox
     assert abs(b.x0 - x0) <= 1.5 and abs(b.x1 - x1) <= 1.5
@@ -100,7 +112,9 @@ def test_path_data_is_short_and_byte_stable():
 
 
 def test_word_runs_from_block_each_outline_inside_their_layout_box():
-    lay = block("one two three", TextStyle(family=(EMBEDDED,), size=0.06), 1080, unit="word")
+    lay = block(
+        "one two three", TextStyle(family=(EMBEDDED,), size=0.06), 1080, unit="word"
+    )
     assert [r.text for r in lay.runs] == ["one", "two", "three"]
     for r in lay.runs:
         ink, box = run_outline(r).bbox, r.bbox()

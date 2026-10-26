@@ -33,7 +33,7 @@ from tituli.color import RGBA
 from tituli.frame import Frame
 from tituli.geometry import Box
 from tituli.fonts import Face
-from tituli.layout import Layout, Plate, Run
+from tituli.layout import Layout, Plate, Run, check_measured_by, FACE_ENGINE
 
 _TILE_MARGIN_EM = 0.35  # extra room around a rotated glyph tile, in em
 _RESAMPLE = Image.Resampling.BICUBIC
@@ -44,7 +44,12 @@ _CORNER_POWER = 2.2  # ease of a scrim's falloff (higher = holds longer, drops f
 
 class Engine(Protocol):
     """Draws runs, and measures them: the engine that draws a text is the one
-    that must measure it (tituli#7), or wrap points and column pitch drift."""
+    that must measure it (tituli#7), or wrap points and column pitch drift.
+
+    ``name`` is the measurement identity stamped on ``Run.measured_by``: two
+    engines share one only if they measure alike. Without it the class name is used."""
+
+    name: str
 
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None: ...
 
@@ -67,6 +72,8 @@ def _envelope(run: Run, t: float | None) -> float:
 
 class PillowEngine:
     """The zero-extra-dependency engine."""
+
+    name = FACE_ENGINE
 
     def length(self, face: Face, text: str) -> float:
         return face.length(text)
@@ -230,6 +237,8 @@ def render_overlay(
 ) -> Image.Image:
     """The layout on a transparent canvas of ``size`` (RGBA)."""
     engine = engine or PillowEngine()
+    for run in layout.runs:
+        check_measured_by(run, engine)
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     for plate in layout.plates:
         draw_plate(canvas, plate)
@@ -285,7 +294,7 @@ def frames(
 
 def make_engine(name: str = "pillow") -> Engine:
     """Resolve an engine by name: ``"pillow"`` (default) or ``"harfbuzz"``."""
-    if name == "pillow":
+    if name == PillowEngine.name:
         return PillowEngine()
     if name == "harfbuzz":
         from tituli.shaping import HarfBuzzEngine

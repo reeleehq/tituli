@@ -201,13 +201,15 @@ def credits(
     hold: float | None = None,
     background: str | None = None,
     audio: str | None = None,
+    engine: str | None = None,
 ) -> dict:
     """Render credits from a JSON spec file (or JSON string) to ``out``.
 
     Spec: ``{"title": ..., "sections": [{"heading": ..., "entries":
     [["Role", "Name"], "Name", ...]}], "closing": [...]}`` — or a plain JSON
     list of lines. ``mode`` is ``"crawl"`` (one MP4) or ``"cards"`` (PNG per
-    card, or one MP4 when ``out`` ends in .mp4). Never truncates.
+    card, or one MP4 when ``out`` ends in .mp4). Never truncates. ``engine`` is
+    ``"pillow"`` (default) or ``"harfbuzz"``: it measures and draws.
     """
     from tituli.credits import (
         DEFAULT_CARD_HOLD_S,
@@ -226,13 +228,14 @@ def credits(
     sz = _size(size)
     style = CreditsStyle(background=background) if background else CreditsStyle()
     frame = credits_frame(sz, style)
+    eng = _engine(engine)
     out_p = Path(out)
     if mode == "crawl":
         from tituli.video import crawl as _crawl
 
-        lay, total = credits_crawl(cr, frame=frame, style=style)
+        lay, total = credits_crawl(cr, frame=frame, style=style, engine=eng)
         tall = Frame.blank((sz[0], total), color=style.background)
-        img = render(lay, tall)
+        img = render(lay, tall, engine=eng)
         px_s = (speed or DEFAULT_CRAWL_SPEED) * sz[1]
         if out_p.suffix.lower() == ".png":
             return _emit(_save(img, out_p), lay, height=total)
@@ -245,8 +248,8 @@ def credits(
             lines=cr.line_count,
         )
     if mode == "cards":
-        cards = credits_cards(cr, frame=frame, style=style)
-        imgs = [render(c, frame) for c in cards]
+        cards = credits_cards(cr, frame=frame, style=style, engine=eng)
+        imgs = [render(c, frame, engine=eng) for c in cards]
         if out_p.suffix.lower() == ".mp4":
             from tituli.render import frames as _frames
             from tituli.video import DEFAULT_FPS, frames_to_video
@@ -256,7 +259,11 @@ def credits(
             def gen():
                 for c in cards:
                     for f in _frames(
-                        c.with_timing(0.0, 0.4), frame, duration=hold_s, fps=DEFAULT_FPS
+                        c.with_timing(0.0, 0.4),
+                        frame,
+                        duration=hold_s,
+                        fps=DEFAULT_FPS,
+                        engine=eng,
                     ):
                         yield f
 
@@ -292,25 +299,28 @@ def calligram(
     upright: bool = False,
     mask: str | None = None,
     reveal: float | None = None,
+    engine: str | None = None,
 ) -> dict:
     """Lay ``text`` along a shape (``circle``, ``wave``, ``arc``, an SVG path, ``rain``).
 
     ``shape="rain"`` is Apollinaire's *Il pleut* (lines become streaks; give
     it a portrait ``size``). ``mask`` (an image path, light = inside) pours the
     text into a silhouette instead. ``reveal`` (seconds) writes an MP4 with a
-    glyph-by-glyph reveal rather than a PNG.
+    glyph-by-glyph reveal rather than a PNG. ``engine`` is ``"pillow"``
+    (default) or ``"harfbuzz"``.
     """
     from tituli import calligram as cg
     from tituli.render import render
 
     sz = _size(size) if size else (_PORTRAIT if shape == "rain" else DEFAULT_SIZE)
     frame = Frame.blank(sz, color=background)
+    eng = _engine(engine)
     if mask:
-        lay = cg.in_shape(text, mask, frame=frame)
+        lay = cg.in_shape(text, mask, frame=frame, engine=eng)
     elif shape == "rain":
-        lay = cg.rain(text, frame=frame)
+        lay = cg.rain(text, frame=frame, engine=eng)
     else:
-        lay = cg.on_path(text, shape=shape, frame=frame, upright=upright)
+        lay = cg.on_path(text, shape=shape, frame=frame, upright=upright, engine=eng)
     if reveal:
         from tituli.render import frames as _frames
         from tituli.video import DEFAULT_FPS, frames_to_video
@@ -319,10 +329,12 @@ def calligram(
         step = reveal * 0.8 / n
         timed = lay.staggered(step=step, ramp=max(0.15, step * 3))
         frames_to_video(
-            _frames(timed, frame, duration=reveal, fps=DEFAULT_FPS), out, size=sz
+            _frames(timed, frame, duration=reveal, fps=DEFAULT_FPS, engine=eng),
+            out,
+            size=sz,
         )
         return _emit(Path(out), lay, glyphs=len(lay.runs), duration=reveal)
-    return _emit(_save(render(lay, frame), out), lay, glyphs=len(lay.runs))
+    return _emit(_save(render(lay, frame, engine=eng), out), lay, glyphs=len(lay.runs))
 
 
 def overlay_video(
@@ -346,9 +358,8 @@ def overlay_video(
     frame held, audio delayed); overlay times are on the padded timeline.
     ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"``: it measures and draws.
     """
-    from tituli.compose import caption as _caption
-    from tituli.compose import lower_third as _lt
     from tituli.schedule import TimedOverlay, resolve
+    from tituli.video import materialize
     from tituli.video import overlay as _overlay
     from tituli.video import probe_size
 
@@ -359,12 +370,13 @@ def overlay_video(
     eng = _engine(engine)
     timed = []
     for it in items:
+        start, end = float(it["start"]), float(it["end"])
         if "image" in it:
             timed.append(
                 TimedOverlay(
                     None,
-                    float(it["start"]),
-                    float(it["end"]),
+                    start,
+                    end,
                     slot=it.get("slot", "full"),
                     weight=int(it.get("weight", 3)),
                     image=it["image"],
@@ -373,35 +385,20 @@ def overlay_video(
                 )
             )
             continue
-        kind = it.get("kind", "caption")
-        if kind == "lower_third":
-            lay = _lt(
-                it["text"],
-                it.get("role", ""),
-                frame=frame,
-                anchor=it.get("anchor", "bottom-left"),
-                engine=eng,
-            )
-            weight = 2
-        else:
-            lay = _caption(
-                it["text"],
-                it.get("attribution", ""),
-                frame=frame,
-                anchor=it.get("anchor", "top-left"),
-                engine=eng,
-            )
-            weight = 1
+        lower_third = it.get("kind", "caption") == "lower_third"
         timed.append(
             TimedOverlay(
-                lay,
-                float(it["start"]),
-                float(it["end"]),
-                slot=lay.meta.get("anchor", "top-left"),
-                weight=weight,
+                None,
+                start,
+                end,
+                slot=it.get("anchor", "bottom-left" if lower_third else "top-left"),
+                weight=2 if lower_third else 1,
+                payload=it,
             )
         )
-    kept = resolve(timed)
+    # Laid out here, with the engine that will draw them, to resolve slot
+    # contention on real layouts; ``overlay`` then renders what is passed.
+    kept = resolve(materialize(timed, frame=frame, engine=eng))
     _overlay(video, kept, out, size=size, pad_start=pad_start, engine=eng)
     return {"out": out, "overlays": len(kept), "dropped": len(timed) - len(kept)}
 

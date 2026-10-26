@@ -73,6 +73,15 @@ class Run:
     #: Valid only for the ``text`` and ``face`` it was measured with: build a
     #: run by hand, or drop it (``replace(run, advance=None)``) after changing either.
     advance: float | None = None
+    #: Name of the engine that measured ``advance`` (``None``: unrecorded);
+    #: :func:`check_measured_by` refuses a run used with another engine.
+    #: Cleared whenever ``advance`` is ``None``.
+    measured_by: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.advance is None and self.measured_by is not None:
+            # ``replace(run, advance=None)`` drops the width, and with it the claim.
+            object.__setattr__(self, "measured_by", None)
 
     @property
     def width(self) -> float:
@@ -205,14 +214,46 @@ def text_advance(
     return measure_text(face, text)
 
 
-def _keep(engine: "Engine | None", width: float) -> float | None:
-    """The width a run keeps (``Run.advance``): an engine's, else ``None``."""
-    return None if engine is None else width
+#: What :func:`engine_name` answers for "no engine": the face measures, as Pillow does.
+FACE_ENGINE = "pillow"
 
 
-def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> float | None:
-    """The width a run keeps for ``text`` (measures only when an engine will)."""
-    return None if engine is None else text_advance(engine, face, text)
+def engine_name(engine: "Engine | None") -> str:
+    """Who measured: the engine's ``name`` (else its class name); ``None`` is the face."""
+    if engine is None:
+        return FACE_ENGINE
+    return getattr(engine, "name", None) or type(engine).__name__
+
+
+def _keep(engine: "Engine | None", width: float) -> dict:
+    """The ``Run`` fields recording a width an engine measured (none without one)."""
+    if engine is None:
+        return {}
+    return {"advance": width, "measured_by": engine_name(engine)}
+
+
+def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> dict:
+    """:func:`_keep` for ``text`` (measures only when an engine will)."""
+    return {} if engine is None else _keep(engine, text_advance(engine, face, text))
+
+
+def check_measured_by(run: "Run", engine: "Engine | None") -> None:
+    """Raise if ``run`` was measured by a different engine than the one in hand.
+
+    Runs that record no ``measured_by`` (hand-built, or laid out without an
+    engine) are not checked: they carry no claim. A recorded one is refused
+    both ways, by the face (``engine=None``) and by another engine, since each
+    would place glyphs where the measuring engine did not draw them (tituli#15).
+    """
+    if run.measured_by is None:
+        return
+    measured, using = run.measured_by, engine_name(engine)
+    if measured != using:
+        raise ValueError(
+            f"run {run.text!r} was measured by the {measured!r} engine but is being "
+            f"used with the {using!r} one; pass the engine that measured it, or "
+            "lay the text out again with the one you will draw with"
+        )
 
 
 def measure(
@@ -415,7 +456,7 @@ def _glyph_runs(
                 unit="glyph",
                 index=start_index + i,
                 tags=tags,
-                advance=_keep(engine, advance),
+                **_keep(engine, advance),
             )
         )
         cx += advance + tracking
@@ -511,7 +552,7 @@ def block(
                         unit="word",
                         index=idx,
                         tags=tags,
-                        advance=_advance(engine, face, word),
+                        **_advance(engine, face, word),
                     )
                 )
                 cx += text_advance(engine, face, word + _WORD_SEP)
@@ -527,7 +568,7 @@ def block(
                     unit="line",
                     index=i,
                     tags=tags,
-                    advance=_advance(engine, face, line),
+                    **_advance(engine, face, line),
                 )
             )
         baseline += line_h
@@ -616,7 +657,7 @@ def along_path(
                     unit="glyph",
                     index=i,
                     tags=tags,
-                    advance=_keep(engine, widths[i]),
+                    **_keep(engine, widths[i]),
                 )
             )
         s += adv
@@ -699,7 +740,7 @@ def glyph_columns(
                     unit="glyph",
                     index=idx,
                     tags=tags + (f"streak:{k}",),
-                    advance=_keep(engine, adv),
+                    **_keep(engine, adv),
                 )
             )
             idx += 1
@@ -812,7 +853,7 @@ def fill_shape(
                         unit="word",
                         index=idx,
                         tags=tags,
-                        advance=_keep(engine, adv),
+                        **_keep(engine, adv),
                     )
                 )
                 cx += adv + space
