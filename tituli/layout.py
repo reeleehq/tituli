@@ -23,13 +23,16 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field, replace
-from typing import Iterable, Literal, Sequence
+from typing import TYPE_CHECKING, Iterable, Literal, Sequence
 
 from tituli import fonts
 from tituli.color import RGBA, parse_color, with_alpha
 from tituli.frame import Frame
 from tituli.geometry import Box, Path
 from tituli.style import TextStyle
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 Unit = Literal["line", "word", "glyph"]
 PlateKind = Literal[
@@ -64,9 +67,16 @@ class Run:
     t_in: float | None = None  # seconds; None = always visible
     t_full: float | None = None
     tags: tuple[str, ...] = ()
+    #: Width the drawing engine measured for this run (tituli#7); ``None`` means
+    #: measure with the face (Pillow), which is what a hand-built run does.
+    #: Valid only for the ``text`` and ``face`` it was measured with: build a
+    #: run by hand, or drop it (``replace(run, advance=None)``) after changing either.
+    advance: float | None = None
 
     @property
     def width(self) -> float:
+        if self.advance is not None:
+            return self.advance
         return self.face.length(self.text) + self.tracking * max(0, len(self.text) - 1)
 
     def bbox(self) -> Box:
@@ -170,11 +180,53 @@ def _tracking_px(style: TextStyle, face: fonts.Face) -> float:
     return style.tracking * face.size
 
 
-def measure(text: str, style: TextStyle, frame_height: float) -> float:
-    """Width in pixels of ``text`` set in ``style`` on a frame of that height."""
+def _length(
+    engine: "Engine | None", face: fonts.Face, text: str, *, per_glyph: bool = False
+) -> float:
+    """Advance of ``text``: the engine that will draw it measures it (tituli#7);
+    with no engine, the face does (what :class:`~tituli.render.PillowEngine` does).
+
+    ``per_glyph`` sums the characters one by one — how a glyph-by-glyph layout
+    (``unit="glyph"``, a tracked style) places them, so the line measures what
+    its glyphs occupy even for an engine that kerns across characters.
+    """
+    if per_glyph:
+        return sum(_length(engine, face, ch) for ch in text)
+    if engine is None:
+        return face.length(text)
+    try:
+        measure_text = engine.length
+    except AttributeError:
+        raise TypeError(
+            f"{type(engine).__name__} cannot measure text: an engine needs "
+            "length(face, text) as well as draw_run (see tituli.render.Engine)"
+        ) from None
+    return measure_text(face, text)
+
+
+def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> float | None:
+    """The width a run keeps (``Run.advance``): the engine's, else ``None``."""
+    return None if engine is None else _length(engine, face, text)
+
+
+def measure(
+    text: str,
+    style: TextStyle,
+    frame_height: float,
+    *,
+    engine: "Engine | None" = None,
+) -> float:
+    """Width in pixels of ``text`` set in ``style`` on a frame of that height.
+
+    ``engine`` is the one that will draw it (default: measure with the face, as
+    Pillow draws); a page measured by one engine and drawn by another can have
+    wrong wrap points and column pitch.
+    """
     face = style.face(frame_height)
     text = style.apply_case(text)
-    return face.length(text) + _tracking_px(style, face) * max(0, len(text) - 1)
+    return _length(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
+        style, face
+    ) * max(0, len(text) - 1)
 
 
 def _words(text: str) -> list[str]:
@@ -232,6 +284,7 @@ def wrap(
     *,
     max_width: float,
     break_at: str | None = None,
+    engine: "Engine | None" = None,
 ) -> list[str]:
     """Greedy word wrap on measured widths. Explicit newlines are honoured.
 
@@ -247,7 +300,7 @@ def wrap(
     """
 
     def fits(s: str) -> bool:
-        return measure(s, style, frame_height) <= max_width
+        return measure(s, style, frame_height, engine=engine) <= max_width
 
     mark = break_at.strip() if break_at else ""
 
@@ -294,6 +347,7 @@ def fit_size(
     min_size: float = 0.012,
     step: float = 0.9,
     break_at: str | None = None,
+    engine: "Engine | None" = None,
 ) -> TextStyle:
     """Shrink ``style.size`` until ``text`` wraps within the given bounds.
 
@@ -302,8 +356,17 @@ def fit_size(
     """
     s = style
     while s.size > min_size:
-        lines = wrap(text, s, frame_height, max_width=max_width, break_at=break_at)
-        widest = max((measure(l, s, frame_height) for l in lines), default=0)
+        lines = wrap(
+            text,
+            s,
+            frame_height,
+            max_width=max_width,
+            break_at=break_at,
+            engine=engine,
+        )
+        widest = max(
+            (measure(l, s, frame_height, engine=engine) for l in lines), default=0
+        )
         face = s.face(frame_height)
         height = len(lines) * face.size * s.leading
         if widest <= max_width and (max_height is None or height <= max_height):
@@ -328,11 +391,13 @@ def _glyph_runs(
     opacity: float,
     tags: tuple[str, ...],
     start_index: int = 0,
+    engine: "Engine | None" = None,
 ) -> list[Run]:
     """One run per glyph with tracking applied to the advances."""
     runs: list[Run] = []
     cx = x
     for i, ch in enumerate(text):
+        advance = _length(engine, face, ch)
         runs.append(
             Run(
                 ch,
@@ -344,9 +409,10 @@ def _glyph_runs(
                 unit="glyph",
                 index=start_index + i,
                 tags=tags,
+                advance=None if engine is None else advance,
             )
         )
-        cx += face.length(ch) + tracking
+        cx += advance + tracking
     return runs
 
 
@@ -362,6 +428,7 @@ def block(
     unit: Unit = "line",
     tags: tuple[str, ...] = (),
     break_at: str | None = None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Lay out prose as lines from the top-left corner ``(x, y)``.
 
@@ -369,7 +436,10 @@ def block(
     lines. Alignment follows ``style.align`` within ``max_width`` (or the widest
     line when no width is given). ``unit="glyph"`` emits one run per character
     (needed for tracking and for per-glyph reveals). ``break_at`` (e.g.
-    ``" · "``) wraps a list only between its items — see :func:`wrap`.
+    ``" · "``) wraps a list only between its items — see :func:`wrap`. ``engine``
+    is the one that will draw the layout: it measures the lines, and the runs
+    keep that width, so a page composed from this block (``stack``, ``grid``)
+    is placed by the engine's measure too.
     """
     fh = frame.height if isinstance(frame, Frame) else float(frame)
     face = style.face(fh)
@@ -378,7 +448,7 @@ def block(
     )
     if isinstance(text, str):
         lines = (
-            wrap(text, style, fh, max_width=max_width, break_at=break_at)
+            wrap(text, style, fh, max_width=max_width, break_at=break_at, engine=engine)
             if max_width
             else text.split("\n")
         )
@@ -386,12 +456,15 @@ def block(
         lines = list(text)
     lines = [style.apply_case(l) for l in lines]
     tracking = _tracking_px(style, face)
-    widths = [face.length(l) + tracking * max(0, len(l) - 1) for l in lines]
+    per_glyph = unit == "glyph" or tracking != 0
+    widths = [
+        _length(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
+        for l in lines
+    ]
     box_w = max_width if max_width else (max(widths) if widths else 0.0)
     line_h = face.size * style.leading
     runs: list[Run] = []
     baseline = y + face.ascent + (line_h - face.line_height) / 2
-    per_glyph = unit == "glyph" or tracking != 0
     idx = 0
     for i, (line, w) in enumerate(zip(lines, widths)):
         if style.align == "center":
@@ -414,6 +487,7 @@ def block(
                 opacity=1.0,
                 tags=tags,
                 start_index=idx,
+                engine=engine,
             )
             runs.extend(gr)
             idx += len(gr)
@@ -430,13 +504,24 @@ def block(
                         unit="word",
                         index=idx,
                         tags=tags,
+                        advance=_advance(engine, face, word),
                     )
                 )
-                cx += face.length(word + _WORD_SEP)
+                cx += _length(engine, face, word + _WORD_SEP)
                 idx += 1
         else:
             runs.append(
-                Run(line, lx, baseline, face, rgba, unit="line", index=i, tags=tags)
+                Run(
+                    line,
+                    lx,
+                    baseline,
+                    face,
+                    rgba,
+                    unit="line",
+                    index=i,
+                    tags=tags,
+                    advance=_advance(engine, face, line),
+                )
             )
         baseline += line_h
     return Layout(tuple(runs), meta={"line_height": line_h, "block_width": box_w})

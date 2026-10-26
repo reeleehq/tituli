@@ -32,6 +32,7 @@ from PIL import Image, ImageChops, ImageDraw
 from tituli.color import RGBA
 from tituli.frame import Frame
 from tituli.geometry import Box
+from tituli.fonts import Face
 from tituli.layout import Layout, Plate, Run
 
 _TILE_MARGIN_EM = 0.35  # extra room around a rotated glyph tile, in em
@@ -42,9 +43,14 @@ _CORNER_POWER = 2.2  # ease of a scrim's falloff (higher = holds longer, drops f
 
 
 class Engine(Protocol):
-    """Draws one run onto an RGBA canvas at a given opacity."""
+    """Draws runs, and measures them: the engine that draws a text is the one
+    that must measure it (tituli#7), or wrap points and column pitch drift."""
 
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None: ...
+
+    def length(self, face: Face, text: str) -> float:
+        """Advance of ``text`` in pixels, before tracking."""
+        ...
 
 
 def _envelope(run: Run, t: float | None) -> float:
@@ -61,6 +67,9 @@ def _envelope(run: Run, t: float | None) -> float:
 
 class PillowEngine:
     """The zero-extra-dependency engine."""
+
+    def length(self, face: Face, text: str) -> float:
+        return face.length(text)
 
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None:
         color = _scaled_alpha(run.color, run.opacity * opacity)

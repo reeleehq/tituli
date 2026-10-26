@@ -35,12 +35,15 @@ True
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import Literal, Sequence
+from typing import TYPE_CHECKING, Literal, Sequence
 
 from tituli.frame import Frame
 from tituli.geometry import Box
 from tituli.layout import Layout, block
 from tituli.style import GLOSS, GLOSS_GLYPH, TextStyle
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 HAlign = Literal["left", "center", "right"]
 
@@ -267,6 +270,7 @@ def glossed(
     column_gap: float = DEFAULT_GLOSS_COLUMN_GAP,
     columns: int | None = None,
     anchor: str | Sequence[str] | None = "center",
+    engine: "Engine | None" = None,
 ) -> Layout:
     """A row of big glyphs, each with a small reading centred under it.
 
@@ -274,6 +278,7 @@ def glossed(
     Columns share one pitch (the widest column), so readings line up under
     their glyphs and the row reads as a row. ``columns`` wraps a long row into
     several. Runs are tagged ``glyph:i`` / ``gloss:i`` (for staggered reveals).
+    ``engine`` is the one that will draw it; it measures the columns.
 
     >>> lay = glossed([("カ", "ka"), ("ス", "su")], frame=1080)
     >>> [r.text for r in lay.runs]
@@ -285,8 +290,8 @@ def glossed(
     cells = [
         stack(
             [
-                block(g, glyph, fh, tags=(f"glyph:{i}",)),
-                block(r, gloss, fh, tags=(f"gloss:{i}",)),
+                block(g, glyph, fh, tags=(f"glyph:{i}",), engine=engine),
+                block(r, gloss, fh, tags=(f"gloss:{i}",), engine=engine),
             ],
             frame=fh,
             gap=gap,
