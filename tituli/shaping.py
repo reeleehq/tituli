@@ -17,7 +17,7 @@ from functools import lru_cache
 
 from PIL import Image
 
-from tituli.fonts import variation_coords, variation_key
+from tituli.fonts import Face, variation_coords, variation_key
 from tituli.layout import Run
 
 _HB_SCALE = 64  # 26.6 fixed point
@@ -104,6 +104,26 @@ class HarfBuzzEngine:
 
         self._fallback = PillowEngine()
 
+    def length(self, face: Face, text: str) -> float:
+        """Advance of ``text`` as this engine shapes it (kerning, ligatures)."""
+        if face.path is None:
+            return self._fallback.length(face, text)
+        return sum(
+            xa
+            for _, xa, _, _, _ in shape(
+                text,
+                face.path,
+                face.index,
+                face.size,
+                features=self._features(face),
+                variations=face.applied_variations,
+            )
+        )
+
+    @staticmethod
+    def _features(face: Face) -> dict:
+        return {**_DEFAULT_FEATURES, **{tag: True for tag in face.features}}
+
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None:
         import freetype
 
@@ -126,7 +146,7 @@ class HarfBuzzEngine:
             int(cos * _FT_MATRIX_ONE),
         )
         pen_x, pen_y = 0.0, 0.0  # along the (rotated) baseline, in unrotated px
-        features = {**_DEFAULT_FEATURES, **{tag: True for tag in face.features}}
+        features = self._features(face)
         for gid, xa, ya, xo, yo in shape(
             run.text,
             face.path,
