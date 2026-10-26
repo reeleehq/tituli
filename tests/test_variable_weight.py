@@ -236,3 +236,14 @@ def test_a_hand_built_weight_on_a_static_file_is_refused(tmp_path):
     assert resolve_face(path, size=20, weight=700).wght is None
     with pytest.raises(ValueError, match="'wght' axis"):
         Face("Static", "Regular", 20, path, 0, wght=700)
+
+
+def test_hand_built_face_is_canonical(vfont):
+    from dataclasses import replace
+
+    base = _face(vfont, HEAVY)
+    assert replace(base, wght=HEAVY).applied_variations == {"wght": 900.0}
+    assert replace(base, wght=5000).wght == HEAVY  # clamped like resolve_face
+    assert face_digest(replace(base, wght=5000)) == face_digest(
+        replace(base, wght=HEAVY)
+    )

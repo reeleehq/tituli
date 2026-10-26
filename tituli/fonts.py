@@ -141,16 +141,23 @@ class Face:
     #: font has is :attr:`applied_features`.
     features: tuple[str, ...] = ()
     #: Value of the ``wght`` axis when the file is a variable font with one
-    #: (tituli#9), clamped to the axis range; ``None`` for a static face.
+    #: (tituli#9), clamped to the axis range; ``None`` for a static face. A face
+    #: at the axis default still differs from ``None`` in :func:`face_digest`.
     wght: float | None = None
 
     def __post_init__(self):
-        if self.wght is not None and _axis(self.path, self.index, WEIGHT_AXIS) is None:
+        if self.wght is None:
+            return
+        axis = _axis(self.path, self.index, WEIGHT_AXIS)
+        if axis is None:
             raise ValueError(
                 f"wght={self.wght} needs a variable font with a {WEIGHT_AXIS!r} axis, "
                 f"and {self.path or FALLBACK_FAMILY!r} (index {self.index}) has none: "
                 "leave wght=None (resolve_face sets it only where the font has the axis)"
             )
+        # one canonical value per instance, so a face and its digest agree
+        clamped = float(min(max(self.wght, axis.minimum), axis.maximum))
+        object.__setattr__(self, "wght", clamped)
 
     @property
     def pil(self) -> ImageFont.FreeTypeFont:
@@ -567,7 +574,7 @@ def _wght_for(path: str | None, index: int, weight: int) -> float | None:
 
 def variation_key(variations: Mapping[str, float]) -> tuple[tuple[str, float], ...]:
     """``variations`` as a hashable, canonical (tag-sorted) tuple — a cache key."""
-    return tuple(sorted(variations.items()))
+    return tuple(sorted((t, float(v)) for t, v in variations.items()))
 
 
 def variation_coords(
