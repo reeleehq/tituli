@@ -10,10 +10,7 @@ instance (thorwhalen/an#155: *glyphs as SVG sprites, converted at compile
 time*).
 
 >>> from tituli.fonts import EMBEDDED, resolve_face
->>> from tituli.layout import Run, _length
-
-if TYPE_CHECKING:  # pragma: no cover
-    from tituli.render import Engine
+>>> from tituli.layout import Run
 >>> run = Run("Hi", 10.0, 50.0, resolve_face(EMBEDDED, size=40), (0, 0, 0, 255))
 >>> out = run_outline(run)
 >>> out.d.startswith("M")
@@ -42,7 +39,7 @@ from typing import TYPE_CHECKING
 
 from tituli.fonts import glyph_set, ttfont
 from tituli.geometry import Box
-from tituli.layout import Run, _length
+from tituli.layout import Run, text_advance
 
 if TYPE_CHECKING:  # pragma: no cover
     from tituli.render import Engine
@@ -126,7 +123,7 @@ def run_outline(
                 f"{face.family!r} {face.style} has no glyph for {ch!r} "
                 f"(U+{ord(ch):04X})"
             )
-        pen_x = _length(engine, face, run.text[:i]) + run.tracking * i
+        pen_x = text_advance(engine, face, run.text[:i]) + run.tracking * i
         # Font units are y-up; the frame is y-down and the run is rotated
         # clockwise on screen by `angle` about its baseline origin.
         transform = (

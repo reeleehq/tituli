@@ -180,7 +180,7 @@ def _tracking_px(style: TextStyle, face: fonts.Face) -> float:
     return style.tracking * face.size
 
 
-def _length(
+def text_advance(
     engine: "Engine | None", face: fonts.Face, text: str, *, per_glyph: bool = False
 ) -> float:
     """Advance of ``text``: the engine that will draw it measures it (tituli#7);
@@ -191,7 +191,7 @@ def _length(
     its glyphs occupy even for an engine that kerns across characters.
     """
     if per_glyph:
-        return sum(_length(engine, face, ch) for ch in text)
+        return sum(text_advance(engine, face, ch) for ch in text)
     if engine is None:
         return face.length(text)
     try:
@@ -204,9 +204,14 @@ def _length(
     return measure_text(face, text)
 
 
+def _keep(engine: "Engine | None", width: float) -> float | None:
+    """The width a run keeps (``Run.advance``): an engine's, else ``None``."""
+    return None if engine is None else width
+
+
 def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> float | None:
-    """The width a run keeps (``Run.advance``): the engine's, else ``None``."""
-    return None if engine is None else _length(engine, face, text)
+    """The width a run keeps for ``text`` (measures only when an engine will)."""
+    return None if engine is None else text_advance(engine, face, text)
 
 
 def measure(
@@ -224,7 +229,7 @@ def measure(
     """
     face = style.face(frame_height)
     text = style.apply_case(text)
-    return _length(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
+    return text_advance(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
         style, face
     ) * max(0, len(text) - 1)
 
@@ -397,7 +402,7 @@ def _glyph_runs(
     runs: list[Run] = []
     cx = x
     for i, ch in enumerate(text):
-        advance = _length(engine, face, ch)
+        advance = text_advance(engine, face, ch)
         runs.append(
             Run(
                 ch,
@@ -409,7 +414,7 @@ def _glyph_runs(
                 unit="glyph",
                 index=start_index + i,
                 tags=tags,
-                advance=None if engine is None else advance,
+                advance=_keep(engine, advance),
             )
         )
         cx += advance + tracking
@@ -458,7 +463,7 @@ def block(
     tracking = _tracking_px(style, face)
     per_glyph = unit == "glyph" or tracking != 0
     widths = [
-        _length(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
+        text_advance(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
         for l in lines
     ]
     box_w = max_width if max_width else (max(widths) if widths else 0.0)
@@ -507,7 +512,7 @@ def block(
                         advance=_advance(engine, face, word),
                     )
                 )
-                cx += _length(engine, face, word + _WORD_SEP)
+                cx += text_advance(engine, face, word + _WORD_SEP)
                 idx += 1
         else:
             runs.append(
@@ -560,7 +565,7 @@ def along_path(
     )
     text = style.apply_case(text)
     tracking = _tracking_px(style, face)
-    widths = [_length(engine, face, ch) for ch in text]
+    widths = [text_advance(engine, face, ch) for ch in text]
     advances = [w + tracking for w in widths]
     total = sum(advances) - (tracking if advances else 0)
     if align == "center":
@@ -609,7 +614,7 @@ def along_path(
                     unit="glyph",
                     index=i,
                     tags=tags,
-                    advance=None if engine is None else widths[i],
+                    advance=_keep(engine, widths[i]),
                 )
             )
         s += adv
@@ -679,7 +684,7 @@ def glyph_columns(
     idx = 0
     for k, col in enumerate(slots):
         for u, v, ch in col:
-            adv = _length(engine, face, ch)
+            adv = text_advance(engine, face, ch)
             x = box.x0 + (u - u0) * pitch + (pitch - adv) / 2
             y = box.y0 + (v - v0) * pitch + face.ascent
             runs.append(
@@ -692,7 +697,7 @@ def glyph_columns(
                     unit="glyph",
                     index=idx,
                     tags=tags + (f"streak:{k}",),
-                    advance=None if engine is None else adv,
+                    advance=_keep(engine, adv),
                 )
             )
             idx += 1
@@ -738,7 +743,7 @@ def fill_shape(
     data = m.tobytes()
     W, H = m.size
     line_h = face.size * style.leading
-    space = _length(engine, face, _WORD_SEP)
+    space = text_advance(engine, face, _WORD_SEP)
     min_px = face.size * min_span
     runs: list[Run] = []
     wi = 0
@@ -772,7 +777,7 @@ def fill_shape(
                         break
                     probe = 0
                 w = words[probe]
-                ww = _length(engine, face, w)
+                ww = text_advance(engine, face, w)
                 add = ww if not chunk else space + ww
                 if used + add > avail:
                     break
@@ -788,7 +793,7 @@ def fill_shape(
             cx = box.x0 + x0 + (avail - used) / 2
             baseline = box.y0 + y + face.ascent + (line_h - face.line_height) / 2
             for w in chunk:
-                adv = _length(engine, face, w)
+                adv = text_advance(engine, face, w)
                 runs.append(
                     Run(
                         w,
@@ -799,7 +804,7 @@ def fill_shape(
                         unit="word",
                         index=idx,
                         tags=tags,
-                        advance=None if engine is None else adv,
+                        advance=_keep(engine, adv),
                     )
                 )
                 cx += adv + space
