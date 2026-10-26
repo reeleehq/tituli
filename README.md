@@ -86,7 +86,7 @@ A **reserved zone binds every anchor**, not just `anchor="auto"`: with `delivery
 | # | seam | v1 default (no new dependency) | replacement you can point at |
 |---|---|---|---|
 | 1 | subject avoidance — `Frame.from_image(avoid=)` | none (boxes you pass) | `burns.salient_box`, any `burns.FacesDetector` (`pip install tituli[saliency]`) |
-| 2 | the rasteriser — `render(engine=)` | `PillowEngine` (FreeType via Pillow, bitmap rotation) | `HarfBuzzEngine` — shaping + outline transforms (`pip install tituli[shaping]`) | Pass the same `engine=` to `block`/`wrap`/`measure`/`fit_size`/`glossed` so the engine that draws a text also measures it (`stack`/`grid` place by the runs' measured widths).
+| 2 | the rasteriser — `render(engine=)` | `PillowEngine` (FreeType via Pillow, bitmap rotation) | `HarfBuzzEngine` — shaping + outline transforms (`pip install tituli[shaping]`) Pass the same `engine=` to `block`/`wrap`/`measure`/`fit_size`/`glossed` so the engine that draws a text also measures it (`stack`/`grid` place by the runs' measured widths). |
 | 3 | the shape — `on_path(shape=)` | named presets | an SVG `d` string or any `Path` (a traced outline) |
 | 4 | delivery zones — `Frame(delivery=)` | none | `DELIVERY_RESERVED["youtube"]`; add a target, not a rule |
 | 5 | the graph — `tituli.bodies` | plain dict from `body_for()` | `annot://schema/text-overlay/v1` registered with lacing (`pip install tituli[lacing]`) |
