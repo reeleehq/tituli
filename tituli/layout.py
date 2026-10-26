@@ -229,9 +229,9 @@ def measure(
     """
     face = style.face(frame_height)
     text = style.apply_case(text)
-    return text_advance(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
-        style, face
-    ) * max(0, len(text) - 1)
+    return text_advance(
+        engine, face, text, per_glyph=style.tracking != 0
+    ) + _tracking_px(style, face) * max(0, len(text) - 1)
 
 
 def _words(text: str) -> list[str]:
@@ -463,7 +463,8 @@ def block(
     tracking = _tracking_px(style, face)
     per_glyph = unit == "glyph" or tracking != 0
     widths = [
-        text_advance(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
+        text_advance(engine, face, l, per_glyph=per_glyph)
+        + tracking * max(0, len(l) - 1)
         for l in lines
     ]
     box_w = max_width if max_width else (max(widths) if widths else 0.0)
