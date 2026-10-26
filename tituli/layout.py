@@ -21,6 +21,7 @@ True
 
 from __future__ import annotations
 
+import functools
 import re
 from dataclasses import dataclass, field, replace
 from typing import TYPE_CHECKING, Iterable, Literal, Sequence
@@ -746,13 +747,11 @@ def fill_shape(
     line_h = face.size * style.leading
     space = text_advance(engine, face, _WORD_SEP)
     min_px = face.size * min_span
-    # Each word is measured once per call, not once per row and repeat cycle.
-    advances: dict[str, float] = {}
 
+    # Each word is measured once per call, not once per row and repeat cycle.
+    @functools.cache
     def advance_of(word: str) -> float:
-        if word not in advances:
-            advances[word] = text_advance(engine, face, word)
-        return advances[word]
+        return text_advance(engine, face, word)
 
     runs: list[Run] = []
     wi = 0

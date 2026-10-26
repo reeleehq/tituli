@@ -24,9 +24,12 @@ import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path
-from typing import Iterable, Literal, Sequence
+from typing import TYPE_CHECKING, Iterable, Literal, Sequence
 
 from PIL import Image
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 from tituli.schedule import TimedOverlay
 
@@ -199,7 +202,7 @@ def overlay(
     workdir: str | Path | None = None,
     crf: int = DEFAULT_CRF,
     preset: str = DEFAULT_PRESET,
-    engine=None,
+    engine: "Engine | None" = None,
     pad_start: float = 0.0,
     pad_mode: PadMode = "clone",
 ) -> Path:
@@ -373,7 +376,7 @@ def _blank_frame(size: tuple[int, int], delivery: str | None):
 
 
 def materialize(
-    overlays: Sequence[TimedOverlay], *, frame, engine=None
+    overlays: Sequence[TimedOverlay], *, frame, engine: "Engine | None" = None
 ) -> list[TimedOverlay]:
     """Give every overlay a layout, rendering payloads; raise naming any that can't be.
 

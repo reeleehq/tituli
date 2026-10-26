@@ -18,7 +18,7 @@ off its own backdrop.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from tituli.color import (
     WCAG_NORMAL_MIN,
@@ -44,6 +44,9 @@ from tituli.style import (
     TITLE,
     TextStyle,
 )
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 # Scrim tuning. Opacity is what a dark scrim needs to carry white text over
 # white paper (the worst case a found-image film throws at it) — the corner
@@ -144,7 +147,7 @@ def truncate(
     *,
     max_width: float,
     max_lines: int,
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> str:
     """Wrap and hard-truncate with an ellipsis at ``max_lines`` lines.
 
@@ -193,7 +196,7 @@ def _set_within(
     max_width: float,
     max_lines: int,
     on_overflow: str,
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> tuple[str, TextStyle]:
     """Apply an :data:`OVERFLOW_POLICIES` policy, returning (text, style)."""
     if on_overflow not in OVERFLOW_POLICIES:
@@ -260,7 +263,7 @@ def fit(
     max_width: float,
     max_lines: int,
     min_size: float = MIN_LEGIBLE_SIZE,
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> tuple[str, TextStyle]:
     """Wrap ``text`` complete, shrinking the type until it fits — never cutting it.
 
@@ -317,7 +320,7 @@ def _stack(
     *,
     max_width: float,
     align: str | None = None,
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Lay out several (text, style) blocks top-to-bottom with style-sized gaps."""
     y = 0.0
@@ -347,7 +350,7 @@ def title_card(
     kicker_style: TextStyle = KICKER,
     ink: RGBA | None = None,
     scrim: bool | None = None,
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """An opening card: optional kicker, title, optional subtitle.
 
@@ -401,7 +404,7 @@ def caption(
     scrim: bool | None = None,
     accent: bool = True,
     on_overflow: str = "fit",
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """A museum label over a picture: what is on screen, plus a tiny credit line.
 
@@ -492,7 +495,7 @@ def lower_third(
     ink: RGBA | None = None,
     scrim: bool | None = None,
     on_overflow: str = "fit",
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Who is speaking: a name and a role, left-anchored, scrimmed if needed.
 
@@ -563,7 +566,7 @@ def note(
     scrim: bool | None = None,
     accent: bool = True,
     on_overflow: str = "fit",
-    engine=None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """An editorial context card: an optional headline over equal-weight lines.
 
@@ -666,7 +669,11 @@ def _finish(
 
 
 def intertitle(
-    text: str, *, frame: Frame, style: TextStyle | None = None, engine=None
+    text: str,
+    *,
+    frame: Frame,
+    style: TextStyle | None = None,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """A silent-film style card: serif italic prose, centred on the frame."""
     from tituli.style import INTERTITLE

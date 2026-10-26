@@ -66,14 +66,10 @@ def _avoid(spec: str | None):
 
 
 def _engine(name: str | None):
-    """``engine="harfbuzz"`` -> the HarfBuzz engine; None/"pillow" -> the default."""
-    if name in (None, "", "pillow"):
-        return None
-    if name == "harfbuzz":
-        from tituli.shaping import HarfBuzzEngine
+    """An engine by name (``"pillow"``/``"harfbuzz"``); None keeps the default."""
+    from tituli.render import make_engine
 
-        return HarfBuzzEngine()
-    raise ValueError(f"engine must be 'pillow' or 'harfbuzz', got {name!r}")
+    return make_engine(name) if name else None
 
 
 def _save(img, out: str | Path) -> Path:

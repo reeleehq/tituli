@@ -112,3 +112,23 @@ def test_run_outline_refuses_an_engine_measured_run_without_the_engine():
     with pytest.raises(ValueError, match="engine"):
         run_outline(run)
     run_outline(run, engine=Doubling())  # the engine that measured it: fine
+
+
+def test_run_outline_accepts_a_pillow_measured_run():
+    pytest.importorskip("fontTools")
+    from tituli import block, run_outline
+    from tituli.render import PillowEngine
+
+    run = block("ab", STYLE, FH, engine=PillowEngine()).runs[0]
+    assert run.advance is not None
+    run_outline(run)  # Pillow's width is the face's: nothing to disagree about
+
+
+def test_cli_engine_names():
+    from tituli.render import PillowEngine
+    from tituli.tools import _engine
+
+    assert _engine(None) is None
+    assert isinstance(_engine("pillow"), PillowEngine)
+    with pytest.raises(ValueError, match="engine"):
+        _engine("nope")
