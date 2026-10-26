@@ -21,7 +21,7 @@ count; it is never silently dropped.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Sequence
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
 from tituli.color import CREDITS_BLACK, WHITE, parse_color
 from tituli.frame import Frame
@@ -34,6 +34,9 @@ from tituli.style import (
     CREDITS_TITLE,
     TextStyle,
 )
+
+if TYPE_CHECKING:  # pragma: no cover
+    from tituli.render import Engine
 
 # Typographic rhythm, in em of the name face.
 _HEADING_GAP_ABOVE = 2.2
@@ -175,7 +178,10 @@ class CreditsStyle:
 
 
 def _flow(
-    credits: Credits, style: CreditsStyle, frame: Frame
+    credits: Credits,
+    style: CreditsStyle,
+    frame: Frame,
+    engine: "Engine | None" = None,
 ) -> list[tuple[str, float, Layout]]:
     """Each item as ``(kind, height, layout-at-origin)``, in reading order."""
     st = style.inked()
@@ -197,7 +203,11 @@ def _flow(
 
     if credits.title:
         lay = block(
-            credits.title, st.title.with_(align="center"), frame, max_width=col_w
+            credits.title,
+            st.title.with_(align="center"),
+            frame,
+            max_width=col_w,
+            engine=engine,
         )
         add("title", lay, lay.bbox().height + name_em * _TITLE_GAP_BELOW)
     for si, sec in enumerate(credits.sections):
@@ -209,6 +219,7 @@ def _flow(
                 frame,
                 max_width=col_w,
                 y=gap_above,
+                engine=engine,
             )
             add(
                 "heading",
@@ -218,21 +229,36 @@ def _flow(
         kind = sec.resolved_kind
         for e in sec.entries:
             if kind == "pairs":
-                lay = _pair(e, st, frame, col_w)
+                lay = _pair(e, st, frame, col_w, engine)
                 add("pair", lay, rows_height(lay))
             elif kind == "prose":
                 lay = block(
-                    e.name, st.line.with_(align="center"), frame, max_width=col_w
+                    e.name,
+                    st.line.with_(align="center"),
+                    frame,
+                    max_width=col_w,
+                    engine=engine,
                 )
                 add("prose", lay, rows_height(lay))
             else:
                 lay = block(
-                    e.name, st.name.with_(align="center"), frame, max_width=col_w
+                    e.name,
+                    st.name.with_(align="center"),
+                    frame,
+                    max_width=col_w,
+                    engine=engine,
                 )
                 add("line", lay, rows_height(lay))
     for i, line in enumerate(credits.closing):
         gap = name_em * (_CLOSING_GAP_ABOVE if i == 0 else 0.0)
-        lay = block(line, st.line.with_(align="center"), frame, max_width=col_w, y=gap)
+        lay = block(
+            line,
+            st.line.with_(align="center"),
+            frame,
+            max_width=col_w,
+            y=gap,
+            engine=engine,
+        )
         add("closing", lay, gap + lay.bbox().height + name_em * 0.4)
     return items
 
@@ -246,15 +272,28 @@ def _text_height(lay: Layout) -> float:
     return (baselines[-1] - baselines[0]) + line_h
 
 
-def _pair(e: Entry, st: CreditsStyle, frame: Frame, col_w: float) -> Layout:
+def _pair(
+    e: Entry,
+    st: CreditsStyle,
+    frame: Frame,
+    col_w: float,
+    engine: "Engine | None" = None,
+) -> Layout:
     """Role right-aligned into the left column, name left-aligned after the gutter."""
     fh = frame.height
     gutter = st.name.face(fh).size * _GUTTER_EM
     role_w = col_w * _ROLE_COLUMN
     name_w = col_w - role_w - gutter
-    role = block(e.role, st.role.with_(align="right"), frame, max_width=role_w)
+    role = block(
+        e.role, st.role.with_(align="right"), frame, max_width=role_w, engine=engine
+    )
     name = block(
-        e.name, st.name.with_(align="left"), frame, max_width=name_w, x=role_w + gutter
+        e.name,
+        st.name.with_(align="left"),
+        frame,
+        max_width=name_w,
+        x=role_w + gutter,
+        engine=engine,
     )
     # align baselines: block() puts the first baseline at ascent + leading slack
     if role.runs and name.runs:
@@ -278,14 +317,19 @@ def _stack_items(
 
 
 def credits_crawl(
-    credits: Credits, *, frame: Frame, style: CreditsStyle = CreditsStyle()
+    credits: Credits,
+    *,
+    frame: Frame,
+    style: CreditsStyle = CreditsStyle(),
+    engine: "Engine | None" = None,
 ) -> tuple[Layout, int]:
     """One tall layout and its total height in pixels (for :func:`tituli.video.crawl`).
+    ``engine`` is the one that will draw it; it measures the rows.
 
     The layout starts one frame-height down and ends one frame-height before
     its bottom, so the crawl enters from an empty frame and leaves to one.
     """
-    items = _flow(credits, style, frame)
+    items = _flow(credits, style, frame, engine)
     x = frame.safe.x0 + (frame.safe.width - frame.safe.width * _COLUMN_WIDTH) / 2
     lead = frame.height * _CRAWL_LEAD_FRAMES
     lay = _stack_items(items, x, lead)
@@ -323,6 +367,7 @@ def credits_cards(
     frame: Frame,
     style: CreditsStyle = CreditsStyle(),
     max_cards: int | None = None,
+    engine: "Engine | None" = None,
 ) -> list[Layout]:
     """Paginate the roll into cards that each fit the safe area, centred.
 
@@ -330,7 +375,7 @@ def credits_cards(
     ``max_cards`` would force truncation — losing an attribution silently is a
     licence failure invisible to the person responsible for it.
     """
-    items = _flow(credits, style, frame)
+    items = _flow(credits, style, frame, engine)
     limit = frame.safe.height * _CARD_FILL
     pages = _paginate(items, limit)
     # Balance: a greedy fill leaves the last card nearly empty. Re-page to the

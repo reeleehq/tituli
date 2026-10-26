@@ -180,7 +180,7 @@ def _tracking_px(style: TextStyle, face: fonts.Face) -> float:
     return style.tracking * face.size
 
 
-def _length(
+def text_advance(
     engine: "Engine | None", face: fonts.Face, text: str, *, per_glyph: bool = False
 ) -> float:
     """Advance of ``text``: the engine that will draw it measures it (tituli#7);
@@ -191,7 +191,7 @@ def _length(
     its glyphs occupy even for an engine that kerns across characters.
     """
     if per_glyph:
-        return sum(_length(engine, face, ch) for ch in text)
+        return sum(text_advance(engine, face, ch) for ch in text)
     if engine is None:
         return face.length(text)
     try:
@@ -204,9 +204,14 @@ def _length(
     return measure_text(face, text)
 
 
+def _keep(engine: "Engine | None", width: float) -> float | None:
+    """The width a run keeps (``Run.advance``): an engine's, else ``None``."""
+    return None if engine is None else width
+
+
 def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> float | None:
-    """The width a run keeps (``Run.advance``): the engine's, else ``None``."""
-    return None if engine is None else _length(engine, face, text)
+    """The width a run keeps for ``text`` (measures only when an engine will)."""
+    return None if engine is None else text_advance(engine, face, text)
 
 
 def measure(
@@ -224,7 +229,7 @@ def measure(
     """
     face = style.face(frame_height)
     text = style.apply_case(text)
-    return _length(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
+    return text_advance(engine, face, text, per_glyph=style.tracking != 0) + _tracking_px(
         style, face
     ) * max(0, len(text) - 1)
 
@@ -397,7 +402,7 @@ def _glyph_runs(
     runs: list[Run] = []
     cx = x
     for i, ch in enumerate(text):
-        advance = _length(engine, face, ch)
+        advance = text_advance(engine, face, ch)
         runs.append(
             Run(
                 ch,
@@ -409,7 +414,7 @@ def _glyph_runs(
                 unit="glyph",
                 index=start_index + i,
                 tags=tags,
-                advance=None if engine is None else advance,
+                advance=_keep(engine, advance),
             )
         )
         cx += advance + tracking
@@ -458,7 +463,7 @@ def block(
     tracking = _tracking_px(style, face)
     per_glyph = unit == "glyph" or tracking != 0
     widths = [
-        _length(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
+        text_advance(engine, face, l, per_glyph=per_glyph) + tracking * max(0, len(l) - 1)
         for l in lines
     ]
     box_w = max_width if max_width else (max(widths) if widths else 0.0)
@@ -507,7 +512,7 @@ def block(
                         advance=_advance(engine, face, word),
                     )
                 )
-                cx += _length(engine, face, word + _WORD_SEP)
+                cx += text_advance(engine, face, word + _WORD_SEP)
                 idx += 1
         else:
             runs.append(
@@ -539,6 +544,7 @@ def along_path(
     upright: bool = False,
     color: RGBA | None = None,
     tags: tuple[str, ...] = (),
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Set ``text`` glyph by glyph along ``path`` (the path is the baseline).
 
@@ -549,7 +555,8 @@ def along_path(
     ``align`` positions the whole string on the path from ``start``.
 
     Text longer than the path keeps its spacing and runs off the end — that is
-    reported in ``meta["overflow"]`` rather than silently squeezed.
+    reported in ``meta["overflow"]`` rather than silently squeezed. ``engine`` is
+    the one that will draw it; it measures the glyph advances.
     """
     fh = frame.height if isinstance(frame, Frame) else float(frame)
     face = style.face(fh)
@@ -558,7 +565,8 @@ def along_path(
     )
     text = style.apply_case(text)
     tracking = _tracking_px(style, face)
-    advances = [face.length(ch) + tracking for ch in text]
+    widths = [text_advance(engine, face, ch) for ch in text]
+    advances = [w + tracking for w in widths]
     total = sum(advances) - (tracking if advances else 0)
     if align == "center":
         s = start + (path.length - start - total) / 2
@@ -596,7 +604,18 @@ def along_path(
             py += math.cos(a) * offset
         if ch != _WORD_SEP:
             runs.append(
-                Run(ch, px, py, face, rgba, angle=ang, unit="glyph", index=i, tags=tags)
+                Run(
+                    ch,
+                    px,
+                    py,
+                    face,
+                    rgba,
+                    angle=ang,
+                    unit="glyph",
+                    index=i,
+                    tags=tags,
+                    advance=_keep(engine, widths[i]),
+                )
             )
         s += adv
     overflow = 0.0 if closed else max(0.0, s - tracking - path.length)
@@ -617,6 +636,7 @@ def glyph_columns(
     size_ratio: float = 0.86,
     color: RGBA | None = None,
     tags: tuple[str, ...] = (),
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.
 
@@ -628,6 +648,7 @@ def glyph_columns(
     how it stays one preset of :func:`along_path` rather than a second family.
 
     ``slants`` and ``head_offsets`` are cycled if shorter than ``lines``.
+    ``engine`` is the one that will draw it; it centres each glyph in its slot.
     """
     if not lines:
         return Layout()
@@ -663,7 +684,8 @@ def glyph_columns(
     idx = 0
     for k, col in enumerate(slots):
         for u, v, ch in col:
-            x = box.x0 + (u - u0) * pitch + (pitch - face.length(ch)) / 2
+            adv = text_advance(engine, face, ch)
+            x = box.x0 + (u - u0) * pitch + (pitch - adv) / 2
             y = box.y0 + (v - v0) * pitch + face.ascent
             runs.append(
                 Run(
@@ -675,6 +697,7 @@ def glyph_columns(
                     unit="glyph",
                     index=idx,
                     tags=tags + (f"streak:{k}",),
+                    advance=_keep(engine, adv),
                 )
             )
             idx += 1
@@ -693,6 +716,7 @@ def fill_shape(
     color: RGBA | None = None,
     tags: tuple[str, ...] = (),
     repeat: bool = True,
+    engine: "Engine | None" = None,
 ) -> Layout:
     """Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.
 
@@ -701,7 +725,8 @@ def fill_shape(
     fitted into ``box``; for each line of text height the horizontal spans of
     the shape are found and filled with as many words as fit, in reading order.
     With ``repeat`` the text cycles until the shape is full; otherwise leftover
-    spans stay empty and leftover words are reported in ``meta["unplaced"]``.
+    spans stay empty and leftover words are reported in ``meta["unplaced"]``. ``engine`` is the one
+    that will draw it; it measures the words.
     """
     from PIL import Image
 
@@ -718,7 +743,7 @@ def fill_shape(
     data = m.tobytes()
     W, H = m.size
     line_h = face.size * style.leading
-    space = face.length(_WORD_SEP)
+    space = text_advance(engine, face, _WORD_SEP)
     min_px = face.size * min_span
     runs: list[Run] = []
     wi = 0
@@ -752,7 +777,7 @@ def fill_shape(
                         break
                     probe = 0
                 w = words[probe]
-                ww = face.length(w)
+                ww = text_advance(engine, face, w)
                 add = ww if not chunk else space + ww
                 if used + add > avail:
                     break
@@ -768,10 +793,21 @@ def fill_shape(
             cx = box.x0 + x0 + (avail - used) / 2
             baseline = box.y0 + y + face.ascent + (line_h - face.line_height) / 2
             for w in chunk:
+                adv = text_advance(engine, face, w)
                 runs.append(
-                    Run(w, cx, baseline, face, rgba, unit="word", index=idx, tags=tags)
+                    Run(
+                        w,
+                        cx,
+                        baseline,
+                        face,
+                        rgba,
+                        unit="word",
+                        index=idx,
+                        tags=tags,
+                        advance=_keep(engine, adv),
+                    )
                 )
-                cx += face.length(w) + space
+                cx += adv + space
                 idx += 1
             if not repeat and wi >= len(words):
                 break
