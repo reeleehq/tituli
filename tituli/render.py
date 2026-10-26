@@ -33,7 +33,7 @@ from tituli.color import RGBA
 from tituli.frame import Frame
 from tituli.geometry import Box
 from tituli.fonts import Face
-from tituli.layout import Layout, Plate, Run
+from tituli.layout import Layout, Plate, Run, check_measured_by
 
 _TILE_MARGIN_EM = 0.35  # extra room around a rotated glyph tile, in em
 _RESAMPLE = Image.Resampling.BICUBIC
@@ -67,6 +67,8 @@ def _envelope(run: Run, t: float | None) -> float:
 
 class PillowEngine:
     """The zero-extra-dependency engine."""
+
+    name = "pillow"
 
     def length(self, face: Face, text: str) -> float:
         return face.length(text)
@@ -230,6 +232,8 @@ def render_overlay(
 ) -> Image.Image:
     """The layout on a transparent canvas of ``size`` (RGBA)."""
     engine = engine or PillowEngine()
+    for run in layout.runs:
+        check_measured_by(run, engine)
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     for plate in layout.plates:
         draw_plate(canvas, plate)

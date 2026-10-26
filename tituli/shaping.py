@@ -98,6 +98,8 @@ def shape(
 class HarfBuzzEngine:
     """Draw runs through HarfBuzz + FreeType. Falls back to Pillow for the embedded font."""
 
+    name = "harfbuzz"
+
     def __init__(self) -> None:
         _require()
         from tituli.render import PillowEngine
