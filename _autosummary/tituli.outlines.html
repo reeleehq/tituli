@@ -223,8 +223,8 @@ invisible, and it keeps the string short and byte-stable.</p>
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
 <code class="docutils literal notranslate"><span class="pre">engine</span></code> is the one the layout was measured with (default: the face). A
-run that carries an <code class="docutils literal notranslate"><span class="pre">advance</span></code> from another engine’s measure is refused
-when <code class="docutils literal notranslate"><span class="pre">engine</span></code> is not given, rather than outlined with the face’s advances.</p>
+run measured by a different engine is refused (<code class="docutils literal notranslate"><span class="pre">Run.measured_by</span></code>), rather
+than outlined with advances it was not drawn with.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.outlines.Outline" title="tituli.outlines.Outline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Outline</span></code></a></span></p>
@@ -252,7 +252,7 @@ when <code class="docutils literal notranslate"><span class="pre">engine</span><
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=0c446633"></script>
+<script src="../_static/documentation_options.js?v=3bbcec59"></script>
 <script src="../_static/doctools.js?v=fd6eb6e6"></script>
 <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

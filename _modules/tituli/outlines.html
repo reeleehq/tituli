@@ -219,7 +219,7 @@
 </span><span id="line-39">
 </span><span id="line-40"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.fonts</span><span class="w"> </span><span class="kn">import</span> <span class="n">glyph_set</span><span class="p">,</span> <span class="n">ttfont</span>
 </span><span id="line-41"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Box</span>
-</span><span id="line-42"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.layout</span><span class="w"> </span><span class="kn">import</span> <span class="n">Run</span><span class="p">,</span> <span class="n">text_advance</span>
+</span><span id="line-42"><span class="kn">from</span><span class="w"> </span><span class="nn">tituli.layout</span><span class="w"> </span><span class="kn">import</span> <span class="n">Run</span><span class="p">,</span> <span class="n">check_measured_by</span><span class="p">,</span> <span class="n">text_advance</span>
 </span><span id="line-43">
 </span><span id="line-44"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 </span><span id="line-45">    <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">Engine</span>
@@ -227,130 +227,116 @@
 </span><span id="line-47"><span class="c1">#: Decimal places kept in the path data. Two is a hundredth of a pixel —</span>
 </span><span id="line-48"><span class="c1">#: invisible, and it keeps the string short and byte-stable.</span>
 </span><span id="line-49"><span class="n">DFLT_PRECISION</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span id="line-50"><span class="n">_ADVANCE_TOL_PX</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># engine-vs-face width gaps below this are rounding</span>
+</span><span id="line-50">
 </span><span id="line-51">
-</span><span id="line-52">
 <div class="viewcode-block" id="MissingGlyphError">
 <a class="viewcode-back" href="../../_autosummary/tituli.outlines.html#tituli.MissingGlyphError">[docs]</a>
-</span><span id="line-53"><span class="k">class</span><span class="w"> </span><span class="nc">MissingGlyphError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-</span><span id="line-54"><span class="w">    </span><span class="sd">"""The run's face has no glyph for one of its characters."""</span></div>
+</span><span id="line-52"><span class="k">class</span><span class="w"> </span><span class="nc">MissingGlyphError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+</span><span id="line-53"><span class="w">    </span><span class="sd">"""The run's face has no glyph for one of its characters."""</span></div>
 
+</span><span id="line-54">
 </span><span id="line-55">
-</span><span id="line-56">
 <div class="viewcode-block" id="Outline">
 <a class="viewcode-back" href="../../_autosummary/tituli.outlines.html#tituli.Outline">[docs]</a>
-</span><span id="line-57"><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-58"><span class="k">class</span><span class="w"> </span><span class="nc">Outline</span><span class="p">:</span>
-</span><span id="line-59"><span class="w">    </span><span class="sd">"""A run's contours as SVG path data, in frame pixels.</span>
-</span><span id="line-60">
-</span><span id="line-61"><span class="sd">    ``bbox`` is the ink's bounds (``None`` when nothing is inked, e.g. a space).</span>
-</span><span id="line-62"><span class="sd">    """</span>
-</span><span id="line-63">
-</span><span id="line-64">    <span class="n">d</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="line-65">    <span class="n">bbox</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span></div>
+</span><span id="line-56"><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-57"><span class="k">class</span><span class="w"> </span><span class="nc">Outline</span><span class="p">:</span>
+</span><span id="line-58"><span class="w">    </span><span class="sd">"""A run's contours as SVG path data, in frame pixels.</span>
+</span><span id="line-59">
+</span><span id="line-60"><span class="sd">    ``bbox`` is the ink's bounds (``None`` when nothing is inked, e.g. a space).</span>
+</span><span id="line-61"><span class="sd">    """</span>
+</span><span id="line-62">
+</span><span id="line-63">    <span class="n">d</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="line-64">    <span class="n">bbox</span><span class="p">:</span> <span class="n">Box</span> <span class="o">|</span> <span class="kc">None</span></div>
 
+</span><span id="line-65">
 </span><span id="line-66">
-</span><span id="line-67">
-</span><span id="line-68"><span class="k">def</span><span class="w"> </span><span class="nf">_require</span><span class="p">():</span>
-</span><span id="line-69">    <span class="k">try</span><span class="p">:</span>
-</span><span id="line-70">        <span class="kn">import</span><span class="w"> </span><span class="nn">fontTools</span>  <span class="c1"># noqa: F401</span>
-</span><span id="line-71">    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover - depends on the extra</span>
-</span><span id="line-72">        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-</span><span id="line-73">            <span class="s2">"glyph outlines need fontTools: `pip install tituli[outlines]`"</span>
-</span><span id="line-74">        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span id="line-67"><span class="k">def</span><span class="w"> </span><span class="nf">_require</span><span class="p">():</span>
+</span><span id="line-68">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-69">        <span class="kn">import</span><span class="w"> </span><span class="nn">fontTools</span>  <span class="c1"># noqa: F401</span>
+</span><span id="line-70">    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover - depends on the extra</span>
+</span><span id="line-71">        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+</span><span id="line-72">            <span class="s2">"glyph outlines need fontTools: `pip install tituli[outlines]`"</span>
+</span><span id="line-73">        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span id="line-74">
 </span><span id="line-75">
-</span><span id="line-76">
-</span><span id="line-77"><span class="k">def</span><span class="w"> </span><span class="nf">_number_formatter</span><span class="p">(</span><span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="line-78">    <span class="k">def</span><span class="w"> </span><span class="nf">ntos</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-79">        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
-</span><span id="line-80">        <span class="k">return</span> <span class="s2">"0"</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"-0"</span><span class="p">)</span> <span class="k">else</span> <span class="n">s</span>
-</span><span id="line-81">
-</span><span id="line-82">    <span class="k">return</span> <span class="n">ntos</span>
+</span><span id="line-76"><span class="k">def</span><span class="w"> </span><span class="nf">_number_formatter</span><span class="p">(</span><span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="line-77">    <span class="k">def</span><span class="w"> </span><span class="nf">ntos</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-78">        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+</span><span id="line-79">        <span class="k">return</span> <span class="s2">"0"</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"-0"</span><span class="p">)</span> <span class="k">else</span> <span class="n">s</span>
+</span><span id="line-80">
+</span><span id="line-81">    <span class="k">return</span> <span class="n">ntos</span>
+</span><span id="line-82">
 </span><span id="line-83">
-</span><span id="line-84">
-</span><span id="line-85"><span class="k">def</span><span class="w"> </span><span class="nf">_glyph_names</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="line-86"><span class="w">    </span><span class="sd">"""The glyph each character draws: the cmap's, or with the face's applied</span>
-</span><span id="line-87"><span class="sd">    OpenType features the substituted one (the glyph its length measured)."""</span>
-</span><span id="line-88">    <span class="k">if</span> <span class="n">face</span><span class="o">.</span><span class="n">applied_features</span><span class="p">:</span>
-</span><span id="line-89">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.features</span><span class="w"> </span><span class="kn">import</span> <span class="n">featured_glyphs</span>
-</span><span id="line-90">
-</span><span id="line-91">        <span class="k">return</span> <span class="n">featured_glyphs</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-</span><span id="line-92">    <span class="n">cmap</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">getBestCmap</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
-</span><span id="line-93">    <span class="k">return</span> <span class="p">[</span><span class="n">cmap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+</span><span id="line-84"><span class="k">def</span><span class="w"> </span><span class="nf">_glyph_names</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="line-85"><span class="w">    </span><span class="sd">"""The glyph each character draws: the cmap's, or with the face's applied</span>
+</span><span id="line-86"><span class="sd">    OpenType features the substituted one (the glyph its length measured)."""</span>
+</span><span id="line-87">    <span class="k">if</span> <span class="n">face</span><span class="o">.</span><span class="n">applied_features</span><span class="p">:</span>
+</span><span id="line-88">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.features</span><span class="w"> </span><span class="kn">import</span> <span class="n">featured_glyphs</span>
+</span><span id="line-89">
+</span><span id="line-90">        <span class="k">return</span> <span class="n">featured_glyphs</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</span><span id="line-91">    <span class="n">cmap</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">getBestCmap</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
+</span><span id="line-92">    <span class="k">return</span> <span class="p">[</span><span class="n">cmap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+</span><span id="line-93">
 </span><span id="line-94">
-</span><span id="line-95">
-</span><span id="line-96"><span class="k">def</span><span class="w"> </span><span class="nf">_check_measured_by</span><span class="p">(</span><span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">,</span> <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-97"><span class="w">    </span><span class="sd">"""Raise if ``run.advance`` came from an engine whose glyph pitch we would not use."""</span>
-</span><span id="line-98">    <span class="k">if</span> <span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">run</span><span class="o">.</span><span class="n">advance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-99">        <span class="k">return</span>
-</span><span id="line-100">    <span class="n">by_face</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">face</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span class="n">run</span><span class="o">.</span><span class="n">tracking</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-101">    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">advance</span> <span class="o">-</span> <span class="n">by_face</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_ADVANCE_TOL_PX</span><span class="p">:</span>
-</span><span id="line-102">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="line-103">            <span class="sa">f</span><span class="s2">"run </span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> was measured by an engine (advance </span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">advance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">px "</span>
-</span><span id="line-104">            <span class="sa">f</span><span class="s2">"vs </span><span class="si">{</span><span class="n">by_face</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">px by the face); pass that engine as "</span>
-</span><span id="line-105">            <span class="s2">"run_outline(engine=...) so glyphs sit where it drew them"</span>
-</span><span id="line-106">        <span class="p">)</span>
-</span><span id="line-107">
-</span><span id="line-108">
 <div class="viewcode-block" id="run_outline">
 <a class="viewcode-back" href="../../_autosummary/tituli.outlines.html#tituli.run_outline">[docs]</a>
-</span><span id="line-109"><span class="k">def</span><span class="w"> </span><span class="nf">run_outline</span><span class="p">(</span>
-</span><span id="line-110">    <span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DFLT_PRECISION</span><span class="p">,</span> <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="line-111"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Outline</span><span class="p">:</span>
-</span><span id="line-112"><span class="w">    </span><span class="sd">"""The contours of ``run`` as one SVG path, placed where the run is drawn.</span>
+</span><span id="line-95"><span class="k">def</span><span class="w"> </span><span class="nf">run_outline</span><span class="p">(</span>
+</span><span id="line-96">    <span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DFLT_PRECISION</span><span class="p">,</span> <span class="n">engine</span><span class="p">:</span> <span class="s2">"Engine | None"</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-97"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Outline</span><span class="p">:</span>
+</span><span id="line-98"><span class="w">    </span><span class="sd">"""The contours of ``run`` as one SVG path, placed where the run is drawn.</span>
+</span><span id="line-99">
+</span><span id="line-100"><span class="sd">    Glyph ``i`` starts at ``face.length(text[:i]) + i * tracking`` along the</span>
+</span><span id="line-101"><span class="sd">    baseline — the same advances the layout measured with, kerning included,</span>
+</span><span id="line-102"><span class="sd">    so the outline and the layout cannot disagree about where a glyph is.</span>
+</span><span id="line-103"><span class="sd">    ``engine`` is the one the layout was measured with (default: the face). A</span>
+</span><span id="line-104"><span class="sd">    run measured by a different engine is refused (``Run.measured_by``), rather</span>
+</span><span id="line-105"><span class="sd">    than outlined with advances it was not drawn with.</span>
+</span><span id="line-106"><span class="sd">    """</span>
+</span><span id="line-107">    <span class="n">_require</span><span class="p">()</span>
+</span><span id="line-108">    <span class="n">check_measured_by</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+</span><span id="line-109">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.boundsPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundsPen</span>
+</span><span id="line-110">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.recordingPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecomposingRecordingPen</span>
+</span><span id="line-111">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.svgPathPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGPathPen</span>
+</span><span id="line-112">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.transformPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformPen</span>
 </span><span id="line-113">
-</span><span id="line-114"><span class="sd">    Glyph ``i`` starts at ``face.length(text[:i]) + i * tracking`` along the</span>
-</span><span id="line-115"><span class="sd">    baseline — the same advances the layout measured with, kerning included,</span>
-</span><span id="line-116"><span class="sd">    so the outline and the layout cannot disagree about where a glyph is.</span>
-</span><span id="line-117"><span class="sd">    ``engine`` is the one the layout was measured with (default: the face). A</span>
-</span><span id="line-118"><span class="sd">    run that carries an ``advance`` from another engine's measure is refused</span>
-</span><span id="line-119"><span class="sd">    when ``engine`` is not given, rather than outlined with the face's advances.</span>
-</span><span id="line-120"><span class="sd">    """</span>
-</span><span id="line-121">    <span class="n">_require</span><span class="p">()</span>
-</span><span id="line-122">    <span class="n">_check_measured_by</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
-</span><span id="line-123">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.boundsPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundsPen</span>
-</span><span id="line-124">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.recordingPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecomposingRecordingPen</span>
-</span><span id="line-125">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.svgPathPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVGPathPen</span>
-</span><span id="line-126">    <span class="kn">from</span><span class="w"> </span><span class="nn">fontTools.pens.transformPen</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformPen</span>
-</span><span id="line-127">
-</span><span id="line-128">    <span class="n">face</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">face</span>
-</span><span id="line-129">    <span class="n">font</span> <span class="o">=</span> <span class="n">ttfont</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">face</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-</span><span id="line-130">    <span class="n">glyphs</span> <span class="o">=</span> <span class="n">glyph_set</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>  <span class="c1"># at the face's variation instance</span>
-</span><span id="line-131">    <span class="n">names</span> <span class="o">=</span> <span class="n">_glyph_names</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
-</span><span id="line-132">    <span class="n">scale</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">font</span><span class="p">[</span><span class="s2">"head"</span><span class="p">]</span><span class="o">.</span><span class="n">unitsPerEm</span>
-</span><span id="line-133">    <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
-</span><span id="line-134">    <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-</span><span id="line-135">
-</span><span id="line-136">    <span class="n">recording</span> <span class="o">=</span> <span class="n">DecomposingRecordingPen</span><span class="p">(</span><span class="n">glyphs</span><span class="p">)</span>
-</span><span id="line-137">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">names</span><span class="p">)):</span>
-</span><span id="line-138">        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-139">            <span class="k">raise</span> <span class="n">MissingGlyphError</span><span class="p">(</span>
-</span><span id="line-140">                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">face</span><span class="o">.</span><span class="n">family</span><span class="si">!r}</span><span class="s2"> </span><span class="si">{</span><span class="n">face</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s2"> has no glyph for </span><span class="si">{</span><span class="n">ch</span><span class="si">!r}</span><span class="s2"> "</span>
-</span><span id="line-141">                <span class="sa">f</span><span class="s2">"(U+</span><span class="si">{</span><span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">)"</span>
-</span><span id="line-142">            <span class="p">)</span>
-</span><span id="line-143">        <span class="n">pen_x</span> <span class="o">=</span> <span class="n">text_advance</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">face</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="n">run</span><span class="o">.</span><span class="n">tracking</span> <span class="o">*</span> <span class="n">i</span>
-</span><span id="line-144">        <span class="c1"># Font units are y-up; the frame is y-down and the run is rotated</span>
-</span><span id="line-145">        <span class="c1"># clockwise on screen by `angle` about its baseline origin.</span>
-</span><span id="line-146">        <span class="n">transform</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-147">            <span class="n">cos</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span id="line-148">            <span class="n">sin</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span id="line-149">            <span class="n">sin</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span id="line-150">            <span class="o">-</span><span class="n">cos</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-</span><span id="line-151">            <span class="n">run</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">pen_x</span><span class="p">,</span>
-</span><span id="line-152">            <span class="n">run</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">pen_x</span><span class="p">,</span>
-</span><span id="line-153">        <span class="p">)</span>
-</span><span id="line-154">        <span class="n">glyphs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">TransformPen</span><span class="p">(</span><span class="n">recording</span><span class="p">,</span> <span class="n">transform</span><span class="p">))</span>
-</span><span id="line-155">
-</span><span id="line-156">    <span class="n">svg</span> <span class="o">=</span> <span class="n">SVGPathPen</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntos</span><span class="o">=</span><span class="n">_number_formatter</span><span class="p">(</span><span class="n">precision</span><span class="p">))</span>
-</span><span id="line-157">    <span class="n">bounds</span> <span class="o">=</span> <span class="n">BoundsPen</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-</span><span id="line-158">    <span class="n">recording</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">svg</span><span class="p">)</span>
-</span><span id="line-159">    <span class="n">recording</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-</span><span id="line-160">    <span class="n">bbox</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">*</span><span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span> <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="line-161">    <span class="k">return</span> <span class="n">Outline</span><span class="p">(</span><span class="n">svg</span><span class="o">.</span><span class="n">getCommands</span><span class="p">(),</span> <span class="n">bbox</span><span class="p">)</span></div>
+</span><span id="line-114">    <span class="n">face</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">face</span>
+</span><span id="line-115">    <span class="n">font</span> <span class="o">=</span> <span class="n">ttfont</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">face</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</span><span id="line-116">    <span class="n">glyphs</span> <span class="o">=</span> <span class="n">glyph_set</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>  <span class="c1"># at the face's variation instance</span>
+</span><span id="line-117">    <span class="n">names</span> <span class="o">=</span> <span class="n">_glyph_names</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+</span><span id="line-118">    <span class="n">scale</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">font</span><span class="p">[</span><span class="s2">"head"</span><span class="p">]</span><span class="o">.</span><span class="n">unitsPerEm</span>
+</span><span id="line-119">    <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+</span><span id="line-120">    <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span id="line-121">
+</span><span id="line-122">    <span class="n">recording</span> <span class="o">=</span> <span class="n">DecomposingRecordingPen</span><span class="p">(</span><span class="n">glyphs</span><span class="p">)</span>
+</span><span id="line-123">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">names</span><span class="p">)):</span>
+</span><span id="line-124">        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-125">            <span class="k">raise</span> <span class="n">MissingGlyphError</span><span class="p">(</span>
+</span><span id="line-126">                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">face</span><span class="o">.</span><span class="n">family</span><span class="si">!r}</span><span class="s2"> </span><span class="si">{</span><span class="n">face</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s2"> has no glyph for </span><span class="si">{</span><span class="n">ch</span><span class="si">!r}</span><span class="s2"> "</span>
+</span><span id="line-127">                <span class="sa">f</span><span class="s2">"(U+</span><span class="si">{</span><span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">)"</span>
+</span><span id="line-128">            <span class="p">)</span>
+</span><span id="line-129">        <span class="n">pen_x</span> <span class="o">=</span> <span class="n">text_advance</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">face</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="n">run</span><span class="o">.</span><span class="n">tracking</span> <span class="o">*</span> <span class="n">i</span>
+</span><span id="line-130">        <span class="c1"># Font units are y-up; the frame is y-down and the run is rotated</span>
+</span><span id="line-131">        <span class="c1"># clockwise on screen by `angle` about its baseline origin.</span>
+</span><span id="line-132">        <span class="n">transform</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="line-133">            <span class="n">cos</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span id="line-134">            <span class="n">sin</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span id="line-135">            <span class="n">sin</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span id="line-136">            <span class="o">-</span><span class="n">cos</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+</span><span id="line-137">            <span class="n">run</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">pen_x</span><span class="p">,</span>
+</span><span id="line-138">            <span class="n">run</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">pen_x</span><span class="p">,</span>
+</span><span id="line-139">        <span class="p">)</span>
+</span><span id="line-140">        <span class="n">glyphs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">TransformPen</span><span class="p">(</span><span class="n">recording</span><span class="p">,</span> <span class="n">transform</span><span class="p">))</span>
+</span><span id="line-141">
+</span><span id="line-142">    <span class="n">svg</span> <span class="o">=</span> <span class="n">SVGPathPen</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntos</span><span class="o">=</span><span class="n">_number_formatter</span><span class="p">(</span><span class="n">precision</span><span class="p">))</span>
+</span><span id="line-143">    <span class="n">bounds</span> <span class="o">=</span> <span class="n">BoundsPen</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-144">    <span class="n">recording</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">svg</span><span class="p">)</span>
+</span><span id="line-145">    <span class="n">recording</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</span><span id="line-146">    <span class="n">bbox</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">*</span><span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span> <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="line-147">    <span class="k">return</span> <span class="n">Outline</span><span class="p">(</span><span class="n">svg</span><span class="o">.</span><span class="n">getCommands</span><span class="p">(),</span> <span class="n">bbox</span><span class="p">)</span></div>
 
-</span><span id="line-162">
-</span><span id="line-163">
-</span><span id="line-164"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"DFLT_PRECISION"</span><span class="p">,</span> <span class="s2">"MissingGlyphError"</span><span class="p">,</span> <span class="s2">"Outline"</span><span class="p">,</span> <span class="s2">"run_outline"</span><span class="p">]</span>
+</span><span id="line-148">
+</span><span id="line-149">
+</span><span id="line-150"><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"DFLT_PRECISION"</span><span class="p">,</span> <span class="s2">"MissingGlyphError"</span><span class="p">,</span> <span class="s2">"Outline"</span><span class="p">,</span> <span class="s2">"run_outline"</span><span class="p">]</span>
 </span></code></pre></div>
     </div></div>
           </main>
@@ -364,7 +350,7 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=0c446633"></script>
+    <script src="../../_static/documentation_options.js?v=3bbcec59"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

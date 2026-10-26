@@ -510,7 +510,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None)
+### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -529,6 +529,15 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)
+
+#### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+unrecorded);
+`check_measured_by()` refuses a run used with another engine.
+Cleared whenever `advance` is `None`.
+
+* **Type:**
+  Name of the engine that measured `advance` (`None`
 
 ### *class* tituli.Section(heading='', entries=(), kind='auto')
 
@@ -1073,8 +1082,8 @@ Glyph `i` starts at `face.length(text[:i]) + i * tracking` along the
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
 `engine` is the one the layout was measured with (default: the face). A
-run that carries an `advance` from another engine’s measure is refused
-when `engine` is not given, rather than outlined with the face’s advances.
+run measured by a different engine is refused (`Run.measured_by`), rather
+than outlined with advances it was not drawn with.
 
 * **Return type:**
   [`Outline`](tituli.outlines.html.md#tituli.outlines.Outline)

@@ -23,14 +23,15 @@ a file, and returns a dict describing what it wrote.
 | [`overlay_video`](#tituli.tools.overlay_video)(video, overlays, \*[, out, ...])   | Composite captions/lower thirds/images onto a finished video in one ffmpeg pass. |
 | [`title_card`](#tituli.tools.title_card)(title[, subtitle, out, ...])          | Render a title card to `out` (PNG, or MP4 when `duration` is given).             |
 
-### tituli.tools.calligram(text, , out='calligram.png', shape='wave', size=None, background='#f4f1e8', upright=False, mask=None, reveal=None)
+### tituli.tools.calligram(text, , out='calligram.png', shape='wave', size=None, background='#f4f1e8', upright=False, mask=None, reveal=None, engine=None)
 
 Lay `text` along a shape (`circle`, `wave`, `arc`, an SVG path, `rain`).
 
 `shape="rain"` is Apollinaire’s *Il pleut* (lines become streaks; give
 it a portrait `size`). `mask` (an image path, light = inside) pours the
 text into a silhouette instead. `reveal` (seconds) writes an MP4 with a
-glyph-by-glyph reveal rather than a PNG.
+glyph-by-glyph reveal rather than a PNG. `engine` is `"pillow"`
+(default) or `"harfbuzz"`.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -48,14 +49,15 @@ onto motion video instead of the flattened picture. `engine` is
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### tituli.tools.credits(spec, , out='credits.mp4', mode='crawl', size=None, speed=None, hold=None, background=None, audio=None)
+### tituli.tools.credits(spec, , out='credits.mp4', mode='crawl', size=None, speed=None, hold=None, background=None, audio=None, engine=None)
 
 Render credits from a JSON spec file (or JSON string) to `out`.
 
 Spec: `{"title": ..., "sections": [{"heading": ..., "entries":
 [["Role", "Name"], "Name", ...]}], "closing": [...]}` — or a plain JSON
 list of lines. `mode` is `"crawl"` (one MP4) or `"cards"` (PNG per
-card, or one MP4 when `out` ends in .mp4). Never truncates.
+card, or one MP4 when `out` ends in .mp4). Never truncates. `engine` is
+`"pillow"` (default) or `"harfbuzz"`: it measures and draws.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)

@@ -22,11 +22,18 @@ estimate.
 True
 ```
 
+### Module Attributes
+
+| [`FACE_ENGINE`](#tituli.layout.FACE_ENGINE)   | the face measures, as Pillow does.   |
+|----------------------------------------------------------------|--------------------------------------|
+
 ### Functions
 
 | [`along_path`](#tituli.layout.along_path)(text, path, style, frame, \*[, ...])    | Set `text` glyph by glyph along `path` (the path is the baseline).                                                                |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | [`block`](#tituli.layout.block)(text, style, frame, \*[, max_width, x, ...]) | Lay out prose as lines from the top-left corner `(x, y)`.                                                                         |
+| [`check_measured_by`](#tituli.layout.check_measured_by)(run, engine)                     | Raise if `run` was measured by a different engine than the one in hand.                                                           |
+| [`engine_name`](#tituli.layout.engine_name)(engine)                                | Who measured: the engine's `name` (else its class name); `None` is the face.                                                      |
 | [`fill_shape`](#tituli.layout.fill_shape)(text, mask, style, frame, \*, box)      | Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.                                                        |
 | [`fit_size`](#tituli.layout.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                   |
 | [`glyph_columns`](#tituli.layout.glyph_columns)(lines, style, frame, \*, box, ...)   | Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.                                                          |
@@ -41,6 +48,13 @@ True
 |---------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
 | [`Plate`](#tituli.layout.Plate)(box, color[, kind, radius, solid])   | A backdrop drawn under the runs: a scrim, a box, a rule.                 |
 | [`Run`](#tituli.layout.Run)(text, x, y, face, color[, angle, ...]) | A string drawn from a baseline origin, possibly rotated.                 |
+
+### tituli.layout.FACE_ENGINE *= 'pillow'*
+
+the face measures, as Pillow does.
+
+* **Type:**
+  What [`engine_name()`](#tituli.layout.engine_name) answers for “no engine”
 
 ### *class* tituli.layout.Layout(runs=(), plates=(), meta=dict())
 
@@ -86,7 +100,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None)
+### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -105,6 +119,15 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)
+
+#### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+unrecorded);
+[`check_measured_by()`](#tituli.layout.check_measured_by) refuses a run used with another engine.
+Cleared whenever `advance` is `None`.
+
+* **Type:**
+  Name of the engine that measured `advance` (`None`
 
 ### tituli.layout.along_path(text, path, style, frame, , start=0.0, align='start', offset=0.0, upright=False, color=None, tags=(), engine=None)
 
@@ -138,6 +161,25 @@ is placed by the engine’s measure too.
 
 * **Return type:**
   [`Layout`](#tituli.layout.Layout)
+
+### tituli.layout.check_measured_by(run, engine)
+
+Raise if `run` was measured by a different engine than the one in hand.
+
+Runs that record no `measured_by` (hand-built, or laid out without an
+engine) are not checked: they carry no claim. A recorded one is refused
+both ways, by the face (`engine=None`) and by another engine, since each
+would place glyphs where the measuring engine did not draw them (tituli#15).
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
+### tituli.layout.engine_name(engine)
+
+Who measured: the engine’s `name` (else its class name); `None` is the face.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### tituli.layout.fill_shape(text, mask, style, frame, , box, threshold=128, min_span=0.5, color=None, tags=(), repeat=True, engine=None)
 

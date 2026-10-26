@@ -1,4 +1,4 @@
-> built 2026-10-26 18:17 UTC from de32abd (main) · tituli 0.0.11. Details: build_info.json
+> built 2026-10-26 20:20 UTC from 277ebe6 (main) · tituli 0.0.12. Details: build_info.json
 
 # index.html.md
 
@@ -2020,7 +2020,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None)
+### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -2039,6 +2039,15 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+unrecorded);
+`check_measured_by()` refuses a run used with another engine.
+Cleared whenever `advance` is `None`.
+
+* **Type:**
+  Name of the engine that measured `advance` (`None`
 
 ### *class* tituli.Section(heading='', entries=(), kind='auto')
 
@@ -2583,8 +2592,8 @@ Glyph `i` starts at `face.length(text[:i]) + i * tracking` along the
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
 `engine` is the one the layout was measured with (default: the face). A
-run that carries an `advance` from another engine’s measure is refused
-when `engine` is not given, rather than outlined with the face’s advances.
+run measured by a different engine is refused (`Run.measured_by`), rather
+than outlined with advances it was not drawn with.
 
 * **Return type:**
   [`Outline`](_autosummary/tituli.outlines.html.md#tituli.outlines.Outline)
@@ -2732,11 +2741,18 @@ estimate.
 True
 ```
 
+### Module Attributes
+
+| [`FACE_ENGINE`](_autosummary/tituli.layout.html.md#tituli.layout.FACE_ENGINE)   | the face measures, as Pillow does.   |
+|----------------------------------------------------------------|--------------------------------------|
+
 ### Functions
 
 | [`along_path`](_autosummary/tituli.layout.html.md#tituli.layout.along_path)(text, path, style, frame, \*[, ...])    | Set `text` glyph by glyph along `path` (the path is the baseline).                                                                |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | [`block`](_autosummary/tituli.layout.html.md#tituli.layout.block)(text, style, frame, \*[, max_width, x, ...]) | Lay out prose as lines from the top-left corner `(x, y)`.                                                                         |
+| [`check_measured_by`](_autosummary/tituli.layout.html.md#tituli.layout.check_measured_by)(run, engine)                     | Raise if `run` was measured by a different engine than the one in hand.                                                           |
+| [`engine_name`](_autosummary/tituli.layout.html.md#tituli.layout.engine_name)(engine)                                | Who measured: the engine's `name` (else its class name); `None` is the face.                                                      |
 | [`fill_shape`](_autosummary/tituli.layout.html.md#tituli.layout.fill_shape)(text, mask, style, frame, \*, box)      | Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.                                                        |
 | [`fit_size`](_autosummary/tituli.layout.html.md#tituli.layout.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                   |
 | [`glyph_columns`](_autosummary/tituli.layout.html.md#tituli.layout.glyph_columns)(lines, style, frame, \*, box, ...)   | Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.                                                          |
@@ -2751,6 +2767,13 @@ True
 |---------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
 | [`Plate`](_autosummary/tituli.layout.html.md#tituli.layout.Plate)(box, color[, kind, radius, solid])   | A backdrop drawn under the runs: a scrim, a box, a rule.                 |
 | [`Run`](_autosummary/tituli.layout.html.md#tituli.layout.Run)(text, x, y, face, color[, angle, ...]) | A string drawn from a baseline origin, possibly rotated.                 |
+
+### tituli.layout.FACE_ENGINE *= 'pillow'*
+
+the face measures, as Pillow does.
+
+* **Type:**
+  What [`engine_name()`](_autosummary/tituli.layout.html.md#tituli.layout.engine_name) answers for “no engine”
 
 ### *class* tituli.layout.Layout(runs=(), plates=(), meta=dict())
 
@@ -2796,7 +2819,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None)
+### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -2815,6 +2838,15 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+unrecorded);
+[`check_measured_by()`](_autosummary/tituli.layout.html.md#tituli.layout.check_measured_by) refuses a run used with another engine.
+Cleared whenever `advance` is `None`.
+
+* **Type:**
+  Name of the engine that measured `advance` (`None`
 
 ### tituli.layout.along_path(text, path, style, frame, , start=0.0, align='start', offset=0.0, upright=False, color=None, tags=(), engine=None)
 
@@ -2848,6 +2880,25 @@ is placed by the engine’s measure too.
 
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
+### tituli.layout.check_measured_by(run, engine)
+
+Raise if `run` was measured by a different engine than the one in hand.
+
+Runs that record no `measured_by` (hand-built, or laid out without an
+engine) are not checked: they carry no claim. A recorded one is refused
+both ways, by the face (`engine=None`) and by another engine, since each
+would place glyphs where the measuring engine did not draw them (tituli#15).
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
+### tituli.layout.engine_name(engine)
+
+Who measured: the engine’s `name` (else its class name); `None` is the face.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### tituli.layout.fill_shape(text, mask, style, frame, , box, threshold=128, min_span=0.5, color=None, tags=(), repeat=True, engine=None)
 
@@ -3035,8 +3086,8 @@ Glyph `i` starts at `face.length(text[:i]) + i * tracking` along the
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
 `engine` is the one the layout was measured with (default: the face). A
-run that carries an `advance` from another engine’s measure is refused
-when `engine` is not given, rather than outlined with the face’s advances.
+run measured by a different engine is refused (`Run.measured_by`), rather
+than outlined with advances it was not drawn with.
 
 * **Return type:**
   [`Outline`](_autosummary/tituli.outlines.html.md#tituli.outlines.Outline)
@@ -3295,14 +3346,15 @@ a file, and returns a dict describing what it wrote.
 | [`overlay_video`](_autosummary/tituli.tools.html.md#tituli.tools.overlay_video)(video, overlays, \*[, out, ...])   | Composite captions/lower thirds/images onto a finished video in one ffmpeg pass. |
 | [`title_card`](_autosummary/tituli.tools.html.md#tituli.tools.title_card)(title[, subtitle, out, ...])          | Render a title card to `out` (PNG, or MP4 when `duration` is given).             |
 
-### tituli.tools.calligram(text, , out='calligram.png', shape='wave', size=None, background='#f4f1e8', upright=False, mask=None, reveal=None)
+### tituli.tools.calligram(text, , out='calligram.png', shape='wave', size=None, background='#f4f1e8', upright=False, mask=None, reveal=None, engine=None)
 
 Lay `text` along a shape (`circle`, `wave`, `arc`, an SVG path, `rain`).
 
 `shape="rain"` is Apollinaire’s *Il pleut* (lines become streaks; give
 it a portrait `size`). `mask` (an image path, light = inside) pours the
 text into a silhouette instead. `reveal` (seconds) writes an MP4 with a
-glyph-by-glyph reveal rather than a PNG.
+glyph-by-glyph reveal rather than a PNG. `engine` is `"pillow"`
+(default) or `"harfbuzz"`.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -3320,14 +3372,15 @@ onto motion video instead of the flattened picture. `engine` is
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### tituli.tools.credits(spec, , out='credits.mp4', mode='crawl', size=None, speed=None, hold=None, background=None, audio=None)
+### tituli.tools.credits(spec, , out='credits.mp4', mode='crawl', size=None, speed=None, hold=None, background=None, audio=None, engine=None)
 
 Render credits from a JSON spec file (or JSON string) to `out`.
 
 Spec: `{"title": ..., "sections": [{"heading": ..., "entries":
 [["Role", "Name"], "Name", ...]}], "closing": [...]}` — or a plain JSON
 list of lines. `mode` is `"crawl"` (one MP4) or `"cards"` (PNG per
-card, or one MP4 when `out` ends in .mp4). Never truncates.
+card, or one MP4 when `out` ends in .mp4). Never truncates. `engine` is
+`"pillow"` (default) or `"harfbuzz"`: it measures and draws.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -3543,20 +3596,18 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-10-26 18:17 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/de32abda6a850c32c13c544703d742f535ccef8f"><code>de32abd</code></a> on branch <code>main</code>, for **tituli 0.0.11** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-26 20:20 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/277ebe61a91a181108ac27ced7014713a6ba2b98"><code>277ebe6</code></a> on branch <code>main</code>, for **tituli 0.0.12** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.11) is ahead of the latest release on PyPI (0.0.10): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/de32abda6a850c32c13c544703d742f535ccef8f"><code>de32abda6a850c32c13c544703d742f535ccef8f</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/277ebe61a91a181108ac27ced7014713a6ba2b98"><code>277ebe61a91a181108ac27ced7014713a6ba2b98</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | <code>0.0.11</code>                                                                                                                                    |
+| Tags at this commit | <code>0.0.12</code>                                                                                                                                    |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3565,9 +3616,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/40375951074">40375951074</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/40391464356">40391464356</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>9d62a146594e3a8db5e487e9b385b5f13625c75e</code> (in the history of the built commit) |
+| Event commit | <code>0f29a3603ab77d86d237041a6014295adcc88f88</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3592,13 +3643,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.10/">0.0.10</a>, older than the documented version (0.0.11).
+Latest release: <a href="https://pypi.org/project/tituli/0.0.12/">0.0.12</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout de32abda6a850c32c13c544703d742f535ccef8f
+git checkout 277ebe61a91a181108ac27ced7014713a6ba2b98
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

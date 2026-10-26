@@ -150,6 +150,14 @@ estimate.</p>
 </span><span id="line-7"><span class="go">True</span>
 </span></code></pre></div>
 </div>
+<p class="rubric">Module Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.layout.FACE_ENGINE" title="tituli.layout.FACE_ENGINE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACE_ENGINE</span></code></a></p></td>
+<td><p>the face measures, as Pillow does.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -158,6 +166,12 @@ estimate.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.layout.block" title="tituli.layout.block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block</span></code></a>(text, style, frame, *[, max_width, x, ...])</p></td>
 <td><p>Lay out prose as lines from the top-left corner <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.layout.check_measured_by" title="tituli.layout.check_measured_by"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_measured_by</span></code></a>(run, engine)</p></td>
+<td><p>Raise if <code class="docutils literal notranslate"><span class="pre">run</span></code> was measured by a different engine than the one in hand.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.layout.engine_name" title="tituli.layout.engine_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">engine_name</span></code></a>(engine)</p></td>
+<td><p>Who measured: the engine's <code class="docutils literal notranslate"><span class="pre">name</span></code> (else its class name); <code class="docutils literal notranslate"><span class="pre">None</span></code> is the face.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#tituli.layout.fill_shape" title="tituli.layout.fill_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_shape</span></code></a>(text, mask, style, frame, *, box)</p></td>
 <td><p>Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.</p></td>
@@ -196,6 +210,16 @@ estimate.</p>
 </tr>
 </tbody>
 </table>
+<dl class="py data">
+<dt class="sig sig-object py" id="tituli.layout.FACE_ENGINE">
+<span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">FACE_ENGINE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pillow'</span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.FACE_ENGINE" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.FACE_ENGINE'">¶</a></dt>
+<dd><p>the face measures, as Pillow does.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>What <a class="reference internal" href="#tituli.layout.engine_name" title="tituli.layout.engine_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">engine_name()</span></code></a> answers for “no engine”</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.layout.Layout">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">Layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">dict()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.Layout" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.Layout'">¶</a></dt>
@@ -259,7 +283,7 @@ estimate.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.layout.Run">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">advance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.Run" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.Run'">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">advance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measured_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.Run" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.Run'">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
 <p>A string drawn from a baseline origin, possibly rotated.</p>
 <dl class="field-list simple">
@@ -279,6 +303,18 @@ run by hand, or drop it (<code class="docutils literal notranslate"><span class=
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tituli.layout.Run.measured_by">
+<span class="sig-name descname"><span class="pre">measured_by</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">None</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.Run.measured_by" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.Run.measured_by'">¶</a></dt>
+<dd><p>unrecorded);
+<a class="reference internal" href="#tituli.layout.check_measured_by" title="tituli.layout.check_measured_by"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_measured_by()</span></code></a> refuses a run used with another engine.
+Cleared whenever <code class="docutils literal notranslate"><span class="pre">advance</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the engine that measured <code class="docutils literal notranslate"><span class="pre">advance</span></code> (<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,6 +352,30 @@ is placed by the engine’s measure too.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.layout.Layout" title="tituli.layout.Layout"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.layout.check_measured_by">
+<span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">check_measured_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#check_measured_by"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.check_measured_by" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.check_measured_by'">¶</a></dt>
+<dd><p>Raise if <code class="docutils literal notranslate"><span class="pre">run</span></code> was measured by a different engine than the one in hand.</p>
+<p>Runs that record no <code class="docutils literal notranslate"><span class="pre">measured_by</span></code> (hand-built, or laid out without an
+engine) are not checked: they carry no claim. A recorded one is refused
+both ways, by the face (<code class="docutils literal notranslate"><span class="pre">engine=None</span></code>) and by another engine, since each
+would place glyphs where the measuring engine did not draw them (tituli#15).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><span class="highlight sphinx_autodoc_typehints-value"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tituli.layout.engine_name">
+<span class="sig-prename descclassname"><span class="pre">tituli.layout.</span></span><span class="sig-name descname"><span class="pre">engine_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#engine_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.layout.engine_name" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.layout.engine_name'">¶</a></dt>
+<dd><p>Who measured: the engine’s <code class="docutils literal notranslate"><span class="pre">name</span></code> (else its class name); <code class="docutils literal notranslate"><span class="pre">None</span></code> is the face.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -429,6 +489,7 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
+<li><a :data-current="activeSection === '#tituli.layout.FACE_ENGINE'" class="reference internal" href="#tituli.layout.FACE_ENGINE"><code class="docutils literal notranslate"><span class="pre">FACE_ENGINE</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.Layout'" class="reference internal" href="#tituli.layout.Layout"><code class="docutils literal notranslate"><span class="pre">Layout</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.layout.Layout.bbox'" class="reference internal" href="#tituli.layout.Layout.bbox"><code class="docutils literal notranslate"><span class="pre">Layout.bbox()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.Layout.duration_hint'" class="reference internal" href="#tituli.layout.Layout.duration_hint"><code class="docutils literal notranslate"><span class="pre">Layout.duration_hint</span></code></a></li>
@@ -441,10 +502,13 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 <li><a :data-current="activeSection === '#tituli.layout.Run'" class="reference internal" href="#tituli.layout.Run"><code class="docutils literal notranslate"><span class="pre">Run</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.layout.Run.advance'" class="reference internal" href="#tituli.layout.Run.advance"><code class="docutils literal notranslate"><span class="pre">Run.advance</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.Run.bbox'" class="reference internal" href="#tituli.layout.Run.bbox"><code class="docutils literal notranslate"><span class="pre">Run.bbox()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.layout.Run.measured_by'" class="reference internal" href="#tituli.layout.Run.measured_by"><code class="docutils literal notranslate"><span class="pre">Run.measured_by</span></code></a></li>
 </ul>
 </li>
 <li><a :data-current="activeSection === '#tituli.layout.along_path'" class="reference internal" href="#tituli.layout.along_path"><code class="docutils literal notranslate"><span class="pre">along_path()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.block'" class="reference internal" href="#tituli.layout.block"><code class="docutils literal notranslate"><span class="pre">block()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.layout.check_measured_by'" class="reference internal" href="#tituli.layout.check_measured_by"><code class="docutils literal notranslate"><span class="pre">check_measured_by()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.layout.engine_name'" class="reference internal" href="#tituli.layout.engine_name"><code class="docutils literal notranslate"><span class="pre">engine_name()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.fill_shape'" class="reference internal" href="#tituli.layout.fill_shape"><code class="docutils literal notranslate"><span class="pre">fill_shape()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.fit_size'" class="reference internal" href="#tituli.layout.fit_size"><code class="docutils literal notranslate"><span class="pre">fit_size()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.layout.glyph_columns'" class="reference internal" href="#tituli.layout.glyph_columns"><code class="docutils literal notranslate"><span class="pre">glyph_columns()</span></code></a></li>
@@ -465,7 +529,7 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=0c446633"></script>
+<script src="../_static/documentation_options.js?v=3bbcec59"></script>
 <script src="../_static/doctools.js?v=fd6eb6e6"></script>
 <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

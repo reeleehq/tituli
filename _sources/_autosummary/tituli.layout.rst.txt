@@ -4,12 +4,20 @@ tituli.layout
 .. automodule:: tituli.layout
 
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      FACE_ENGINE
+   
    .. rubric:: Functions
 
    .. autosummary::
    
       along_path
       block
+      check_measured_by
+      engine_name
       fill_shape
       fit_size
       glyph_columns

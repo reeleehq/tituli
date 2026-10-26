@@ -83,8 +83,8 @@ Glyph `i` starts at `face.length(text[:i]) + i * tracking` along the
 baseline — the same advances the layout measured with, kerning included,
 so the outline and the layout cannot disagree about where a glyph is.
 `engine` is the one the layout was measured with (default: the face). A
-run that carries an `advance` from another engine’s measure is refused
-when `engine` is not given, rather than outlined with the face’s advances.
+run measured by a different engine is refused (`Run.measured_by`), rather
+than outlined with advances it was not drawn with.
 
 * **Return type:**
   [`Outline`](#tituli.outlines.Outline)
