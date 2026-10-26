@@ -746,6 +746,14 @@ def fill_shape(
     line_h = face.size * style.leading
     space = text_advance(engine, face, _WORD_SEP)
     min_px = face.size * min_span
+    # Each word is measured once per call, not once per row and repeat cycle.
+    advances: dict[str, float] = {}
+
+    def advance_of(word: str) -> float:
+        if word not in advances:
+            advances[word] = text_advance(engine, face, word)
+        return advances[word]
+
     runs: list[Run] = []
     wi = 0
     idx = 0
@@ -778,7 +786,7 @@ def fill_shape(
                         break
                     probe = 0
                 w = words[probe]
-                ww = text_advance(engine, face, w)
+                ww = advance_of(w)
                 add = ww if not chunk else space + ww
                 if used + add > avail:
                     break
@@ -794,7 +802,7 @@ def fill_shape(
             cx = box.x0 + x0 + (avail - used) / 2
             baseline = box.y0 + y + face.ascent + (line_h - face.line_height) / 2
             for w in chunk:
-                adv = text_advance(engine, face, w)
+                adv = advance_of(w)
                 runs.append(
                     Run(
                         w,

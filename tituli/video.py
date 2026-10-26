@@ -234,7 +234,9 @@ def overlay(
     if not overlays:
         raise ValueError("overlay() needs at least one TimedOverlay")
     size = size or probe_size(video)
-    items = materialize(overlays, frame=frame or _blank_frame(size, delivery))
+    items = materialize(
+        overlays, frame=frame or _blank_frame(size, delivery), engine=engine
+    )
     _check_image_sizes(items, size)
     workdir = Path(workdir) if workdir else dst.parent / f"_{dst.stem}_overlays"
     workdir.mkdir(parents=True, exist_ok=True)
@@ -370,8 +372,12 @@ def _blank_frame(size: tuple[int, int], delivery: str | None):
     return Frame.blank(size).with_delivery(delivery)
 
 
-def materialize(overlays: Sequence[TimedOverlay], *, frame) -> list[TimedOverlay]:
+def materialize(
+    overlays: Sequence[TimedOverlay], *, frame, engine=None
+) -> list[TimedOverlay]:
     """Give every overlay a layout, rendering payloads; raise naming any that can't be.
+
+    ``engine`` is the one that will draw them: payloads are measured with it.
 
     >>> from tituli.frame import Frame
     >>> from tituli.schedule import Label, TimedOverlay
@@ -412,24 +418,42 @@ def materialize(overlays: Sequence[TimedOverlay], *, frame) -> list[TimedOverlay
         p = o.payload
         lay = None
         if isinstance(p, Label):
-            lay = caption(p.text, p.attribution, frame=frame, anchor=o.slot)
+            lay = caption(
+                p.text, p.attribution, frame=frame, anchor=o.slot, engine=engine
+            )
         elif isinstance(p, dict) and "text" in p:
             kind = p.get("kind", "caption")
             if kind == "lower_third":
                 lay = lower_third(
-                    p["text"], p.get("role", ""), frame=frame, anchor=o.slot
+                    p["text"],
+                    p.get("role", ""),
+                    frame=frame,
+                    anchor=o.slot,
+                    engine=engine,
                 )
             elif kind == "note":
                 lay = note(
-                    p.get("lines", ()), headline=p["text"], frame=frame, anchor=o.slot
+                    p.get("lines", ()),
+                    headline=p["text"],
+                    frame=frame,
+                    anchor=o.slot,
+                    engine=engine,
                 )
             elif kind == "title":
                 lay = title_card(
-                    p["text"], p.get("subtitle", ""), frame=frame, anchor=o.slot
+                    p["text"],
+                    p.get("subtitle", ""),
+                    frame=frame,
+                    anchor=o.slot,
+                    engine=engine,
                 )
             else:
                 lay = caption(
-                    p["text"], p.get("attribution", ""), frame=frame, anchor=o.slot
+                    p["text"],
+                    p.get("attribution", ""),
+                    frame=frame,
+                    anchor=o.slot,
+                    engine=engine,
                 )
         if lay is None:
             unrenderable.append(

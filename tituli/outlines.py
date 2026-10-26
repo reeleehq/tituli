@@ -47,6 +47,7 @@ if TYPE_CHECKING:  # pragma: no cover
 #: Decimal places kept in the path data. Two is a hundredth of a pixel —
 #: invisible, and it keeps the string short and byte-stable.
 DFLT_PRECISION = 2
+_ADVANCE_TOL_PX = 0.5  # engine-vs-face width gaps below this are rounding
 
 
 class MissingGlyphError(ValueError):
@@ -92,6 +93,19 @@ def _glyph_names(face, text: str, font) -> list:
     return [cmap.get(ord(ch)) for ch in text]
 
 
+def _check_measured_by(run: Run, engine: "Engine | None") -> None:
+    """Raise if ``run.advance`` came from an engine whose glyph pitch we would not use."""
+    if engine is not None or run.advance is None:
+        return
+    by_face = run.face.length(run.text) + run.tracking * max(0, len(run.text) - 1)
+    if abs(run.advance - by_face) > _ADVANCE_TOL_PX:
+        raise ValueError(
+            f"run {run.text!r} was measured by an engine (advance {run.advance:.2f}px "
+            f"vs {by_face:.2f}px by the face); pass that engine as "
+            "run_outline(engine=...) so glyphs sit where it drew them"
+        )
+
+
 def run_outline(
     run: Run, *, precision: int = DFLT_PRECISION, engine: "Engine | None" = None
 ) -> Outline:
@@ -100,9 +114,12 @@ def run_outline(
     Glyph ``i`` starts at ``face.length(text[:i]) + i * tracking`` along the
     baseline — the same advances the layout measured with, kerning included,
     so the outline and the layout cannot disagree about where a glyph is.
-    ``engine`` is the one the layout was measured with (default: the face).
+    ``engine`` is the one the layout was measured with (default: the face). A
+    run that carries an ``advance`` from another engine's measure is refused
+    when ``engine`` is not given, rather than outlined with the face's advances.
     """
     _require()
+    _check_measured_by(run, engine)
     from fontTools.pens.boundsPen import BoundsPen
     from fontTools.pens.recordingPen import DecomposingRecordingPen
     from fontTools.pens.svgPathPen import SVGPathPen
