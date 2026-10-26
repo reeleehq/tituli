@@ -37,32 +37,45 @@ def _require():
 
 
 @lru_cache(maxsize=64)
-def _hb_font(path: str, index: int, size: int):
+def _hb_font(path: str, index: int, size: int, wght: float | None = None):
     import uharfbuzz as hb
 
     blob = hb.Blob.from_file_path(path)
     face = hb.Face(blob, index)
     font = hb.Font(face)
     font.scale = (size * _HB_SCALE, size * _HB_SCALE)
+    if wght is not None:
+        font.set_variations({"wght": wght})
     return font
 
 
 @lru_cache(maxsize=64)
-def _ft_face(path: str, index: int, size: int):
+def _ft_face(path: str, index: int, size: int, wght: float | None = None):
     import freetype
 
     face = freetype.Face(path, index)
     face.set_char_size(size * _HB_SCALE)
+    if wght is not None:
+        axes = face.get_variation_info().axes
+        face.set_var_design_coords(
+            [wght if a.tag == "wght" else a.default for a in axes]
+        )
     return face
 
 
 def shape(
-    text: str, path: str, index: int, size: int, *, features: dict | None = None
+    text: str,
+    path: str,
+    index: int,
+    size: int,
+    *,
+    features: dict | None = None,
+    wght: float | None = None,
 ) -> list[tuple[int, float, float, float, float]]:
     """``[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]`` in pixels."""
     import uharfbuzz as hb
 
-    font = _hb_font(path, index, size)
+    font = _hb_font(path, index, size, wght)
     buf = hb.Buffer()
     buf.add_str(text)
     buf.guess_segment_properties()
@@ -101,7 +114,7 @@ class HarfBuzzEngine:
         alpha = max(0.0, min(1.0, (a / 255) * run.opacity * opacity))
         if alpha == 0 or not run.text:
             return
-        ft = _ft_face(face.path, face.index, face.size)
+        ft = _ft_face(face.path, face.index, face.size, face.wght)
         ang = math.radians(-run.angle)  # FreeType's y points up
         cos, sin = math.cos(ang), math.sin(ang)
         matrix = freetype.Matrix(
@@ -113,7 +126,12 @@ class HarfBuzzEngine:
         pen_x, pen_y = 0.0, 0.0  # along the (rotated) baseline, in unrotated px
         features = {**_DEFAULT_FEATURES, **{tag: True for tag in face.features}}
         for gid, xa, ya, xo, yo in shape(
-            run.text, face.path, face.index, face.size, features=features
+            run.text,
+            face.path,
+            face.index,
+            face.size,
+            features=features,
+            wght=face.wght,
         ):
             ft.set_transform(matrix, freetype.Vector(0, 0))
             ft.load_glyph(gid, freetype.FT_LOAD_RENDER | freetype.FT_LOAD_TARGET_NORMAL)

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import os
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from typing import Iterable, Iterator, Sequence
@@ -134,17 +134,18 @@ class Face:
     #: OpenType feature tags the style asked for (tituli#4); which of them the
     #: font has is :attr:`applied_features`.
     features: tuple[str, ...] = ()
+    #: Value of the ``wght`` axis when the file is a variable font with one
+    #: (tituli#9), clamped to the axis range; ``None`` for a static face.
+    wght: float | None = None
 
     @property
     def pil(self) -> ImageFont.FreeTypeFont:
-        """The Pillow font object (cached per ``(path, index, size)``)."""
-        return _load_pil(self.path, self.index, self.size)
+        """The Pillow font object (cached per ``(path, index, size, wght)``)."""
+        return _load_pil(self.path, self.index, self.size, self.wght)
 
     def with_size(self, size: int) -> "Face":
         """Same face at another pixel size."""
-        return Face(
-            self.family, self.style, int(size), self.path, self.index, self.features
-        )
+        return replace(self, size=int(size))
 
     @property
     def applied_features(self) -> tuple[str, ...]:
@@ -159,6 +160,12 @@ class Face:
         from tituli.features import applied_features
 
         return applied_features(self)
+
+    @property
+    def applied_variations(self) -> dict[str, float]:
+        """The variable-font axis values applied (``{"wght": 700.0}``); empty for
+        a static face."""
+        return {} if self.wght is None else {"wght": self.wght}
 
     def length(self, text: str) -> float:
         """Advance width of ``text`` in pixels.
@@ -355,7 +362,15 @@ def resolve_face(
     )
     if ff is None:
         return Face(FALLBACK_FAMILY, "Regular", int(size), None, 0, tuple(features))
-    return Face(ff.family, ff.style, int(size), ff.path, ff.index, tuple(features))
+    return Face(
+        ff.family,
+        ff.style,
+        int(size),
+        ff.path,
+        ff.index,
+        tuple(features),
+        _wght_for(ff.path, ff.index, weight),
+    )
 
 
 def face_bytes(face: Face) -> bytes:
@@ -369,7 +384,8 @@ def face_bytes(face: Face) -> bytes:
     """
     if face.path is None:
         return _embedded_bytes()
-    return Path(face.path).read_bytes()
+    data = Path(face.path).read_bytes()
+    return instance_bytes(data, face.index, face.wght)
 
 
 def face_digest(face: Face) -> str:
@@ -395,7 +411,63 @@ def _embedded_bytes() -> bytes:
 
 
 @lru_cache(maxsize=256)
-def _load_pil(path: str | None, index: int, size: int) -> ImageFont.FreeTypeFont:
+def _weight_axis(path: str, index: int) -> tuple[int, list[dict]] | None:
+    """``(position, axes)`` of the ``wght`` axis of a variable font, else ``None``."""
+    try:
+        axes = ImageFont.truetype(path, 12, index=index).get_variation_axes()
+    except (OSError, ValueError, AttributeError):  # static font, or no FreeType MM
+        return None
+    for i, axis in enumerate(axes):
+        name = axis["name"]
+        name = name.decode("latin-1") if isinstance(name, bytes) else name
+        if name.lower() == "weight":
+            return i, axes
+    return None
+
+
+def _wght_for(path: str | None, index: int, weight: int) -> float | None:
+    """The ``wght`` to set for a requested ``weight``: clamped to the axis range."""
+    found = _weight_axis(path, index) if path else None
+    if found is None:
+        return None
+    axis = found[1][found[0]]
+    return float(min(max(weight, axis["minimum"]), axis["maximum"]))
+
+
+def instance_bytes(data: bytes, index: int, wght: float | None) -> bytes:
+    """``data`` as a static font at ``wght`` (itself when ``wght`` is ``None``).
+
+    The identity of a variable face is the file *and* the instance drawn from it.
+    """
+    if wght is None:
+        return data
+    import io
+
+    try:
+        from fontTools.ttLib import TTFont
+        from fontTools.varLib.instancer import instantiateVariableFont
+    except ImportError as e:  # pragma: no cover - depends on the extra
+        raise ImportError(
+            "a variable font's weight needs fontTools here: "
+            "`pip install tituli[outlines]`"
+        ) from e
+    font = TTFont(io.BytesIO(data), fontNumber=index)
+    instantiateVariableFont(font, {"wght": wght}, inplace=True)
+    out = io.BytesIO()
+    font.save(out)
+    return out.getvalue()
+
+
+@lru_cache(maxsize=256)
+def _load_pil(
+    path: str | None, index: int, size: int, wght: float | None = None
+) -> ImageFont.FreeTypeFont:
     if path is None:
         return ImageFont.load_default(size=size)
-    return ImageFont.truetype(path, size, index=index)
+    font = ImageFont.truetype(path, size, index=index)
+    if wght is not None:
+        pos, axes = _weight_axis(path, index)
+        font.set_variation_by_axes(
+            [wght if i == pos else a["default"] for i, a in enumerate(axes)]
+        )
+    return font

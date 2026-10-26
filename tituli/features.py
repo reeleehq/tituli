@@ -47,7 +47,7 @@ class FeatureError(ValueError):
 
 
 @lru_cache(maxsize=32)
-def _ttfont(path: str | None, index: int):
+def _ttfont(path: str | None, index: int, wght: float | None = None):
     try:
         from fontTools.ttLib import TTFont
     except ImportError as e:  # pragma: no cover - depends on the extra
@@ -56,7 +56,7 @@ def _ttfont(path: str | None, index: int):
         ) from e
     from tituli.fonts import Face, face_bytes
 
-    probe = Face("", "", 1, path, index)
+    probe = Face("", "", 1, path, index, wght=wght)
     return TTFont(io.BytesIO(face_bytes(probe)), fontNumber=index, lazy=True)
 
 
@@ -119,7 +119,7 @@ def _substitutions(
 def featured_glyphs(face: "Face", text: str) -> list[str | None]:
     """The glyph name each character of ``text`` draws with the face's applied
     features (``None`` where the font has no glyph for it)."""
-    font = _ttfont(face.path, face.index)
+    font = _ttfont(face.path, face.index, face.wght)
     cmap = font.getBestCmap() or {}
     subs = _substitutions(face.path, face.index, applied_features(face))
     return [
@@ -131,7 +131,7 @@ def featured_glyphs(face: "Face", text: str) -> list[str | None]:
 def featured_length(face: "Face", text: str) -> float:
     """Advance width of ``text`` in pixels, from the substituted glyphs' own
     advances (the font's design metrics, scaled to the face's size)."""
-    font = _ttfont(face.path, face.index)
+    font = _ttfont(face.path, face.index, face.wght)
     scale = face.size / font["head"].unitsPerEm
     hmtx = font["hmtx"]
     total = 0.0

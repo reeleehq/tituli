@@ -72,12 +72,12 @@ def _require():
 
 
 @lru_cache(maxsize=32)
-def _font(path: str | None, index: int):
+def _font(path: str | None, index: int, wght: float | None = None):
     """The parsed font behind a face, cached per file (not per size)."""
     _require()
     from fontTools.ttLib import TTFont
 
-    probe = Face("", "", 1, path, index)
+    probe = Face("", "", 1, path, index, wght=wght)
     return TTFont(io.BytesIO(face_bytes(probe)), fontNumber=index, lazy=True)
 
 
@@ -114,7 +114,7 @@ def run_outline(run: Run, *, precision: int = DFLT_PRECISION) -> Outline:
     from fontTools.pens.transformPen import TransformPen
 
     face = run.face
-    font = _font(face.path, face.index)
+    font = _font(face.path, face.index, face.wght)
     glyphs = font.getGlyphSet()
     names = _glyph_names(face, run.text, font)
     scale = face.size / font["head"].unitsPerEm
