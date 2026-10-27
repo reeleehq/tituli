@@ -1,4 +1,4 @@
-> built 2026-10-26 20:20 UTC from 277ebe6 (main) · tituli 0.0.12. Details: build_info.json
+> built 2026-10-27 20:20 UTC from 7758ae1 (main) · tituli 0.0.12. Details: build_info.json
 
 # index.html.md
 
@@ -89,13 +89,13 @@ A **reserved zone binds every anchor**, not just `anchor="auto"`: with `delivery
 
 ## Seams
 
-|   # | seam                                           | v1 default (no new dependency)                        | replacement you can point at                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|-----|------------------------------------------------|-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|   1 | subject avoidance — `Frame.from_image(avoid=)` | none (boxes you pass)                                 | `burns.salient_box`, any `burns.FacesDetector` (`pip install tituli[saliency]`)                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|   2 | the rasteriser — `render(engine=)`             | `PillowEngine` (FreeType via Pillow, bitmap rotation) | `HarfBuzzEngine` — shaping + outline transforms (`pip install tituli[shaping]`) Pass the same `engine=` to `block`/`wrap`/`measure`/`fit_size`/`glossed`/`along_path`/`glyph_columns`/`fill_shape`/`on_path`/`rain`/`in_shape`/`credits_cards`/`credits_crawl`/`run_outline` so the engine that draws a text also measures it (the `compose` builders — `title_card`, `caption`, `lower_third`, `note`, `intertitle` — and `video.overlay` do not take `engine=` yet) (`stack`/`grid` place by the runs’ measured widths). |
-|   3 | the shape — `on_path(shape=)`                  | named presets                                         | an SVG `d` string or any `Path` (a traced outline)                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|   4 | delivery zones — `Frame(delivery=)`            | none                                                  | `DELIVERY_RESERVED["youtube"]`; add a target, not a rule                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-|   5 | the graph — `tituli.bodies`                    | plain dict from `body_for()`                          | `annot://schema/text-overlay/v1` registered with lacing (`pip install tituli[lacing]`)                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|   # | seam                                           | v1 default (no new dependency)                        | replacement you can point at                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|-----|------------------------------------------------|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|   1 | subject avoidance — `Frame.from_image(avoid=)` | none (boxes you pass)                                 | `burns.salient_box`, any `burns.FacesDetector` (`pip install tituli[saliency]`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|   2 | the rasteriser — `render(engine=)`             | `PillowEngine` (FreeType via Pillow, bitmap rotation) | `HarfBuzzEngine` — shaping + outline transforms (`pip install tituli[shaping]`) Pass the same `engine=` to `block`/`wrap`/`measure`/`fit_size`/`glossed`/`along_path`/`glyph_columns`/`fill_shape`/`on_path`/`rain`/`in_shape`/`credits_cards`/`credits_crawl`/`run_outline` — and the `compose` builders, `video.overlay` and the CLI’s `--engine` — so the engine that draws a text also measures it (`stack`/`grid` place by the runs’ measured widths). Each run records who measured it (`Run.measured_by`), and drawing or outlining it with another engine raises; `HarfBuzzEngine` hands the file-less embedded font to Pillow, so those runs are stamped `"pillow"`. A custom engine names itself with `name` (a subclass overriding `length` must restate it) and may delegate faces with `measurer(face)`. |
+|   3 | the shape — `on_path(shape=)`                  | named presets                                         | an SVG `d` string or any `Path` (a traced outline)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|   4 | delivery zones — `Frame(delivery=)`            | none                                                  | `DELIVERY_RESERVED["youtube"]`; add a target, not a rule                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+|   5 | the graph — `tituli.bodies`                    | plain dict from `body_for()`                          | `annot://schema/text-overlay/v1` registered with lacing (`pip install tituli[lacing]`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 Surface for v1: **CLI** (`python -m tituli`, `cw.dispatch` over `tituli.tools._dispatch_funcs`). MCP/HTTP would project the same list. Agent skill shipped (`tituli/data/skills/tituli`).
 NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode args — written directly, on purpose.
@@ -2752,7 +2752,7 @@ True
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | [`block`](_autosummary/tituli.layout.html.md#tituli.layout.block)(text, style, frame, \*[, max_width, x, ...]) | Lay out prose as lines from the top-left corner `(x, y)`.                                                                         |
 | [`check_measured_by`](_autosummary/tituli.layout.html.md#tituli.layout.check_measured_by)(run, engine)                     | Raise if `run` was measured by a different engine than the one in hand.                                                           |
-| [`engine_name`](_autosummary/tituli.layout.html.md#tituli.layout.engine_name)(engine)                                | Who measured: the engine's `name` (else its class name); `None` is the face.                                                      |
+| [`engine_name`](_autosummary/tituli.layout.html.md#tituli.layout.engine_name)(engine, face)                          | Who measures `face` with `engine` (`None` is the face, as Pillow does).                                                           |
 | [`fill_shape`](_autosummary/tituli.layout.html.md#tituli.layout.fill_shape)(text, mask, style, frame, \*, box)      | Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.                                                        |
 | [`fit_size`](_autosummary/tituli.layout.html.md#tituli.layout.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                   |
 | [`glyph_columns`](_autosummary/tituli.layout.html.md#tituli.layout.glyph_columns)(lines, style, frame, \*, box, ...)   | Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.                                                          |
@@ -2893,9 +2893,16 @@ would place glyphs where the measuring engine did not draw them (tituli#15).
 * **Return type:**
   [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
-### tituli.layout.engine_name(engine)
+### tituli.layout.engine_name(engine, face)
 
-Who measured: the engine’s `name` (else its class name); `None` is the face.
+Who measures `face` with `engine` (`None` is the face, as Pillow does).
+
+An engine that hands some faces to another (`measurer(face)`, as
+HarfBuzz does with the embedded font) is named by the one it hands them
+to. Otherwise its `name` (an instance’s own wins, so two configurations
+of one engine can differ) — unless a subclass re-measures (overrides
+`length`) without restating `name`/`measurer`, when it is told
+apart by class name.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
@@ -3238,6 +3245,11 @@ Advance of `text` as this engine shapes it (kerning, ligatures).
 
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
+#### measurer(face)
+
+The engine that measures and draws `face`: Pillow for the embedded
+font (it has no file to shape), this one otherwise.
 
 ### tituli.shaping.shape(text, path, index, size, , features=None, variations=None)
 
@@ -3596,7 +3608,7 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-10-26 20:20 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/277ebe61a91a181108ac27ced7014713a6ba2b98"><code>277ebe6</code></a> on branch <code>main</code>, for **tituli 0.0.12** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-27 20:20 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/7758ae1f45da88e328a33057b27c636838137074"><code>7758ae1</code></a> on branch <code>main</code>, for **tituli 0.0.12** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -3605,9 +3617,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/277ebe61a91a181108ac27ced7014713a6ba2b98"><code>277ebe61a91a181108ac27ced7014713a6ba2b98</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/7758ae1f45da88e328a33057b27c636838137074"><code>7758ae1f45da88e328a33057b27c636838137074</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | <code>0.0.12</code>                                                                                                                                    |
+| Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3616,9 +3628,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/40391464356">40391464356</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/40574062623">40574062623</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>0f29a3603ab77d86d237041a6014295adcc88f88</code> (in the history of the built commit) |
+| Event commit | <code>7758ae1f45da88e328a33057b27c636838137074</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3649,7 +3661,7 @@ Latest release: <a href="https://pypi.org/project/tituli/0.0.12/">0.0.12</a>, th
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout 277ebe61a91a181108ac27ced7014713a6ba2b98
+git checkout 7758ae1f45da88e328a33057b27c636838137074
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

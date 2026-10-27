@@ -34,6 +34,11 @@ Advance of `text` as this engine shapes it (kerning, ligatures).
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
+#### measurer(face)
+
+The engine that measures and draws `face`: Pillow for the embedded
+font (it has no file to shape), this one otherwise.
+
 ### tituli.shaping.shape(text, path, index, size, , features=None, variations=None)
 
 `[(glyph_id, x_advance, y_advance, x_offset, y_offset), ...]` in pixels.

@@ -33,7 +33,7 @@ True
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | [`block`](#tituli.layout.block)(text, style, frame, \*[, max_width, x, ...]) | Lay out prose as lines from the top-left corner `(x, y)`.                                                                         |
 | [`check_measured_by`](#tituli.layout.check_measured_by)(run, engine)                     | Raise if `run` was measured by a different engine than the one in hand.                                                           |
-| [`engine_name`](#tituli.layout.engine_name)(engine)                                | Who measured: the engine's `name` (else its class name); `None` is the face.                                                      |
+| [`engine_name`](#tituli.layout.engine_name)(engine, face)                          | Who measures `face` with `engine` (`None` is the face, as Pillow does).                                                           |
 | [`fill_shape`](#tituli.layout.fill_shape)(text, mask, style, frame, \*, box)      | Pour prose into a silhouette, row by row — the concrete-poem 'shape' case.                                                        |
 | [`fit_size`](#tituli.layout.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                   |
 | [`glyph_columns`](#tituli.layout.glyph_columns)(lines, style, frame, \*, box, ...)   | Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.                                                          |
@@ -174,9 +174,16 @@ would place glyphs where the measuring engine did not draw them (tituli#15).
 * **Return type:**
   [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
-### tituli.layout.engine_name(engine)
+### tituli.layout.engine_name(engine, face)
 
-Who measured: the engine’s `name` (else its class name); `None` is the face.
+Who measures `face` with `engine` (`None` is the face, as Pillow does).
+
+An engine that hands some faces to another (`measurer(face)`, as
+HarfBuzz does with the embedded font) is named by the one it hands them
+to. Otherwise its `name` (an instance’s own wins, so two configurations
+of one engine can differ) — unless a subclass re-measures (overrides
+`length`) without restating `name`/`measurer`, when it is told
+apart by class name.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)

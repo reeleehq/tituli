@@ -26,7 +26,7 @@
 - [tituli.tools](_autosummary/tituli.tools.html.md): The SSOT of dispatchable operations: flat, JSON-able in, JSON-able out.
 - [tituli.video](_autosummary/tituli.video.html.md): Video output through ffmpeg: stills to clips, overlays onto footage, crawls.
 - [For AI agents](ai-agents.html.md): &#96;tituli&#96; ships artifacts for coding agents alongside its code. This page lists
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-26 20:20 UTC&#42;&#42; from commit &lt;a href="https://github.com/ree...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-27 20:20 UTC&#42;&#42; from commit &lt;a href="https://github.com/ree...
 
 ## Optional
 
