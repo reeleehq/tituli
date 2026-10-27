@@ -47,7 +47,11 @@ class Engine(Protocol):
     that must measure it (tituli#7), or wrap points and column pitch drift.
 
     ``name`` is the measurement identity stamped on ``Run.measured_by``: two
-    engines share one only if they measure alike. Without it the class name is used."""
+    engines share one only if they measure alike. Without it the class name is
+    used, as it is for a subclass that overrides ``length`` but not ``name``.
+    An engine that hands some faces to another may say so with an optional
+    ``measurer(face) -> Engine``; the run is then stamped with that one's name
+    (see :func:`tituli.layout.engine_name`)."""
 
     name: str
 

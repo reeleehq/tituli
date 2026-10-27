@@ -6,11 +6,12 @@ from dataclasses import replace
 import pytest
 from PIL import Image
 
-from tituli import EMBEDDED, Frame, TextStyle, render_overlay
+from tituli import EMBEDDED, Frame, Layout, TextStyle, render_overlay
 from tituli import tools
 from tituli.compose import caption
 from tituli.layout import Run, block, check_measured_by
 from tituli.outlines import run_outline
+from tituli.fonts import SANS_STACK
 from tituli.render import PillowEngine
 
 STYLE = TextStyle(family=EMBEDDED, size=0.05)
@@ -129,3 +130,139 @@ def test_dropping_the_advance_drops_the_engine_claim():
     bare = replace(run, advance=None)
     assert bare.measured_by is None
     check_measured_by(bare, PillowEngine())
+
+
+def test_harfbuzz_stamps_the_embedded_font_as_measured_by_pillow():
+    """HarfBuzz hands the file-less embedded font to Pillow; the stamp says so (tituli#18)."""
+    pytest.importorskip("uharfbuzz")
+    pytest.importorskip("freetype")
+    from tituli.fonts import resolve_face
+    from tituli.shaping import HarfBuzzEngine
+
+    hb = HarfBuzzEngine()
+    runs = _runs(hb)
+    assert {r.measured_by for r in runs} == {"pillow"}
+    for run in runs:  # usable with either engine: the widths are Pillow's
+        check_measured_by(run, PillowEngine())
+        check_measured_by(run, hb)
+    assert render_overlay(Layout(tuple(runs)), (640, 360)).size == (640, 360)
+
+    face = resolve_face(SANS_STACK, size=40)
+    if face.path is None:
+        pytest.skip("no installed font to shape with")
+    shaped = block(
+        ["ab"],
+        TextStyle(family=SANS_STACK, size=0.05),
+        Frame.blank((640, 360)),
+        engine=hb,
+    ).runs
+    assert {r.measured_by for r in shaped} == {"harfbuzz"}
+    with pytest.raises(ValueError, match="'harfbuzz'"):
+        check_measured_by(shaped[0], PillowEngine())
+
+
+class Remeasuring(PillowEngine):
+    """Inherits ``name = "pillow"`` but measures differently."""
+
+    def length(self, face, text):
+        return 2 * face.length(text)
+
+
+class Renamed(PillowEngine):
+    name = "renamed"
+
+    def length(self, face, text):
+        return 2 * face.length(text)
+
+
+def test_a_subclass_that_remeasures_is_not_mistaken_for_its_base():
+    assert {r.measured_by for r in _runs(Remeasuring())} == {"Remeasuring"}
+    assert {r.measured_by for r in _runs(Renamed())} == {"renamed"}
+    with pytest.raises(ValueError, match="'Remeasuring'"):
+        check_measured_by(_runs(Remeasuring())[0], PillowEngine())
+
+
+def test_an_instance_name_tells_two_configurations_apart():
+    a, b = Other(), Other()
+    a.name, b.name = "other:tight", "other:loose"
+    assert {r.measured_by for r in _runs(a)} == {"other:tight"}
+    with pytest.raises(ValueError, match="'other:tight'"):
+        check_measured_by(_runs(a)[0], b)
+
+
+def _hb():
+    pytest.importorskip("uharfbuzz")
+    pytest.importorskip("freetype")
+    from tituli.shaping import HarfBuzzEngine
+
+    return HarfBuzzEngine
+
+
+def test_harfbuzz_embedded_runs_outline_and_render_mixed_with_shaped_ones():
+    """The caller's path: one layout, embedded and file fonts, drawn by HarfBuzz."""
+    HarfBuzzEngine = _hb()
+    pytest.importorskip("fontTools")
+    from tituli.fonts import resolve_face
+
+    hb = HarfBuzzEngine()
+    embedded = _runs(hb)[0]
+    assert run_outline(embedded, engine=PillowEngine()).d  # outlined by who measured
+    if resolve_face(SANS_STACK, size=40).path is None:
+        pytest.skip("no installed font to shape with")
+    shaped = block(
+        ["ab"],
+        TextStyle(family=SANS_STACK, size=0.05),
+        Frame.blank((640, 360)),
+        engine=hb,
+    ).runs
+    mixed = Layout((embedded, *shaped))
+    assert render_overlay(mixed, (640, 360), engine=hb).getbbox()  # drew ink, no raise
+    with pytest.raises(ValueError, match="'harfbuzz'"):
+        render_overlay(mixed, (640, 360), engine=PillowEngine())
+
+
+def test_a_subclass_that_remeasures_loses_the_handoff_too():
+    """A ``measurer`` inherited past a new ``length`` no longer holds (no false stamp)."""
+    HarfBuzzEngine = _hb()
+
+    class Doubled(HarfBuzzEngine):
+        def length(self, face, text):
+            return 2 * super().length(face, text)
+
+    assert {r.measured_by for r in _runs(Doubled())} == {"Doubled"}
+
+
+class _NameMixin:
+    name = "tight"
+
+
+class Named(_NameMixin, Remeasuring):
+    pass
+
+
+def test_a_name_from_a_mixin_above_length_counts():
+    assert {r.measured_by for r in _runs(Named())} == {"tight"}
+
+
+def test_an_empty_name_falls_back_to_the_class_name():
+    class Nameless(Other):
+        name = None
+
+    blank = Other()
+    blank.name = ""
+    assert {r.measured_by for r in _runs(Nameless())} == {"Nameless"}
+    assert {r.measured_by for r in _runs(blank)} == {"Other"}
+
+
+def test_a_measurer_must_hand_back_an_engine():
+    from unittest.mock import Mock
+
+    from tituli.layout import engine_name
+
+    class Bad(Other):
+        def measurer(self, face):
+            return "pillow"
+
+    with pytest.raises(TypeError, match="not an engine"):
+        _runs(Bad())
+    assert engine_name(Mock(), STYLE.face(FH)) == "Mock"  # no invented delegation

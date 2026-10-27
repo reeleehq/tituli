@@ -106,9 +106,14 @@ class HarfBuzzEngine:
 
         self._fallback = PillowEngine()
 
+    def measurer(self, face: Face):
+        """The engine that measures and draws ``face``: Pillow for the embedded
+        font (it has no file to shape), this one otherwise."""
+        return self._fallback if face.path is None else self
+
     def length(self, face: Face, text: str) -> float:
         """Advance of ``text`` as this engine shapes it (kerning, ligatures)."""
-        if face.path is None:
+        if self.measurer(face) is not self:
             return self._fallback.length(face, text)
         return sum(
             xa
@@ -130,7 +135,7 @@ class HarfBuzzEngine:
         import freetype
 
         face = run.face
-        if face.path is None:  # Pillow's embedded fallback font has no file
+        if self.measurer(face) is not self:
             self._fallback.draw_run(canvas, run, opacity)
             return
         r, g, b, a = run.color

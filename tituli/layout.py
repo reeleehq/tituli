@@ -218,23 +218,68 @@ def text_advance(
 FACE_ENGINE = "pillow"
 
 
-def engine_name(engine: "Engine | None") -> str:
-    """Who measured: the engine's ``name`` (else its class name); ``None`` is the face."""
+def _claims(cls: type, attr: str) -> bool:
+    """Whether ``cls`` defines ``attr`` at or below where it defines ``length``.
+
+    A claim about measuring (``name``, ``measurer``) only holds for the
+    ``length`` it was made beside: a subclass that re-measures without
+    restating it does not inherit it.
+    """
+    mro = cls.__mro__
+    owner = next((c for c in mro if attr in vars(c)), None)
+    length_owner = next((c for c in mro if "length" in vars(c)), None)
+    if owner is None:
+        return False
+    return length_owner is None or mro.index(owner) <= mro.index(length_owner)
+
+
+def _own_name(engine: "Engine") -> str:
+    """The engine's ``name`` if it may claim one (an instance's own wins), else its class name."""
+    own = vars(engine).get("name") if hasattr(engine, "__dict__") else None
+    if own:
+        return own
+    cls = type(engine)
+    return (
+        getattr(engine, "name", None) if _claims(cls, "name") else None
+    ) or cls.__name__
+
+
+def engine_name(engine: "Engine | None", face: fonts.Face) -> str:
+    """Who measures ``face`` with ``engine`` (``None`` is the face, as Pillow does).
+
+    An engine that hands some faces to another (``measurer(face)``, as
+    HarfBuzz does with the embedded font) is named by the one it hands them
+    to. Otherwise its ``name`` (an instance's own wins, so two configurations
+    of one engine can differ) — unless a subclass re-measures (overrides
+    ``length``) without restating ``name``/``measurer``, when it is told
+    apart by class name.
+    """
     if engine is None:
         return FACE_ENGINE
-    return getattr(engine, "name", None) or type(engine).__name__
+    if _claims(type(engine), "measurer"):
+        actual = engine.measurer(face)
+        if actual is not engine:
+            if not callable(getattr(actual, "length", None)):
+                raise TypeError(
+                    f"{type(engine).__name__}.measurer returned "
+                    f"{type(actual).__name__}, not an engine"
+                )
+            return _own_name(actual)  # one hop: a delegate does not delegate again
+    return _own_name(engine)
 
 
-def _keep(engine: "Engine | None", width: float) -> dict:
+def _keep(engine: "Engine | None", face: fonts.Face, width: float) -> dict:
     """The ``Run`` fields recording a width an engine measured (none without one)."""
     if engine is None:
         return {}
-    return {"advance": width, "measured_by": engine_name(engine)}
+    return {"advance": width, "measured_by": engine_name(engine, face)}
 
 
 def _advance(engine: "Engine | None", face: fonts.Face, text: str) -> dict:
     """:func:`_keep` for ``text`` (measures only when an engine will)."""
-    return {} if engine is None else _keep(engine, text_advance(engine, face, text))
+    if engine is None:
+        return {}
+    return _keep(engine, face, text_advance(engine, face, text))
 
 
 def check_measured_by(run: "Run", engine: "Engine | None") -> None:
@@ -247,7 +292,7 @@ def check_measured_by(run: "Run", engine: "Engine | None") -> None:
     """
     if run.measured_by is None:
         return
-    measured, using = run.measured_by, engine_name(engine)
+    measured, using = run.measured_by, engine_name(engine, run.face)
     if measured != using:
         raise ValueError(
             f"run {run.text!r} was measured by the {measured!r} engine but is being "
@@ -456,7 +501,7 @@ def _glyph_runs(
                 unit="glyph",
                 index=start_index + i,
                 tags=tags,
-                **_keep(engine, advance),
+                **_keep(engine, face, advance),
             )
         )
         cx += advance + tracking
@@ -657,7 +702,7 @@ def along_path(
                     unit="glyph",
                     index=i,
                     tags=tags,
-                    **_keep(engine, widths[i]),
+                    **_keep(engine, face, widths[i]),
                 )
             )
         s += adv
@@ -740,7 +785,7 @@ def glyph_columns(
                     unit="glyph",
                     index=idx,
                     tags=tags + (f"streak:{k}",),
-                    **_keep(engine, adv),
+                    **_keep(engine, face, adv),
                 )
             )
             idx += 1
@@ -853,7 +898,7 @@ def fill_shape(
                         unit="word",
                         index=idx,
                         tags=tags,
-                        **_keep(engine, adv),
+                        **_keep(engine, face, adv),
                     )
                 )
                 cx += adv + space
