@@ -6,7 +6,7 @@ from dataclasses import replace
 import pytest
 from PIL import Image
 
-from tituli import EMBEDDED, Frame, TextStyle, render_overlay
+from tituli import EMBEDDED, Frame, Layout, TextStyle, render_overlay
 from tituli import tools
 from tituli.compose import caption
 from tituli.layout import Run, block, check_measured_by
@@ -129,3 +129,61 @@ def test_dropping_the_advance_drops_the_engine_claim():
     bare = replace(run, advance=None)
     assert bare.measured_by is None
     check_measured_by(bare, PillowEngine())
+
+
+def test_harfbuzz_stamps_the_embedded_font_as_measured_by_pillow():
+    """HarfBuzz hands the file-less embedded font to Pillow; the stamp says so (tituli#18)."""
+    pytest.importorskip("uharfbuzz")
+    pytest.importorskip("freetype")
+    from tituli.fonts import resolve_face
+    from tituli.shaping import HarfBuzzEngine
+
+    hb = HarfBuzzEngine()
+    runs = _runs(hb)
+    assert {r.measured_by for r in runs} == {"pillow"}
+    for run in runs:  # usable with either engine: the widths are Pillow's
+        check_measured_by(run, PillowEngine())
+        check_measured_by(run, hb)
+    assert render_overlay(Layout(tuple(runs)), (640, 360)).size == (640, 360)
+
+    face = resolve_face("DejaVu Sans", size=40)
+    if face.path is None:
+        pytest.skip("no installed font to shape with")
+    shaped = block(
+        ["ab"],
+        TextStyle(family="DejaVu Sans", size=0.05),
+        Frame.blank((640, 360)),
+        engine=hb,
+    ).runs
+    assert {r.measured_by for r in shaped} == {"harfbuzz"}
+    with pytest.raises(ValueError, match="'harfbuzz'"):
+        check_measured_by(shaped[0], PillowEngine())
+
+
+class Remeasuring(PillowEngine):
+    """Inherits ``name = "pillow"`` but measures differently."""
+
+    def length(self, face, text):
+        return 2 * face.length(text)
+
+
+class Renamed(PillowEngine):
+    name = "renamed"
+
+    def length(self, face, text):
+        return 2 * face.length(text)
+
+
+def test_a_subclass_that_remeasures_is_not_mistaken_for_its_base():
+    assert {r.measured_by for r in _runs(Remeasuring())} == {"Remeasuring"}
+    assert {r.measured_by for r in _runs(Renamed())} == {"renamed"}
+    with pytest.raises(ValueError, match="'Remeasuring'"):
+        check_measured_by(_runs(Remeasuring())[0], PillowEngine())
+
+
+def test_an_instance_name_tells_two_configurations_apart():
+    a, b = Other(), Other()
+    a.name, b.name = "other:tight", "other:loose"
+    assert {r.measured_by for r in _runs(a)} == {"other:tight"}
+    with pytest.raises(ValueError, match="'other:tight'"):
+        check_measured_by(_runs(a)[0], b)
