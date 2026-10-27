@@ -364,10 +364,12 @@ def overlay_video(
 
     ``overlays`` is a JSON file/string: a list of ``{"start", "end", "text",
     "attribution"?, "kind"?: "caption"|"lower_third", "role"?, "anchor"?,
-    "halo"?: true}``
+    "halo"?: true|false|{"spread"?, "blur"?, "gain"?, "opacity"?, "color"?}}``
     or ``{"start", "end", "image", "fade_in"?, "fade_out"?}`` (a frame-sized
     PNG, e.g. a title page; it occupies its own slot and suppresses no
-    caption — time captions after it). Text is laid out against the video's frame size;
+    caption — time captions after it). ``"halo"`` is a bool or a
+    :class:`~tituli.style.Halo`'s fields; anything else (``"false"`` too) raises
+    naming the item. Text is laid out against the video's frame size;
     the picture under each overlay is not sampled (pass a still through
     ``caption`` for that). ``pad_start`` seconds are added at the head (first
     frame held, audio delayed); overlay times are on the padded timeline.

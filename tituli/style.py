@@ -48,8 +48,9 @@ class Halo:
 
     The glyphs' own alpha, dilated by ``spread``, blurred by ``blur``, boosted by
     ``gain`` and laid under the text at ``opacity``. Sizes are in em (the
-    run's type size), so one halo is right at any resolution. ``color`` ``None``
-    is the opposite of the ink: dark under light text, light under dark.
+    run's type size: runs of different sizes get their own halo), so one halo
+    is right at any resolution. ``color`` ``None`` is the opposite of the ink:
+    dark under light text, light under dark.
 
     The defaults give a soft glow that keeps letter shapes, for regular-weight
     type. Thin type over very bright footage takes a heavier one, e.g.
@@ -62,6 +63,21 @@ class Halo:
     blur: float = 0.1
     gain: float = 2.0
     opacity: float = 0.65
+
+    def __post_init__(self) -> None:
+        negative = [
+            f"{k}={v}"
+            for k, v in (
+                ("spread", self.spread),
+                ("blur", self.blur),
+                ("gain", self.gain),
+            )
+            if v < 0
+        ]
+        if negative:
+            raise ValueError(f"Halo: negative {', '.join(negative)}")
+        if not 0 <= self.opacity <= 1:
+            raise ValueError(f"Halo: opacity={self.opacity} is outside [0, 1]")
 
 
 @dataclass(frozen=True)

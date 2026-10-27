@@ -32,7 +32,8 @@ Frame.over(
 
 **Centred text over footage without darkening it**: a halo instead of a scrim.
 ```python
-caption("AI imagining…", frame=f, anchor="center", halo=True)  # or halo=Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8) for thin type
+# or halo=Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8) for thin type
+caption("AI imagining…", frame=f, anchor="center", halo=True)
 ```
 
 **Text as geometry** (no font engine downstream — e.g. an animation runtime that draws SVG): lay out with a deterministic face, then take each run's contours.
