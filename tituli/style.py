@@ -43,6 +43,28 @@ _MIN_FONT_PX = 8
 
 
 @dataclass(frozen=True)
+class Halo:
+    """A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).
+
+    The glyphs' own alpha, dilated by ``spread``, blurred by ``blur``, boosted by
+    ``gain`` and laid under the text at ``opacity``. Sizes are in em (the
+    run's type size), so one halo is right at any resolution. ``color`` ``None``
+    is the opposite of the ink: dark under light text, light under dark.
+
+    The defaults give a soft glow that keeps letter shapes, for regular-weight
+    type. Thin type over very bright footage takes a heavier one, e.g.
+    ``Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8)`` (a 12 %-of-height
+    EB Garamond italic over sand); on heavy type that one fills the counters.
+    """
+
+    color: Color | None = None
+    spread: float = 0.03
+    blur: float = 0.1
+    gain: float = 2.0
+    opacity: float = 0.65
+
+
+@dataclass(frozen=True)
 class TextStyle:
     """How a run of text looks. All fields keyword-only; build variants with ``with_``."""
 

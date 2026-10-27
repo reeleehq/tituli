@@ -25,21 +25,27 @@ from __future__ import annotations
 
 import math
 from dataclasses import replace
+from itertools import groupby
 from typing import Callable, Iterator, Protocol
 
-from PIL import Image, ImageChops, ImageDraw
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from tituli.color import RGBA
+from tituli.color import NEAR_BLACK, RGBA, WHITE, parse_color, relative_luminance
 from tituli.frame import Frame
 from tituli.geometry import Box
 from tituli.fonts import Face
 from tituli.layout import Layout, Plate, Run, check_measured_by, FACE_ENGINE
+from tituli.style import Halo
 
 _TILE_MARGIN_EM = 0.35  # extra room around a rotated glyph tile, in em
 _RESAMPLE = Image.Resampling.BICUBIC
 _ALPHA_MAX = 255
 _GRADIENT_STEPS = 256
 _CORNER_POWER = 2.2  # ease of a scrim's falloff (higher = holds longer, drops faster)
+_BLUR_REACH = (
+    3  # a Gaussian's visible reach, in radii: how far a halo extends past its spread
+)
+_LIGHT_INK = 0.5  # relative luminance above which ink counts as light (halo goes dark)
 
 
 class Engine(Protocol):
@@ -227,6 +233,56 @@ def draw_plate(canvas: Image.Image, plate: Plate) -> None:
     canvas.alpha_composite(layer, (x0, y0))
 
 
+def _halo_color(halo: Halo, ink: RGBA) -> RGBA:
+    """The halo's colour, or the opposite of the ink when it names none."""
+    if halo.color is not None:
+        return parse_color(halo.color)
+    return parse_color(NEAR_BLACK if relative_luminance(ink) > _LIGHT_INK else WHITE)
+
+
+def draw_halo(
+    canvas: Image.Image, text: Image.Image, halo: Halo, *, em: float, ink: RGBA
+) -> None:
+    """Composite onto ``canvas`` the halo of the glyphs drawn on ``text`` (same size).
+
+    Only the region the glyphs and their glow reach is filtered, so a caption
+    on a 4K frame costs what the caption covers.
+    """
+    alpha = text.getchannel("A")
+    ink_box = alpha.getbbox()
+    if ink_box is None:
+        return
+    spread = max(0, round(halo.spread * em))
+    blur = halo.blur * em
+    reach = spread + math.ceil(_BLUR_REACH * blur)
+    x0, y0 = max(0, ink_box[0] - reach), max(0, ink_box[1] - reach)
+    x1, y1 = (
+        min(canvas.width, ink_box[2] + reach),
+        min(canvas.height, ink_box[3] + reach),
+    )
+    glow = alpha.crop((x0, y0, x1, y1))
+    for _ in range(
+        spread
+    ):  # dilate one pixel a pass: a 3x3 max stays cheap at any size
+        glow = glow.filter(ImageFilter.MaxFilter(3))
+    if blur > 0:
+        glow = glow.filter(ImageFilter.GaussianBlur(blur))
+    glow = glow.point(lambda v: round(min(_ALPHA_MAX, v * halo.gain) * halo.opacity))
+    r, g, b, a = _halo_color(halo, ink)
+    layer = Image.new("RGBA", glow.size, (r, g, b, 0))
+    layer.putalpha(glow.point(lambda v: v * a // _ALPHA_MAX))
+    canvas.alpha_composite(layer, (x0, y0))
+
+
+def _draw_runs(
+    canvas: Image.Image, runs: list[Run], engine: Engine, t: float | None
+) -> None:
+    for run in runs:
+        f = _envelope(run, t)
+        if f > 0:
+            engine.draw_run(canvas, run, f)
+
+
 # ----------------------------------------------------------------------------
 # Entry points
 # ----------------------------------------------------------------------------
@@ -246,10 +302,18 @@ def render_overlay(
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     for plate in layout.plates:
         draw_plate(canvas, plate)
-    for run in layout.runs:
-        f = _envelope(run, t)
-        if f > 0:
-            engine.draw_run(canvas, run, f)
+    # Consecutive runs sharing a halo glow together, under their own text only:
+    # the glyphs are drawn on a layer whose alpha (reveal envelope included) is the halo's source.
+    for halo, group in groupby(layout.runs, key=lambda r: r.halo):
+        runs = list(group)
+        if halo is None:
+            _draw_runs(canvas, runs, engine, t)
+            continue
+        text = Image.new("RGBA", size, (0, 0, 0, 0))
+        _draw_runs(text, runs, engine, t)
+        em = max(r.face.size for r in runs)
+        draw_halo(canvas, text, halo, em=em, ink=runs[0].color)
+        canvas.alpha_composite(text)
     return canvas
 
 

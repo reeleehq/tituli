@@ -427,6 +427,7 @@ def materialize(
             )
         elif isinstance(p, dict) and "text" in p:
             kind = p.get("kind", "caption")
+            halo = bool(p.get("halo", False))
             if kind == "lower_third":
                 lay = lower_third(
                     p["text"],
@@ -434,6 +435,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             elif kind == "note":
                 lay = note(
@@ -442,6 +444,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             elif kind == "title":
                 lay = title_card(
@@ -450,6 +453,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             else:
                 lay = caption(
@@ -458,6 +462,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
         if lay is None:
             unrenderable.append(

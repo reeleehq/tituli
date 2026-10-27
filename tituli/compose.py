@@ -42,6 +42,7 @@ from tituli.style import (
     NOTE_LINE,
     SUBTITLE,
     TITLE,
+    Halo,
     TextStyle,
 )
 
@@ -350,6 +351,7 @@ def title_card(
     kicker_style: TextStyle = KICKER,
     ink: RGBA | None = None,
     scrim: bool | None = None,
+    halo: bool | Halo = False,
     engine: "Engine | None" = None,
 ) -> Layout:
     """An opening card: optional kicker, title, optional subtitle.
@@ -358,6 +360,8 @@ def title_card(
     the parts with a gap proportional to the type, places the block at
     ``anchor`` (subject-avoiding when the frame knows the picture), and picks
     ink by the frame's contrast. ``scrim`` forces a scrim on/off; None decides.
+    ``halo`` (``True`` or a :class:`~tituli.style.Halo`) glows under the glyphs
+    in place of an automatic scrim: legible over footage without darkening it.
     """
     safe = frame.safe
     max_w = safe.width * _TITLE_MAX_WIDTH
@@ -385,6 +389,7 @@ def title_card(
         where,
         ink=ink,
         scrim=scrim,
+        halo=halo,
         em=tstyle.face(frame.height).size,
         preferred=parse_color(title_style.color),
     )
@@ -402,6 +407,7 @@ def caption(
     max_width: float = _CAPTION_MAX_WIDTH,
     ink: RGBA | None = None,
     scrim: bool | None = None,
+    halo: bool | Halo = False,
     accent: bool = True,
     on_overflow: str = "fit",
     engine: "Engine | None" = None,
@@ -415,7 +421,10 @@ def caption(
     :class:`TextDoesNotFit`; pass ``on_overflow="truncate"`` for text whose
     length you do not control (see :data:`OVERFLOW_POLICIES`). Placement avoids the
     frame's ``avoid`` boxes and its delivery target's reserved zones; the
-    scrim is a 2-D corner falloff cut to the measured block.
+    scrim is a 2-D corner falloff cut to the measured block. ``halo`` (``True``
+    or a :class:`~tituli.style.Halo`) glows under the glyphs in place of an
+    automatic scrim — for a centred caption over footage, where a scrim would
+    dim the frame.
     """
     safe = frame.safe
     max_w = safe.width * max_width
@@ -476,6 +485,7 @@ def caption(
         where,
         ink=ink,
         scrim=scrim,
+        halo=halo,
         em=em,
         preferred=parse_color(style.color),
     )
@@ -494,6 +504,7 @@ def lower_third(
     role_style: TextStyle = LOWER_THIRD_ROLE,
     ink: RGBA | None = None,
     scrim: bool | None = None,
+    halo: bool | Halo = False,
     on_overflow: str = "fit",
     engine: "Engine | None" = None,
 ) -> Layout:
@@ -547,6 +558,7 @@ def lower_third(
         where,
         ink=ink,
         scrim=scrim,
+        halo=halo,
         em=em,
         preferred=parse_color(name_style.color),
     )
@@ -564,6 +576,7 @@ def note(
     max_width: float = _NOTE_MAX_WIDTH,
     ink: RGBA | None = None,
     scrim: bool | None = None,
+    halo: bool | Halo = False,
     accent: bool = True,
     on_overflow: str = "fit",
     engine: "Engine | None" = None,
@@ -619,6 +632,7 @@ def note(
         where,
         ink=ink,
         scrim=scrim,
+        halo=halo,
         em=em,
         preferred=parse_color(line_style.color),
     )
@@ -648,18 +662,33 @@ def _finish(
     scrim: bool | None,
     em: float,
     preferred: RGBA,
+    halo: bool | Halo = False,
 ) -> Layout:
-    """Apply the ink decision and, if needed, the scrim — after measuring."""
+    """Apply the ink decision and, if needed, the scrim — after measuring.
+
+    ``halo`` (``True`` for the default :class:`~tituli.style.Halo`, or one)
+    glows under the glyphs: legibility over footage without darkening the
+    picture. It stands in for the scrim the decision would add; ``scrim=True``
+    still forces one, and ``meta["ink"]`` says when the halo replaced it.
+    """
     bb = lay.bbox()
     decision = decide_ink(frame, bb, preferred=preferred)
     chosen = ink if ink is not None else decision.ink
+    glow = Halo() if halo is True else (halo or None)
     runs = tuple(
-        Run(**{**r.__dict__, "color": with_alpha(chosen, r.color[3] / 255)})
+        Run(
+            **{
+                **r.__dict__,
+                "color": with_alpha(chosen, r.color[3] / 255),
+                "halo": glow or r.halo,
+            }
+        )
         for r in lay.runs
     )
-    lay = Layout(
-        runs, lay.plates, {**lay.meta, "ink": decision.reason, "anchor": anchor}
-    )
+    reason = decision.reason
+    if glow is not None and scrim is None and decision.scrim is not None:
+        scrim, reason = False, f"{reason}; halo instead of scrim"
+    lay = Layout(runs, lay.plates, {**lay.meta, "ink": reason, "anchor": anchor})
     want_scrim = decision.scrim is not None if scrim is None else scrim
     if want_scrim:
         color = decision.scrim or (SCRIM_DARK if chosen == WHITE else SCRIM_LIGHT)

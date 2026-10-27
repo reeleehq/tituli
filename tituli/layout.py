@@ -30,7 +30,7 @@ from tituli import fonts
 from tituli.color import RGBA, parse_color, with_alpha
 from tituli.frame import Frame
 from tituli.geometry import Box, Path
-from tituli.style import TextStyle
+from tituli.style import Halo, TextStyle
 
 if TYPE_CHECKING:  # pragma: no cover
     from tituli.render import Engine
@@ -77,6 +77,8 @@ class Run:
     #: :func:`check_measured_by` refuses a run used with another engine.
     #: Cleared whenever ``advance`` is ``None``.
     measured_by: str | None = None
+    #: A soft glow drawn under the glyphs (:class:`~tituli.style.Halo`); ``None``: none.
+    halo: Halo | None = None
 
     def __post_init__(self) -> None:
         if self.advance is None and self.measured_by is not None:
@@ -157,6 +159,10 @@ class Layout:
 
     def with_plates(self, *plates: Plate) -> "Layout":
         return Layout(self.runs, self.plates + tuple(plates), dict(self.meta))
+
+    def with_halo(self, halo: Halo | None = Halo()) -> "Layout":
+        """Every run with ``halo`` under it (``None`` removes it)."""
+        return replace(self, runs=tuple(replace(r, halo=halo) for r in self.runs))
 
     def with_timing(self, t_in: float, t_full: float) -> "Layout":
         """Give every run the same reveal envelope."""
