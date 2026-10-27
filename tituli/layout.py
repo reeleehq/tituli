@@ -218,36 +218,54 @@ def text_advance(
 FACE_ENGINE = "pillow"
 
 
-def _owner(cls: type, attr: str) -> type | None:
-    """The class in ``cls``'s MRO that defines ``attr`` itself."""
-    return next((c for c in cls.__mro__ if attr in vars(c)), None)
+def _claims(cls: type, attr: str) -> bool:
+    """Whether ``cls`` defines ``attr`` at or below where it defines ``length``.
+
+    A claim about measuring (``name``, ``measurer``) only holds for the
+    ``length`` it was made beside: a subclass that re-measures without
+    restating it does not inherit it.
+    """
+    mro = cls.__mro__
+    owner = next((c for c in mro if attr in vars(c)), None)
+    length_owner = next((c for c in mro if "length" in vars(c)), None)
+    if owner is None:
+        return False
+    return length_owner is None or mro.index(owner) <= mro.index(length_owner)
 
 
-def engine_name(engine: "Engine | None", face: "fonts.Face | None" = None) -> str:
+def _own_name(engine: "Engine") -> str:
+    """The engine's ``name`` if it may claim one (an instance's own wins), else its class name."""
+    own = vars(engine).get("name") if hasattr(engine, "__dict__") else None
+    if own:
+        return own
+    cls = type(engine)
+    return (
+        getattr(engine, "name", None) if _claims(cls, "name") else None
+    ) or cls.__name__
+
+
+def engine_name(engine: "Engine | None", face: fonts.Face) -> str:
     """Who measures ``face`` with ``engine`` (``None`` is the face, as Pillow does).
 
     An engine that hands some faces to another (``measurer(face)``, as
-    HarfBuzz does with the embedded font) is named by the one that measures.
-    Otherwise its ``name`` (an instance's own wins, so two configurations of
-    one engine can differ) — unless a subclass re-measures (overrides
-    ``length``) without naming itself, when it is told apart by class name.
+    HarfBuzz does with the embedded font) is named by the one it hands them
+    to. Otherwise its ``name`` (an instance's own wins, so two configurations
+    of one engine can differ) — unless a subclass re-measures (overrides
+    ``length``) without restating ``name``/``measurer``, when it is told
+    apart by class name.
     """
     if engine is None:
         return FACE_ENGINE
-    delegate = getattr(engine, "measurer", None)
-    if face is not None and delegate is not None:
-        actual = delegate(face)
+    if _claims(type(engine), "measurer"):
+        actual = engine.measurer(face)
         if actual is not engine:
-            return engine_name(actual, face)
-    if "name" in getattr(engine, "__dict__", {}):
-        return engine.name
-    cls = type(engine)
-    name_owner, length_owner = _owner(cls, "name"), _owner(cls, "length")
-    if name_owner is None or (
-        length_owner and not issubclass(name_owner, length_owner)
-    ):
-        return cls.__name__
-    return engine.name
+            if not callable(getattr(actual, "length", None)):
+                raise TypeError(
+                    f"{type(engine).__name__}.measurer returned "
+                    f"{type(actual).__name__}, not an engine"
+                )
+            return _own_name(actual)  # one hop: a delegate does not delegate again
+    return _own_name(engine)
 
 
 def _keep(engine: "Engine | None", face: fonts.Face, width: float) -> dict:
