@@ -8,5 +8,6 @@ tituli.style
 
    .. autosummary::
    
+      Halo
       TextStyle
    

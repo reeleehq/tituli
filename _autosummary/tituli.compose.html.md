@@ -40,7 +40,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 What the frame told us to do about legibility.
 
-### tituli.compose.caption(text, attribution='', , frame, anchor='auto', style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.04, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.25, case='as-is', align='left', opacity=1.0, features=()), attribution_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.02, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='left', opacity=0.85, features=()), max_lines=3, max_width=0.55, ink=None, scrim=None, accent=True, on_overflow='fit', engine=None)
+### tituli.compose.caption(text, attribution='', , frame, anchor='auto', style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.04, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.25, case='as-is', align='left', opacity=1.0, features=()), attribution_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.02, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='left', opacity=0.85, features=()), max_lines=3, max_width=0.55, ink=None, scrim=None, halo=False, accent=True, on_overflow='fit', engine=None)
 
 A museum label over a picture: what is on screen, plus a tiny credit line.
 
@@ -51,7 +51,10 @@ compete. If the words cannot be set legibly this raises
 [`TextDoesNotFit`](tituli.html.md#tituli.TextDoesNotFit); pass `on_overflow="truncate"` for text whose
 length you do not control (see `OVERFLOW_POLICIES`). Placement avoids the
 frame’s `avoid` boxes and its delivery target’s reserved zones; the
-scrim is a 2-D corner falloff cut to the measured block.
+scrim is a 2-D corner falloff cut to the measured block. `halo` (`True`
+or a [`Halo`](tituli.style.html.md#tituli.style.Halo)) glows under the glyphs in place of an
+automatic scrim — for a centred caption over footage, where a scrim would
+dim the frame.
 
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
@@ -75,7 +78,7 @@ A silent-film style card: serif italic prose, centred on the frame.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.compose.lower_third(name, role='', , frame, anchor='bottom-left', name_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.042, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), role_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.04, leading=1.2, case='as-is', align='left', opacity=0.9, features=()), ink=None, scrim=None, on_overflow='fit', engine=None)
+### tituli.compose.lower_third(name, role='', , frame, anchor='bottom-left', name_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.042, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), role_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.04, leading=1.2, case='as-is', align='left', opacity=0.9, features=()), ink=None, scrim=None, halo=False, on_overflow='fit', engine=None)
 
 Who is speaking: a name and a role, left-anchored, scrimmed if needed.
 
@@ -90,7 +93,7 @@ a shortened label but a false one.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.compose.note(lines, , frame, headline='', anchor='top-left', headline_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.055, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.15, case='as-is', align='left', opacity=1.0, features=()), line_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='left', opacity=0.92, features=()), max_width=0.62, ink=None, scrim=None, accent=True, on_overflow='fit', engine=None)
+### tituli.compose.note(lines, , frame, headline='', anchor='top-left', headline_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.055, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.15, case='as-is', align='left', opacity=1.0, features=()), line_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='left', opacity=0.92, features=()), max_width=0.62, ink=None, scrim=None, halo=False, accent=True, on_overflow='fit', engine=None)
 
 An editorial context card: an optional headline over equal-weight lines.
 
@@ -105,7 +108,7 @@ Raises [`TextDoesNotFit`](tituli.html.md#tituli.TextDoesNotFit) if a line cannot
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.compose.title_card(title, subtitle='', , frame, kicker='', anchor='center', title_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.075, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.01, leading=1.1, case='as-is', align='center', opacity=1.0, features=()), subtitle_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.02, leading=1.3, case='as-is', align='center', opacity=1.0, features=()), kicker_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.022, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.18, leading=1.2, case='upper', align='center', opacity=1.0, features=()), ink=None, scrim=None, engine=None)
+### tituli.compose.title_card(title, subtitle='', , frame, kicker='', anchor='center', title_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.075, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.01, leading=1.1, case='as-is', align='center', opacity=1.0, features=()), subtitle_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.02, leading=1.3, case='as-is', align='center', opacity=1.0, features=()), kicker_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.022, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.18, leading=1.2, case='upper', align='center', opacity=1.0, features=()), ink=None, scrim=None, halo=False, engine=None)
 
 An opening card: optional kicker, title, optional subtitle.
 
@@ -113,6 +116,8 @@ Fits the title to 80 % of the safe width (shrinking, never clipping), stacks
 the parts with a gap proportional to the type, places the block at
 `anchor` (subject-avoiding when the frame knows the picture), and picks
 ink by the frame’s contrast. `scrim` forces a scrim on/off; None decides.
+`halo` (`True` or a [`Halo`](tituli.style.html.md#tituli.style.Halo)) glows under the glyphs
+in place of an automatic scrim: legible over footage without darkening it.
 
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)

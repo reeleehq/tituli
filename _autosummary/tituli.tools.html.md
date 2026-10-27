@@ -36,7 +36,7 @@ glyph-by-glyph reveal rather than a PNG. `engine` is `"pillow"`
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### tituli.tools.caption(image, text, attribution='', , out='captioned.png', anchor='auto', avoid='saliency', delivery='youtube', size=None, overlay_only=False, engine=None)
+### tituli.tools.caption(image, text, attribution='', , out='captioned.png', anchor='auto', avoid='saliency', delivery='youtube', size=None, overlay_only=False, engine=None, halo=False)
 
 Put a museum-label caption and a tiny attribution on `image`.
 
@@ -44,7 +44,8 @@ Placement avoids the subject (`avoid="saliency"` uses `burns` when
 installed, otherwise nothing is avoided) and the delivery target’s
 reserved zones. `overlay_only` writes a transparent PNG to composite
 onto motion video instead of the flattened picture. `engine` is
-`"pillow"` (default) or `"harfbuzz"`.
+`"pillow"` (default) or `"harfbuzz"`. `halo` glows under the text
+instead of a scrim (a centred caption over footage).
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -69,11 +70,12 @@ List installed font families (optionally filtered by substring).
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### tituli.tools.lower_third(name, role='', , out='lower_third.png', background=None, size=None, delivery='youtube', engine=None)
+### tituli.tools.lower_third(name, role='', , out='lower_third.png', background=None, size=None, delivery='youtube', engine=None, halo=False)
 
 A name + role block, bottom-left, as a transparent overlay (or on a picture).
 
-`engine` is `"pillow"` (default) or `"harfbuzz"`.
+`engine` is `"pillow"` (default) or `"harfbuzz"`. `halo` glows under
+the text instead of a scrim.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -83,10 +85,13 @@ A name + role block, bottom-left, as a transparent overlay (or on a picture).
 Composite captions/lower thirds/images onto a finished video in one ffmpeg pass.
 
 `overlays` is a JSON file/string: a list of `{"start", "end", "text",
-"attribution"?, "kind"?: "caption"|"lower_third", "role"?, "anchor"?}`
+"attribution"?, "kind"?: "caption"|"lower_third", "role"?, "anchor"?,
+"halo"?: true|false|{"spread"?, "blur"?, "gain"?, "opacity"?, "color"?}}`
 or `{"start", "end", "image", "fade_in"?, "fade_out"?}` (a frame-sized
 PNG, e.g. a title page; it occupies its own slot and suppresses no
-caption — time captions after it). Text is laid out against the video’s frame size;
+caption — time captions after it). `"halo"` is a bool or a
+[`Halo`](tituli.style.html.md#tituli.style.Halo)’s fields; anything else (`"false"` too) raises
+naming the item. Text is laid out against the video’s frame size;
 the picture under each overlay is not sampled (pass a still through
 `caption` for that). `pad_start` seconds are added at the head (first
 frame held, audio delayed); overlay times are on the padded timeline.
@@ -95,7 +100,7 @@ frame held, audio delayed); overlay times are on the padded timeline.
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### tituli.tools.title_card(title, subtitle='', , out='title.png', background=None, size=None, kicker='', anchor='center', avoid=None, duration=None, engine=None)
+### tituli.tools.title_card(title, subtitle='', , out='title.png', background=None, size=None, kicker='', anchor='center', avoid=None, duration=None, engine=None, halo=False)
 
 Render a title card to `out` (PNG, or MP4 when `duration` is given).
 
@@ -103,6 +108,7 @@ Render a title card to `out` (PNG, or MP4 when `duration` is given).
 transparent overlay). `anchor` is a grid position; `avoid` is
 `"saliency"` or `"x,y,w,h"` to keep the title off the subject.
 `engine` is `"pillow"` (default) or `"harfbuzz"` (`tituli[shaping]`).
+`halo` glows under the text instead of a scrim (over footage).
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)

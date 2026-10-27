@@ -180,6 +180,7 @@
 </tbody>
 </table>
 <p><code class="docutils literal notranslate"><span class="pre">Frame.over(stills)</span></code> samples every frame a camera move will pass through and reports the <em>worst instant</em>, so a scrim over a Ken Burns pan is as light as the whole window allows. <code class="docutils literal notranslate"><span class="pre">delivery="youtube"</span></code> hard-excludes the bottom 22 % (subtitle track + control bar) from placement — modelled as named reserved zones, not a rule to remember.</p>
+<p>A scrim darkens a region; for a large centred title over moving footage that is too heavy. <code class="docutils literal notranslate"><span class="pre">halo=True</span></code> on any compose builder (<code class="docutils literal notranslate"><span class="pre">caption</span></code>, <code class="docutils literal notranslate"><span class="pre">title_card</span></code>, <code class="docutils literal notranslate"><span class="pre">lower_third</span></code>, <code class="docutils literal notranslate"><span class="pre">note</span></code>; <code class="docutils literal notranslate"><span class="pre">--halo</span></code> on the CLI, <code class="docutils literal notranslate"><span class="pre">"halo":</span> <span class="pre">true</span></code> in <code class="docutils literal notranslate"><span class="pre">overlay-video</span></code> items) glows under the glyphs instead — the glyphs’ own alpha, dilated, blurred and laid under them in the opposite of the ink, sized in em — and stands in for the automatic scrim (<code class="docutils literal notranslate"><span class="pre">scrim=True</span></code> still forces one). <code class="docutils literal notranslate"><span class="pre">Halo(spread=,</span> <span class="pre">blur=,</span> <span class="pre">gain=,</span> <span class="pre">opacity=,</span> <span class="pre">color=)</span></code> tunes it; <code class="docutils literal notranslate"><span class="pre">layout.with_halo()</span></code> puts one under any layout.</p>
 </section>
 <section id="pipeline-order-it-matters">
 <h3>Pipeline order (it matters)<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#pipeline-order-it-matters" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pipeline-order-it-matters'">¶</a></h3>
@@ -346,7 +347,7 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 
 </section>
 </section>
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-27 20:20 UTC from <a href="https://github.com/reeleehq/tituli/commit/7758ae1f45da88e328a33057b27c636838137074">7758ae1</a> (main) · tituli 0.0.12 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-27 20:45 UTC from <a href="https://github.com/reeleehq/tituli/commit/c40b07a113f707e0676e3a25815dc0083df93b4a">c40b07a</a> (main) · tituli 0.0.13 · <a href="about-this-build.html">about this build</a></p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
@@ -380,7 +381,7 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=3bbcec59"></script>
+<script src="_static/documentation_options.js?v=9fc46840"></script>
 <script src="_static/doctools.js?v=fd6eb6e6"></script>
 <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="_static/clipboard.min.js?v=a7894cd8"></script>

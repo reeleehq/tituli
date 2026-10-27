@@ -69,23 +69,24 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 
 ### Classes
 
-| [`Frame`](#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.   |
-|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| [`Layout`](#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels. |
-| [`Run`](#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.               |
-| [`Plate`](#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.               |
-| [`Box`](#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.          |
-| [`Path`](#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                        |
-| [`TextStyle`](#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                               |
-| [`Face`](#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.          |
-| [`Credits`](#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                        |
-| [`CreditsStyle`](#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                              |
-| [`Entry`](#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.             |
-| [`Section`](#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                       |
-| [`Label`](#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.        |
-| [`Span`](#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                           |
-| [`TimedOverlay`](#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.      |
-| [`Outline`](#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                    |
+| [`Frame`](#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.               |
+|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [`Layout`](#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels.             |
+| [`Run`](#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.                           |
+| [`Plate`](#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.                           |
+| [`Box`](#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.                      |
+| [`Path`](#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                                    |
+| [`TextStyle`](#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                                           |
+| [`Halo`](#tituli.Halo)([color, spread, blur, gain, opacity])         | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19). |
+| [`Face`](#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.                      |
+| [`Credits`](#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                                    |
+| [`CreditsStyle`](#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                                          |
+| [`Entry`](#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.                         |
+| [`Section`](#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                                   |
+| [`Label`](#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.                    |
+| [`Span`](#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                                       |
+| [`TimedOverlay`](#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.                  |
+| [`Outline`](#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                                |
 
 ### Exceptions
 
@@ -353,6 +354,23 @@ Same frame, placement keeping clear of that target’s reserved zones.
 * **Return type:**
   [`Frame`](tituli.frame.html.md#tituli.frame.Frame)
 
+### *class* tituli.Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).
+
+The glyphs’ own alpha, dilated by `spread`, blurred by `blur`, boosted by
+`gain` and laid under the text at `opacity`. Sizes are in em (the
+run’s type size: runs of different sizes get their own halo), so one halo
+is right at any resolution. `color` `None` is the opposite of the ink:
+dark under light text, light under dark.
+
+The defaults give a soft glow that keeps letter shapes, for regular-weight
+type. Thin type over very bright footage takes a heavier one, e.g.
+`Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8)` (a 12 %-of-height
+EB Garamond italic over sand); on heavy type that one fills the counters.
+
 ### *class* tituli.Label(text, attribution='', key=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
@@ -386,6 +404,13 @@ Translate so the runs’ bbox top-left lands on `box`’s top-left.
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
+
+* **Return type:**
+  [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
+
+#### with_halo(halo=Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65))
+
+Every run with `halo` under it (`None` removes it).
 
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
@@ -510,7 +535,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
+### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -529,6 +554,13 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)
+
+#### halo *: [Halo](tituli.style.html.md#tituli.style.Halo) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+none.
+
+* **Type:**
+  A soft glow drawn under the glyphs ([`Halo`](tituli.style.html.md#tituli.style.Halo)); `None`
 
 #### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
 
@@ -675,7 +707,7 @@ is placed by the engine’s measure too.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.caption(text, attribution='', , frame, anchor='auto', style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.04, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.25, case='as-is', align='left', opacity=1.0, features=()), attribution_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.02, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='left', opacity=0.85, features=()), max_lines=3, max_width=0.55, ink=None, scrim=None, accent=True, on_overflow='fit', engine=None)
+### tituli.caption(text, attribution='', , frame, anchor='auto', style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.04, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.25, case='as-is', align='left', opacity=1.0, features=()), attribution_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.02, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='left', opacity=0.85, features=()), max_lines=3, max_width=0.55, ink=None, scrim=None, halo=False, accent=True, on_overflow='fit', engine=None)
 
 A museum label over a picture: what is on screen, plus a tiny credit line.
 
@@ -686,7 +718,10 @@ compete. If the words cannot be set legibly this raises
 [`TextDoesNotFit`](#tituli.TextDoesNotFit); pass `on_overflow="truncate"` for text whose
 length you do not control (see `OVERFLOW_POLICIES`). Placement avoids the
 frame’s `avoid` boxes and its delivery target’s reserved zones; the
-scrim is a 2-D corner falloff cut to the measured block.
+scrim is a 2-D corner falloff cut to the measured block. `halo` (`True`
+or a [`Halo`](tituli.style.html.md#tituli.style.Halo)) glows under the glyphs in place of an
+automatic scrim — for a centred caption over footage, where a scrim would
+dim the frame.
 
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
@@ -917,7 +952,7 @@ A silent-film style card: serif italic prose, centred on the frame.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.lower_third(name, role='', , frame, anchor='bottom-left', name_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.042, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), role_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.04, leading=1.2, case='as-is', align='left', opacity=0.9, features=()), ink=None, scrim=None, on_overflow='fit', engine=None)
+### tituli.lower_third(name, role='', , frame, anchor='bottom-left', name_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.042, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), role_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.04, leading=1.2, case='as-is', align='left', opacity=0.9, features=()), ink=None, scrim=None, halo=False, on_overflow='fit', engine=None)
 
 Who is speaking: a name and a role, left-anchored, scrimmed if needed.
 
@@ -950,7 +985,7 @@ wrong wrap points and column pitch.
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
-### tituli.note(lines, , frame, headline='', anchor='top-left', headline_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.055, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.15, case='as-is', align='left', opacity=1.0, features=()), line_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='left', opacity=0.92, features=()), max_width=0.62, ink=None, scrim=None, accent=True, on_overflow='fit', engine=None)
+### tituli.note(lines, , frame, headline='', anchor='top-left', headline_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.055, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.15, case='as-is', align='left', opacity=1.0, features=()), line_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='left', opacity=0.92, features=()), max_width=0.62, ink=None, scrim=None, halo=False, accent=True, on_overflow='fit', engine=None)
 
 An editorial context card: an optional headline over equal-weight lines.
 
@@ -1142,7 +1177,7 @@ True
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.title_card(title, subtitle='', , frame, kicker='', anchor='center', title_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.075, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.01, leading=1.1, case='as-is', align='center', opacity=1.0, features=()), subtitle_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.02, leading=1.3, case='as-is', align='center', opacity=1.0, features=()), kicker_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.022, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.18, leading=1.2, case='upper', align='center', opacity=1.0, features=()), ink=None, scrim=None, engine=None)
+### tituli.title_card(title, subtitle='', , frame, kicker='', anchor='center', title_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.075, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.01, leading=1.1, case='as-is', align='center', opacity=1.0, features=()), subtitle_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.02, leading=1.3, case='as-is', align='center', opacity=1.0, features=()), kicker_style=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.022, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.18, leading=1.2, case='upper', align='center', opacity=1.0, features=()), ink=None, scrim=None, halo=False, engine=None)
 
 An opening card: optional kicker, title, optional subtitle.
 
@@ -1150,6 +1185,8 @@ Fits the title to 80 % of the safe width (shrinking, never clipping), stacks
 the parts with a gap proportional to the type, places the block at
 `anchor` (subject-avoiding when the frame knows the picture), and picks
 ink by the frame’s contrast. `scrim` forces a scrim on/off; None decides.
+`halo` (`True` or a [`Halo`](tituli.style.html.md#tituli.style.Halo)) glows under the glyphs
+in place of an automatic scrim: legible over footage without darkening it.
 
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)

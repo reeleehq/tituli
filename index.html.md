@@ -50,6 +50,8 @@ Every use case fills a `Layout` — placed `Run`s (a string, a baseline origin, 
 
 `Frame.over(stills)` samples every frame a camera move will pass through and reports the *worst instant*, so a scrim over a Ken Burns pan is as light as the whole window allows. `delivery="youtube"` hard-excludes the bottom 22 % (subtitle track + control bar) from placement — modelled as named reserved zones, not a rule to remember.
 
+A scrim darkens a region; for a large centred title over moving footage that is too heavy. `halo=True` on any compose builder (`caption`, `title_card`, `lower_third`, `note`; `--halo` on the CLI, `"halo": true` in `overlay-video` items) glows under the glyphs instead — the glyphs’ own alpha, dilated, blurred and laid under them in the opposite of the ink, sized in em — and stands in for the automatic scrim (`scrim=True` still forces one). `Halo(spread=, blur=, gain=, opacity=, color=)` tunes it; `layout.with_halo()` puts one under any layout.
+
 ### Pipeline order (it matters)
 
 **shape/wrap → fit → measure → decide ink → cut the scrim to the measured block → compose.** Your words are set complete or not at all: `caption`, `lower_third` and `note` shrink the type until it fits and raise `TextDoesNotFit` rather than ship a cut label — because `1981 · Centr…` is not a shortened label, it is a wrong one, and only the caller can choose between shorter wording, more lines and no overlay. Text whose length you genuinely don’t control (a licence template pasted into an artist field) still truncates, asked for by name: `on_overflow="truncate"`. And never burn text into stills that a camera move will pan and zoom — composite onto the finished motion video (`tituli.video.overlay`).

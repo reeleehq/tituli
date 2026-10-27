@@ -87,6 +87,13 @@ Reveal runs one after another: run `i` starts at `start + i*step`.
 * **Return type:**
   [`Layout`](#tituli.layout.Layout)
 
+#### with_halo(halo=Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65))
+
+Every run with `halo` under it (`None` removes it).
+
+* **Return type:**
+  [`Layout`](#tituli.layout.Layout)
+
 #### with_timing(t_in, t_full)
 
 Give every run the same reveal envelope.
@@ -100,7 +107,7 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
-### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None)
+### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -119,6 +126,13 @@ Axis-aligned bounds (ignores rotation — fine for placement).
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)
+
+#### halo *: [Halo](tituli.style.html.md#tituli.style.Halo) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+none.
+
+* **Type:**
+  A soft glow drawn under the glyphs ([`Halo`](tituli.style.html.md#tituli.style.Halo)); `None`
 
 #### measured_by *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
 

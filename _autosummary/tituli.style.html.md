@@ -21,8 +21,26 @@ title-safe margins, tracked small caps for labels, generous leading.
 
 ### Classes
 
-| [`TextStyle`](#tituli.style.TextStyle)([family, size, weight, italic, ...])   | How a run of text looks.   |
-|---------------------------------------------------------------------------------------------------|----------------------------|
+| [`Halo`](#tituli.style.Halo)([color, spread, blur, gain, opacity])     | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).   |
+|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| [`TextStyle`](#tituli.style.TextStyle)([family, size, weight, italic, ...]) | How a run of text looks.                                                             |
+
+### *class* tituli.style.Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).
+
+The glyphs’ own alpha, dilated by `spread`, blurred by `blur`, boosted by
+`gain` and laid under the text at `opacity`. Sizes are in em (the
+run’s type size: runs of different sizes get their own halo), so one halo
+is right at any resolution. `color` `None` is the opposite of the ink:
+dark under light text, light under dark.
+
+The defaults give a soft glow that keeps letter shapes, for regular-weight
+type. Thin type over very bright footage takes a heavier one, e.g.
+`Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8)` (a 12 %-of-height
+EB Garamond italic over sand); on heavy type that one fills the counters.
 
 ### *class* tituli.style.TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.04, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='center', opacity=1.0, features=())
 
