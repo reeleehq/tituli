@@ -378,7 +378,7 @@ def _blank_frame(size: tuple[int, int], delivery: str | None):
 
 
 def _payload_halo(value: object) -> "bool | Halo":
-    """An overlay item's ``"halo"``: a bool, or a dict of :class:`~tituli.style.Halo` fields.
+    """An overlay item's ``"halo"``: a bool (``null`` is false), or a dict of :class:`~tituli.style.Halo` fields.
 
     >>> _payload_halo({"spread": 0.05}).spread
     0.05
@@ -387,8 +387,8 @@ def _payload_halo(value: object) -> "bool | Halo":
       ...
     ValueError: halo='false': give true/false or a dict of Halo fields
     """
-    if isinstance(value, bool):
-        return value
+    if value is None or isinstance(value, bool):
+        return bool(value)
     if isinstance(value, dict):
         try:
             return Halo(**value)

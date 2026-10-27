@@ -211,3 +211,20 @@ def test_overlay_items_and_cli_take_a_halo(tmp_path, monkeypatch):
     Image.new("RGB", SIZE, (200, 200, 200)).save(img)
     tools.caption(str(img), "Hi", out=str(tmp_path / "o.png"), avoid=None, halo=True)
     assert seen == [True] and (tmp_path / "o.png").exists()
+
+
+def test_a_staggered_glyph_reveal_keeps_every_halo_under_every_glyph():
+    """Per-glyph reveals make one halo group per glyph; none may glow over a neighbour."""
+    f = Frame.blank(SIZE)
+    tracked = TextStyle(family=EMBEDDED, size=0.15, tracking=0.02)
+    heavy = Halo(spread=0.08, blur=0.15, gain=3, opacity=0.8)
+    lay = block("AVATAR", tracked, f).translated(20, 60).with_halo(heavy)
+    staggered = render_overlay(lay.staggered(step=0.1, ramp=0.3), SIZE, t=5)
+    ink = render_overlay(lay.with_halo(None), SIZE).getchannel("A")
+    cores = [
+        staggered.getpixel((x, y))[:3]
+        for x in range(SIZE[0])
+        for y in range(SIZE[1])
+        if ink.getpixel((x, y)) == 255
+    ]
+    assert cores and all(px == (255, 255, 255) for px in cores)

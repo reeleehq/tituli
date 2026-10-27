@@ -310,6 +310,51 @@ def _halo_group(run: Run) -> tuple:
     return (run.halo, run.t_in, run.t_full, run.face.size)
 
 
+def _paste_faded(canvas: Image.Image, layer: Image.Image, factor: float) -> None:
+    box = layer.getbbox()
+    if box is not None:
+        canvas.alpha_composite(_faded(layer.crop(box), factor), box[:2])
+
+
+def _draw_haloed(
+    canvas: Image.Image,
+    band: list[tuple[Halo, list[Run]]],
+    engine: Engine,
+    t: float | None,
+) -> None:
+    """Neighbouring haloed groups (one halo, reveal and size each): every halo,
+    then every text, so no glow covers a neighbour's ink.
+
+    Each group is drawn fully revealed and faded afterwards: a halo built from
+    half-faded glyphs saturates early and shows the letters first as dark
+    silhouettes. Groups sharing one reveal factor are faded as one layer; groups
+    mid-way through different reveals are faded apart, which darkens their
+    overlap slightly until both are fully revealed.
+    """
+    layers = []
+    for halo, runs in band:
+        f = _envelope(runs[0], t)
+        if f == 0:
+            continue
+        text = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        _draw_runs(text, runs, engine, None)
+        shine = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        draw_halo(shine, text, halo, em=runs[0].face.size, ink=runs[0].color)
+        layers.append((shine, text, f))
+    if len({f for _, _, f in layers}) == 1:
+        whole = layers[0][0]
+        for shine, _, _ in layers[1:]:
+            whole.alpha_composite(shine)
+        for _, text, _ in layers:
+            whole.alpha_composite(text)
+        _paste_faded(canvas, whole, layers[0][2])
+        return
+    for shine, _, f in layers:
+        _paste_faded(canvas, shine, f)
+    for _, text, f in layers:
+        _paste_faded(canvas, text, f)
+
+
 def _draw_runs(
     canvas: Image.Image, runs: list[Run], engine: Engine, t: float | None
 ) -> None:
@@ -338,26 +383,13 @@ def render_overlay(
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     for plate in layout.plates:
         draw_plate(canvas, plate)
-    # Consecutive runs sharing a halo, a reveal and a size glow together, under
-    # their own text only. The group is drawn fully revealed, halo then text, and
-    # faded as one: a halo built from half-faded glyphs saturates early and shows
-    # the letters first as dark silhouettes.
-    for (halo, *_), group in groupby(layout.runs, key=_halo_group):
-        runs = list(group)
-        if halo is None:
-            _draw_runs(canvas, runs, engine, t)
-            continue
-        f = _envelope(runs[0], t)
-        if f == 0:
-            continue
-        text = Image.new("RGBA", size, (0, 0, 0, 0))
-        _draw_runs(text, runs, engine, None)
-        group_layer = Image.new("RGBA", size, (0, 0, 0, 0))
-        draw_halo(group_layer, text, halo, em=runs[0].face.size, ink=runs[0].color)
-        group_layer.alpha_composite(text)
-        box = group_layer.getbbox()
-        if box is not None:
-            canvas.alpha_composite(_faded(group_layer.crop(box), f), box[:2])
+    groups = [(k[0], list(g)) for k, g in groupby(layout.runs, key=_halo_group)]
+    for haloed, band in groupby(groups, key=lambda group: group[0] is not None):
+        if haloed:
+            _draw_haloed(canvas, list(band), engine, t)
+        else:
+            for _, runs in band:
+                _draw_runs(canvas, runs, engine, t)
     return canvas
 
 
