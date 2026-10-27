@@ -103,6 +103,7 @@ def title_card(
     avoid: str | None = None,
     duration: float | None = None,
     engine: str | None = None,
+    halo: bool = False,
 ) -> dict:
     """Render a title card to ``out`` (PNG, or MP4 when ``duration`` is given).
 
@@ -110,6 +111,7 @@ def title_card(
     transparent overlay). ``anchor`` is a grid position; ``avoid`` is
     ``"saliency"`` or ``"x,y,w,h"`` to keep the title off the subject.
     ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"`` (``tituli[shaping]``).
+    ``halo`` glows under the text instead of a scrim (over footage).
     """
     from tituli.compose import title_card as _title
     from tituli.render import render
@@ -117,7 +119,15 @@ def title_card(
     sz = _size(size)
     frame = _frame(background, sz, avoid=avoid, delivery=None)
     eng = _engine(engine)
-    lay = _title(title, subtitle, kicker=kicker, frame=frame, anchor=anchor, engine=eng)
+    lay = _title(
+        title,
+        subtitle,
+        kicker=kicker,
+        frame=frame,
+        anchor=anchor,
+        engine=eng,
+        halo=halo,
+    )
     img = render(lay, frame, engine=eng)
     if duration:
         from tituli.video import still
@@ -139,6 +149,7 @@ def caption(
     size: str | None = None,
     overlay_only: bool = False,
     engine: str | None = None,
+    halo: bool = False,
 ) -> dict:
     """Put a museum-label caption and a tiny attribution on ``image``.
 
@@ -146,7 +157,8 @@ def caption(
     installed, otherwise nothing is avoided) and the delivery target's
     reserved zones. ``overlay_only`` writes a transparent PNG to composite
     onto motion video instead of the flattened picture. ``engine`` is
-    ``"pillow"`` (default) or ``"harfbuzz"``.
+    ``"pillow"`` (default) or ``"harfbuzz"``. ``halo`` glows under the text
+    instead of a scrim (a centred caption over footage).
     """
     from tituli.compose import caption as _caption
     from tituli.render import render, render_overlay
@@ -158,7 +170,7 @@ def caption(
         avoid_fn = None
     frame = Frame.from_image(image, size=sz, avoid=avoid_fn, delivery=delivery)
     eng = _engine(engine)
-    lay = _caption(text, attribution, frame=frame, anchor=anchor, engine=eng)
+    lay = _caption(text, attribution, frame=frame, anchor=anchor, engine=eng, halo=halo)
     img = (
         render_overlay(lay, frame.size, engine=eng)
         if overlay_only
@@ -176,10 +188,12 @@ def lower_third(
     size: str | None = None,
     delivery: str | None = "youtube",
     engine: str | None = None,
+    halo: bool = False,
 ) -> dict:
     """A name + role block, bottom-left, as a transparent overlay (or on a picture).
 
-    ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"``.
+    ``engine`` is ``"pillow"`` (default) or ``"harfbuzz"``. ``halo`` glows under
+    the text instead of a scrim.
     """
     from tituli.compose import lower_third as _lt
     from tituli.render import render
@@ -187,7 +201,7 @@ def lower_third(
     sz = _size(size)
     frame = _frame(background, sz, avoid=None, delivery=delivery)
     eng = _engine(engine)
-    lay = _lt(name, role, frame=frame, engine=eng)
+    lay = _lt(name, role, frame=frame, engine=eng, halo=halo)
     return _emit(_save(render(lay, frame, engine=eng), out), lay)
 
 
@@ -349,10 +363,13 @@ def overlay_video(
     """Composite captions/lower thirds/images onto a finished video in one ffmpeg pass.
 
     ``overlays`` is a JSON file/string: a list of ``{"start", "end", "text",
-    "attribution"?, "kind"?: "caption"|"lower_third", "role"?, "anchor"?}``
+    "attribution"?, "kind"?: "caption"|"lower_third", "role"?, "anchor"?,
+    "halo"?: true|false|{"spread"?, "blur"?, "gain"?, "opacity"?, "color"?}}``
     or ``{"start", "end", "image", "fade_in"?, "fade_out"?}`` (a frame-sized
     PNG, e.g. a title page; it occupies its own slot and suppresses no
-    caption — time captions after it). Text is laid out against the video's frame size;
+    caption — time captions after it). ``"halo"`` is a bool or a
+    :class:`~tituli.style.Halo`'s fields; anything else (``"false"`` too) raises
+    naming the item. Text is laid out against the video's frame size;
     the picture under each overlay is not sampled (pass a still through
     ``caption`` for that). ``pad_start`` seconds are added at the head (first
     frame held, audio delayed); overlay times are on the padded timeline.

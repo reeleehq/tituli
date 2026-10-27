@@ -33,6 +33,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from tituli.render import Engine
 
 from tituli.schedule import TimedOverlay
+from tituli.style import Halo
 
 FFMPEG_ENV_VAR = "TITULI_FFMPEG"
 DEFAULT_FPS = 30
@@ -376,6 +377,26 @@ def _blank_frame(size: tuple[int, int], delivery: str | None):
     return Frame.blank(size).with_delivery(delivery)
 
 
+def _payload_halo(value: object) -> "bool | Halo":
+    """An overlay item's ``"halo"``: a bool (``null`` is false), or a dict of :class:`~tituli.style.Halo` fields.
+
+    >>> _payload_halo({"spread": 0.05}).spread
+    0.05
+    >>> _payload_halo("false")
+    Traceback (most recent call last):
+      ...
+    ValueError: halo='false': give true/false or a dict of Halo fields
+    """
+    if value is None or isinstance(value, bool):
+        return bool(value)
+    if isinstance(value, dict):
+        try:
+            return Halo(**value)
+        except TypeError as e:
+            raise ValueError(f"halo={value!r}: {e}") from None
+    raise ValueError(f"halo={value!r}: give true/false or a dict of Halo fields")
+
+
 def materialize(
     overlays: Sequence[TimedOverlay], *, frame, engine: "Engine | None" = None
 ) -> list[TimedOverlay]:
@@ -427,6 +448,11 @@ def materialize(
             )
         elif isinstance(p, dict) and "text" in p:
             kind = p.get("kind", "caption")
+            try:
+                halo = _payload_halo(p.get("halo", False))
+            except ValueError as e:
+                unrenderable.append(f"#{i} [{o.start:.2f}, {o.end:.2f}] {e}")
+                continue
             if kind == "lower_third":
                 lay = lower_third(
                     p["text"],
@@ -434,6 +460,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             elif kind == "note":
                 lay = note(
@@ -442,6 +469,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             elif kind == "title":
                 lay = title_card(
@@ -450,6 +478,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
             else:
                 lay = caption(
@@ -458,6 +487,7 @@ def materialize(
                     frame=frame,
                     anchor=o.slot,
                     engine=engine,
+                    halo=halo,
                 )
         if lay is None:
             unrenderable.append(
@@ -470,8 +500,9 @@ def materialize(
         raise ValueError(
             "overlay(): these overlays cannot be rendered as given (each needs exactly "
             "one of a layout, an image, or a renderable payload — a Label, or a dict "
-            "with 'text' — and no negative fade); fix them or they would be silently "
-            "missing from the film:\n  " + "\n  ".join(unrenderable)
+            "with 'text' — no negative fade, and a 'halo' that is true/false or Halo "
+            "fields); fix them or they would be silently missing from the film:\n  "
+            + "\n  ".join(unrenderable)
         )
     return out
 

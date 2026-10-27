@@ -68,6 +68,7 @@ from tituli.style import (
     KICKER,
     SUBTITLE,
     TITLE,
+    Halo,
     TextStyle,
 )
 
@@ -79,6 +80,7 @@ __all__ = [
     "Box",
     "Path",
     "TextStyle",
+    "Halo",
     "Face",
     "title_card",
     "caption",

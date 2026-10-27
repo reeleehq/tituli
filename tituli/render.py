@@ -25,21 +25,25 @@ from __future__ import annotations
 
 import math
 from dataclasses import replace
+from itertools import groupby
 from typing import Callable, Iterator, Protocol
 
-from PIL import Image, ImageChops, ImageDraw
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from tituli.color import RGBA
+from tituli.color import RGBA, ink_for, parse_color, relative_luminance
 from tituli.frame import Frame
 from tituli.geometry import Box
 from tituli.fonts import Face
 from tituli.layout import Layout, Plate, Run, check_measured_by, FACE_ENGINE
+from tituli.style import Halo
 
 _TILE_MARGIN_EM = 0.35  # extra room around a rotated glyph tile, in em
 _RESAMPLE = Image.Resampling.BICUBIC
 _ALPHA_MAX = 255
 _GRADIENT_STEPS = 256
 _CORNER_POWER = 2.2  # ease of a scrim's falloff (higher = holds longer, drops faster)
+# A Gaussian's visible reach, in radii: how far a halo extends past its spread.
+_BLUR_REACH = 3
 
 
 class Engine(Protocol):
@@ -227,6 +231,139 @@ def draw_plate(canvas: Image.Image, plate: Plate) -> None:
     canvas.alpha_composite(layer, (x0, y0))
 
 
+def _halo_color(halo: Halo, ink: RGBA) -> RGBA:
+    """The halo's colour, or the opposite of the ink when it names none."""
+    if halo.color is not None:
+        return parse_color(halo.color)
+    return parse_color(ink_for(luminance=relative_luminance(ink)))
+
+
+def glow(
+    alpha: Image.Image, *, spread: int, blur: float, gain: float, opacity: float
+) -> Image.Image:
+    """The halo's alpha (mode ``L``) from the glyphs' alpha: dilated, blurred, boosted.
+
+    ``spread`` and ``blur`` are in pixels. Dilation is a box blur of radius
+    ``spread`` read back steeply: a pixel within ``spread`` of a stroke has at
+    least one column of ink in its box, so scaling by the box's width saturates
+    it, and the glow keeps the letters' shapes. A box blur is running sums, so
+    its cost does not grow with the radius (a max filter's does).
+
+    >>> dot = Image.new("L", (9, 9), 0)
+    >>> dot.putpixel((4, 4), 255)
+    >>> g = glow(dot, spread=2, blur=0, gain=1, opacity=1)
+    >>> g.getbbox(), g.getpixel((4, 4)) > 0
+    ((2, 2, 7, 7), True)
+    """
+    out = alpha
+    if spread > 0:
+        width = 2 * spread + 1
+        out = out.filter(ImageFilter.BoxBlur(spread))
+        out = out.point(lambda v: min(_ALPHA_MAX, v * width))
+    if blur > 0:
+        out = out.filter(ImageFilter.GaussianBlur(blur))
+    return out.point(lambda v: round(min(_ALPHA_MAX, v * gain) * opacity))
+
+
+def draw_halo(
+    canvas: Image.Image, text: Image.Image, halo: Halo, *, em: float, ink: RGBA
+) -> None:
+    """Composite onto ``canvas`` the halo of the glyphs drawn on ``text`` (same size).
+
+    Only the region the glyphs and their glow reach is filtered, so a caption
+    on a 4K frame costs what the caption covers.
+    """
+    alpha = text.getchannel("A")
+    ink_box = alpha.getbbox()
+    if ink_box is None:
+        return
+    spread = max(0, round(halo.spread * em))
+    blur = halo.blur * em
+    reach = spread + math.ceil(_BLUR_REACH * blur)
+    x0, y0 = max(0, ink_box[0] - reach), max(0, ink_box[1] - reach)
+    x1 = min(canvas.width, ink_box[2] + reach)
+    y1 = min(canvas.height, ink_box[3] + reach)
+    shine = glow(
+        alpha.crop((x0, y0, x1, y1)),
+        spread=spread,
+        blur=blur,
+        gain=halo.gain,
+        opacity=halo.opacity,
+    )
+    r, g, b, a = _halo_color(halo, ink)
+    layer = Image.new("RGBA", shine.size, (r, g, b, 0))
+    layer.putalpha(shine.point(lambda v: v * a // _ALPHA_MAX))
+    canvas.alpha_composite(layer, (x0, y0))
+
+
+def _faded(image: Image.Image, factor: float) -> Image.Image:
+    """``image`` (RGBA) with its alpha scaled by ``factor``."""
+    if factor >= 1:
+        return image
+    out = image.copy()
+    out.putalpha(image.getchannel("A").point(lambda v: round(v * factor)))
+    return out
+
+
+def _halo_group(run: Run) -> tuple:
+    """Runs glow together when they share a halo, a reveal and a type size."""
+    return (run.halo, run.t_in, run.t_full, run.face.size)
+
+
+def _paste_faded(canvas: Image.Image, layer: Image.Image, factor: float) -> None:
+    box = layer.getbbox()
+    if box is not None:
+        canvas.alpha_composite(_faded(layer.crop(box), factor), box[:2])
+
+
+def _draw_haloed(
+    canvas: Image.Image,
+    band: list[tuple[Halo, list[Run]]],
+    engine: Engine,
+    t: float | None,
+) -> None:
+    """Neighbouring haloed groups (one halo, reveal and size each): every halo,
+    then every text, so no glow covers a neighbour's ink.
+
+    Each group is drawn fully revealed and faded afterwards: a halo built from
+    half-faded glyphs saturates early and shows the letters first as dark
+    silhouettes. Groups sharing one reveal factor are faded as one layer; groups
+    mid-way through different reveals are faded apart, which darkens their
+    overlap slightly until both are fully revealed.
+    """
+    layers = []
+    for halo, runs in band:
+        f = _envelope(runs[0], t)
+        if f == 0:
+            continue
+        text = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        _draw_runs(text, runs, engine, None)
+        shine = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        draw_halo(shine, text, halo, em=runs[0].face.size, ink=runs[0].color)
+        layers.append((shine, text, f))
+    if len({f for _, _, f in layers}) == 1:
+        whole = layers[0][0]
+        for shine, _, _ in layers[1:]:
+            whole.alpha_composite(shine)
+        for _, text, _ in layers:
+            whole.alpha_composite(text)
+        _paste_faded(canvas, whole, layers[0][2])
+        return
+    for shine, _, f in layers:
+        _paste_faded(canvas, shine, f)
+    for _, text, f in layers:
+        _paste_faded(canvas, text, f)
+
+
+def _draw_runs(
+    canvas: Image.Image, runs: list[Run], engine: Engine, t: float | None
+) -> None:
+    for run in runs:
+        f = _envelope(run, t)
+        if f > 0:
+            engine.draw_run(canvas, run, f)
+
+
 # ----------------------------------------------------------------------------
 # Entry points
 # ----------------------------------------------------------------------------
@@ -246,10 +383,13 @@ def render_overlay(
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     for plate in layout.plates:
         draw_plate(canvas, plate)
-    for run in layout.runs:
-        f = _envelope(run, t)
-        if f > 0:
-            engine.draw_run(canvas, run, f)
+    groups = [(k[0], list(g)) for k, g in groupby(layout.runs, key=_halo_group)]
+    for haloed, band in groupby(groups, key=lambda group: group[0] is not None):
+        if haloed:
+            _draw_haloed(canvas, list(band), engine, t)
+        else:
+            for _, runs in band:
+                _draw_runs(canvas, runs, engine, t)
     return canvas
 
 
