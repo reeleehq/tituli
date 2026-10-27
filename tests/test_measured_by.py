@@ -11,6 +11,7 @@ from tituli import tools
 from tituli.compose import caption
 from tituli.layout import Run, block, check_measured_by
 from tituli.outlines import run_outline
+from tituli.fonts import SANS_STACK
 from tituli.render import PillowEngine
 
 STYLE = TextStyle(family=EMBEDDED, size=0.05)
@@ -146,12 +147,12 @@ def test_harfbuzz_stamps_the_embedded_font_as_measured_by_pillow():
         check_measured_by(run, hb)
     assert render_overlay(Layout(tuple(runs)), (640, 360)).size == (640, 360)
 
-    face = resolve_face("DejaVu Sans", size=40)
+    face = resolve_face(SANS_STACK, size=40)
     if face.path is None:
         pytest.skip("no installed font to shape with")
     shaped = block(
         ["ab"],
-        TextStyle(family="DejaVu Sans", size=0.05),
+        TextStyle(family=SANS_STACK, size=0.05),
         Frame.blank((640, 360)),
         engine=hb,
     ).runs
@@ -206,11 +207,11 @@ def test_harfbuzz_embedded_runs_outline_and_render_mixed_with_shaped_ones():
     hb = HarfBuzzEngine()
     embedded = _runs(hb)[0]
     assert run_outline(embedded, engine=PillowEngine()).d  # outlined by who measured
-    if resolve_face("DejaVu Sans", size=40).path is None:
+    if resolve_face(SANS_STACK, size=40).path is None:
         pytest.skip("no installed font to shape with")
     shaped = block(
         ["ab"],
-        TextStyle(family="DejaVu Sans", size=0.05),
+        TextStyle(family=SANS_STACK, size=0.05),
         Frame.blank((640, 360)),
         engine=hb,
     ).runs
