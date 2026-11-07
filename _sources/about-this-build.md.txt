@@ -5,7 +5,7 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-10-27 20:45 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/c40b07a113f707e0676e3a25815dc0083df93b4a"><code>c40b07a</code></a> on branch <code>main</code>, for **tituli 0.0.13** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-07 18:42 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc"><code>c5d9d18</code></a> on branch <code>main</code>, for **tituli 0.0.15** (from <code>pyproject.toml</code>).
 
 :::{note}
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -15,9 +15,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/reeleehq/tituli/commit/c40b07a113f707e0676e3a25815dc0083df93b4a"><code>c40b07a113f707e0676e3a25815dc0083df93b4a</code></a> |
+| Commit | <a href="https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc"><code>c5d9d1848b6520f3f9ccf45178eb50e569779efc</code></a> |
 | Branch | <code>main</code> |
-| Tags at this commit | <code>0.0.13</code> |
+| Tags at this commit | <code>0.0.15</code> |
 | Working tree | clean |
 | Remote | <code>https://github.com/reeleehq/tituli</code> |
 
@@ -26,9 +26,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 | | |
 |---|---|
 | Repository | <code>reeleehq/tituli</code> |
-| Run | <a href="https://github.com/reeleehq/tituli/actions/runs/40577257848">40577257848</a> |
+| Run | <a href="https://github.com/reeleehq/tituli/actions/runs/42402359962">42402359962</a> |
 | Ref | <code>refs/heads/main</code> |
-| Event commit | <code>a62c531352c2e4b7832ade788c9cb8d702f4e8da</code> (in the history of the built commit) |
+| Event commit | <code>6d38bddb7799f25b1d94f954bc3e7f4250381923</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -37,7 +37,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 | epythet | 0.2.22 |
 | Sphinx | 9.1.1 |
 | docutils | 0.22.4 |
-| Python | 3.12.15 |
+| Python | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -53,13 +53,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.13/">0.0.13</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/tituli/0.0.15/">0.0.15</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout c40b07a113f707e0676e3a25815dc0083df93b4a
+git checkout c5d9d1848b6520f3f9ccf45178eb50e569779efc
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

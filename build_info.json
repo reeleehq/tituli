@@ -1,41 +1,41 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-27T20:45:33Z",
+  "built_at": "2026-11-07T18:42:02Z",
   "package": {
     "name": "tituli",
-    "version": "0.0.13",
+    "version": "0.0.15",
     "display_name": "tituli",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "c40b07a113f707e0676e3a25815dc0083df93b4a",
-    "short_commit": "c40b07a",
+    "commit": "c5d9d1848b6520f3f9ccf45178eb50e569779efc",
+    "short_commit": "c5d9d18",
     "branch": "main",
     "tags": [
-      "0.0.13"
+      "0.0.15"
     ],
     "dirty": false,
     "remote_url": "https://github.com/reeleehq/tituli",
-    "commit_url": "https://github.com/reeleehq/tituli/commit/c40b07a113f707e0676e3a25815dc0083df93b4a",
+    "commit_url": "https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "reeleehq/tituli",
-    "sha": "a62c531352c2e4b7832ade788c9cb8d702f4e8da",
+    "sha": "6d38bddb7799f25b1d94f954bc3e7f4250381923",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "40577257848",
-    "run_url": "https://github.com/reeleehq/tituli/actions/runs/40577257848",
+    "run_id": "42402359962",
+    "run_url": "https://github.com/reeleehq/tituli/actions/runs/42402359962",
     "server_url": "https://github.com"
   },
   "tools": {
     "epythet": "0.2.22",
     "sphinx": "9.1.1",
     "docutils": "0.22.4",
-    "python": "3.12.15"
+    "python": "3.12.16"
   },
   "config": {
     "theme": "auto",
@@ -62,11 +62,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.13",
+    "latest": "0.0.15",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout c40b07a113f707e0676e3a25815dc0083df93b4a\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout c5d9d1848b6520f3f9ccf45178eb50e569779efc\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,
