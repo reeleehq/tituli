@@ -56,6 +56,24 @@ DEFAULT_CRAWL_SPEED = 0.09  # frame heights per second (≈ 97 px/s at 1080p)
 DEFAULT_CARD_HOLD_S = 3.5
 
 
+#: The keys ``Credits.from_dict`` reads. Anything else is refused rather than ignored:
+#: an attribution under a misspelt key (``"lines"`` for ``"entries"``) would otherwise
+#: vanish from the roll, the licence failure this module exists to prevent.
+CREDITS_KEYS = frozenset({"title", "sections", "closing"})
+SECTION_KEYS = frozenset({"heading", "entries", "kind"})
+ENTRY_KEYS = frozenset({"name", "role"})
+
+
+def _known_keys(d: Any, allowed: frozenset, what: str) -> None:
+    if not isinstance(d, dict):
+        raise TypeError(f"{what} must be a dict, got {type(d).__name__}")
+    unknown = sorted(set(d) - allowed)
+    if unknown:
+        raise ValueError(
+            f"{what} has unknown key(s) {unknown}; known keys are {sorted(allowed)}"
+        )
+
+
 @dataclass(frozen=True)
 class Entry:
     """One credit line: ``role`` + ``name``, a bare ``name``, or prose."""
@@ -70,6 +88,7 @@ class Entry:
         if isinstance(item, str):
             return cls(item)
         if isinstance(item, dict):
+            _known_keys(item, ENTRY_KEYS, "a credits entry")
             return cls(str(item.get("name", "")), str(item.get("role", "")))
         role, name = item
         return cls(str(name), str(role))
@@ -116,6 +135,9 @@ class Credits:
         designed card of raw manifest strings. Map titles, artists and
         licences into readable roles and names first.
         """
+        _known_keys(d, CREDITS_KEYS, "credits")
+        for s in d.get("sections", ()):
+            _known_keys(s, SECTION_KEYS, "a credits section")
         sections = tuple(
             Section(
                 heading=str(s.get("heading", "")),
