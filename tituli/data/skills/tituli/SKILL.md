@@ -50,6 +50,8 @@ font_id = face_digest(lay.runs[0].face)  # sha256 of the font bytes: record it
 ```
 `EMBEDDED` never scans installed fonts (same bytes on every machine with the same Pillow); a font-file path in `family` works too. A character the face lacks raises `MissingGlyphError`.
 
+**Choosing a font: free licences only.** Pick a face under OFL, Apache 2.0 or another licence that allows commercial use and embedding at no cost (Google Fonts is the default shelf), and record its licence with the asset. A "free for personal use" font (Riffic Free, many dafont faces) or a paid one is refused unless the user asks for that font by name: a private draft becomes a public cut, and the owner does not buy fonts. When the look you want comes from a paid face, find the closest free one (Riffic → Fredoka) and say which it replaces.
+
 **Title card** (PNG, or MP4 with a duration):
 ```python
 from tituli import Frame, title_card, render
