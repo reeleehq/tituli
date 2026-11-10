@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-07T18:42:02Z",
+  "built_at": "2026-11-10T15:39:38Z",
   "package": {
     "name": "tituli",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "display_name": "tituli",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "c5d9d1848b6520f3f9ccf45178eb50e569779efc",
-    "short_commit": "c5d9d18",
+    "commit": "ee8546c401c7698ef254c2a80b60cce3c36627d2",
+    "short_commit": "ee8546c",
     "branch": "main",
     "tags": [
-      "0.0.15"
+      "0.0.16"
     ],
     "dirty": false,
     "remote_url": "https://github.com/reeleehq/tituli",
-    "commit_url": "https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc",
+    "commit_url": "https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "reeleehq/tituli",
-    "sha": "6d38bddb7799f25b1d94f954bc3e7f4250381923",
+    "sha": "489b147ab6dcbf6f8a02475eeab11499fda02aa8",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "42402359962",
-    "run_url": "https://github.com/reeleehq/tituli/actions/runs/42402359962",
+    "run_id": "42845234095",
+    "run_url": "https://github.com/reeleehq/tituli/actions/runs/42845234095",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -62,11 +62,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.15",
+    "latest": "0.0.16",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout c5d9d1848b6520f3f9ccf45178eb50e569779efc\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout ee8546c401c7698ef254c2a80b60cce3c36627d2\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

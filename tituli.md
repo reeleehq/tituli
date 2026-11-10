@@ -1,4 +1,4 @@
-> built 2026-11-07 18:42 UTC from c5d9d18 (main) · tituli 0.0.15. Details: build_info.json
+> built 2026-11-10 15:39 UTC from ee8546c (main) · tituli 0.0.16. Details: build_info.json
 
 # index.html.md
 
@@ -3690,7 +3690,7 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-07 18:42 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc"><code>c5d9d18</code></a> on branch <code>main</code>, for **tituli 0.0.15** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-10 15:39 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2"><code>ee8546c</code></a> on branch <code>main</code>, for **tituli 0.0.16** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -3699,9 +3699,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/c5d9d1848b6520f3f9ccf45178eb50e569779efc"><code>c5d9d1848b6520f3f9ccf45178eb50e569779efc</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2"><code>ee8546c401c7698ef254c2a80b60cce3c36627d2</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | <code>0.0.15</code>                                                                                                                                    |
+| Tags at this commit | <code>0.0.16</code>                                                                                                                                    |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3710,9 +3710,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/42402359962">42402359962</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/42845234095">42845234095</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>6d38bddb7799f25b1d94f954bc3e7f4250381923</code> (in the history of the built commit) |
+| Event commit | <code>489b147ab6dcbf6f8a02475eeab11499fda02aa8</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3737,13 +3737,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.15/">0.0.15</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/tituli/0.0.16/">0.0.16</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout c5d9d1848b6520f3f9ccf45178eb50e569779efc
+git checkout ee8546c401c7698ef254c2a80b60cce3c36627d2
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
