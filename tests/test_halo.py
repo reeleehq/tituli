@@ -251,3 +251,28 @@ def test_frames_cache_gives_identical_frames():
     got = list(frames(lay, f, duration=0.2, fps=10))
     ref = [render(lay, f, t=i / 10) for i in range(2)]
     assert all(a.tobytes() == b.tobytes() for a, b in zip(got, ref))
+
+
+def test_the_glow_is_placed_clear_of_a_reserved_zone():
+    """#23: placement keeps the glow, not only the glyphs, out of the reserved band."""
+    from tituli import Halo, Layout  # noqa: F401
+    from tituli.compose import lower_third
+
+    f = Frame.blank((1280, 720)).with_delivery("youtube")
+    (band,) = f.reserved
+    halo = Halo(spread=0.1, blur=0.4)
+    glowing = lower_third("Ada Lovelace", "Mathematician", frame=f, anchor="bottom", halo=halo)
+    plain = lower_third("Ada Lovelace", "Mathematician", frame=f, anchor="bottom")
+    assert glowing.bbox(include_halo=True).overlap_fraction(band) == 0
+    assert glowing.bbox().y1 < plain.bbox().y1  # moved up by the glow's reach
+
+
+def test_place_in_returns_the_glyph_box_inside_the_grown_one():
+    from tituli import Halo
+
+    f = Frame.blank((800, 400))
+    lay = caption("Hello", "x", frame=f)
+    where, box = lay.place_in(f, anchor="bottom", halo=Halo())
+    grown = lay.with_halo(Halo()).bbox(include_halo=True)
+    assert box.width == pytest.approx(lay.bbox().width)
+    assert box.y0 - (lay.bbox().y0 - grown.y0) >= f.safe.y0 - 1e-6

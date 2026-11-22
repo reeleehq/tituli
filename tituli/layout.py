@@ -161,6 +161,38 @@ class Layout:
             dict(self.meta),
         )
 
+    def place_in(
+        self,
+        frame: Frame,
+        *,
+        anchor: "str | Sequence[str]" = "auto",
+        halo: Halo | None = None,
+    ) -> "tuple[str, Box]":
+        """Where ``frame`` puts this layout: ``(anchor name, box of the glyphs)``.
+
+        The glow is placed, not only the glyphs: the block ``frame.place`` is
+        asked for includes each haloed run's reach (:meth:`bbox` with
+        ``include_halo``), so a halo stays clear of an edge or a reserved zone.
+        ``halo`` is the one the layout is about to get (``with_halo``); runs
+        that already carry one count too. The returned box is the glyphs' own,
+        ready for :meth:`moved_to`.
+
+        >>> from tituli.layout import block
+        >>> from tituli.style import TextStyle
+        >>> lay = block("Hi", TextStyle(), Frame.blank((1000, 500)), max_width=900)
+        >>> lay.place_in(Frame.blank((1000, 500)), anchor="bottom")[0]
+        'bottom'
+        """
+        glyphs = self.bbox()
+        grown = (self if halo is None else self.with_halo(halo)).bbox(include_halo=True)
+        where, box = frame.place((grown.width, grown.height), anchor=anchor)
+        return where, Box(
+            box.x0 + glyphs.x0 - grown.x0,
+            box.y0 + glyphs.y0 - grown.y0,
+            box.x1 - (grown.x1 - glyphs.x1),
+            box.y1 - (grown.y1 - glyphs.y1),
+        )
+
     def moved_to(self, box: Box) -> "Layout":
         """Translate so the runs' bbox top-left lands on ``box``'s top-left."""
         bb = self.bbox()
