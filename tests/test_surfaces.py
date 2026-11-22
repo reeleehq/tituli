@@ -189,3 +189,22 @@ def test_lacing_body_shape():
     model(**b)
     with pytest.raises(Exception):
         model(**{**b, "extra": 1})
+
+
+def test_body_records_the_halo():
+    from tituli import Halo
+    from tituli.bodies import body_for
+
+    f = Frame.blank((1920, 1080))
+    lay = caption("A", "B", frame=f)
+    assert body_for(lay, f, text="A")["halo"] is None
+    b = body_for(lay.with_halo(Halo(spread=0.05, color="#000000")), f, text="A")
+    assert b["halo"]["spread"] == 0.05 and b["halo"]["color"] == "#000000"
+    pytest.importorskip("lacing")
+    from tituli.bodies import register
+    from lacing.schema import get_body_schema
+
+    from tituli.bodies import TEXT_OVERLAY_V1
+
+    register()
+    get_body_schema(TEXT_OVERLAY_V1).model_validate(b)
