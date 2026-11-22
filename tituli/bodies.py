@@ -48,6 +48,10 @@ def _model():
         scrim: bool | None = Field(
             None, description="Whether a scrim was drawn under the text."
         )
+        halo: dict[str, Any] | None = Field(
+            None,
+            description="The Halo fields (spread, blur, gain, opacity in em; color, null for the ink's opposite) the text was drawn with, if any.",
+        )
         reason: str | None = Field(
             None, description="The ink/scrim decision the frame's knowledge led to."
         )
@@ -75,6 +79,19 @@ def register() -> str:
     register_body_schema(TEXT_OVERLAY_V1, _model())
     _REGISTERED = True
     return TEXT_OVERLAY_V1
+
+
+def _halo_of(layout) -> dict | None:
+    """The first run's halo as plain data (a colour tuple becomes a list), or None."""
+    from dataclasses import asdict
+
+    for run in layout.runs:
+        if run.halo is not None:
+            d = asdict(run.halo)
+            if isinstance(d["color"], tuple):
+                d["color"] = list(d["color"])
+            return d
+    return None
 
 
 def body_for(
@@ -109,6 +126,7 @@ def body_for(
         "ink": ink,
         "scrim": any(p.kind != "box" or p.color[3] < 255 for p in layout.plates)
         or None,
+        "halo": _halo_of(layout),
         "reason": layout.meta.get("ink"),
         "style": None,
         "unlabelled": unlabelled,
