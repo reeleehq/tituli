@@ -143,7 +143,7 @@ def _placed(
             "would run off the frame. Give long blocks a max_width, use smaller "
             "styles or gaps, or split it over two pages"
         )
-    where, box = frame.place((bb.width, bb.height), anchor=anchor)
+    where, box = lay.place_in(frame, anchor=anchor)
     out = lay.moved_to(box)
     return replace(out, meta={**out.meta, "anchor": where, "box": box})
 

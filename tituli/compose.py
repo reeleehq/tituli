@@ -380,8 +380,7 @@ def title_card(
         else ("left" if "left" in anchor else "right")
     )
     lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
-    bb = lay.bbox()
-    where, box = frame.place((bb.width, bb.height), anchor=anchor)
+    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
     lay = lay.moved_to(box)
     return _finish(
         lay,
@@ -458,8 +457,7 @@ def caption(
         align="left",
         engine=engine,
     )
-    bb = lay.bbox()
-    where, box = frame.place((bb.width, bb.height), anchor=anchor)
+    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
     if "right" in where:
         lay = _stack(
             [(body, style), (credit, attribution_style)],
@@ -548,8 +546,7 @@ def lower_third(
         align="left",
         engine=engine,
     )
-    bb = lay.bbox()
-    where, box = frame.place((bb.width, bb.height), anchor=anchor)
+    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
     lay = lay.moved_to(box)
     em = name_style.face(frame.height).size
     out = _finish(
@@ -619,8 +616,7 @@ def note(
     parts = [(head, headline_style)] + [(b, line_style) for b in body]
     align = "left"
     lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
-    bb = lay.bbox()
-    where, box = frame.place((bb.width, bb.height), anchor=anchor)
+    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
     if "right" in where or where in ("top", "center", "bottom"):
         align = "right" if "right" in where else "center"
         lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
@@ -653,6 +649,11 @@ def _with_accent_rule(lay: Layout, em: float, anchor: str) -> Layout:
     return lay.with_plates(rule)
 
 
+def _halo_arg(halo: bool | Halo) -> Halo | None:
+    """The :class:`Halo` a ``halo=`` argument stands for (``True``: the default one)."""
+    return Halo() if halo is True else (halo or None)
+
+
 def _finish(
     lay: Layout,
     frame: Frame,
@@ -674,7 +675,7 @@ def _finish(
     bb = lay.bbox()
     decision = decide_ink(frame, bb, preferred=preferred)
     chosen = ink if ink is not None else decision.ink
-    glow = Halo() if halo is True else (halo or None)
+    glow = _halo_arg(halo)
     runs = tuple(
         Run(
             **{
