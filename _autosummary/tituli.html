@@ -152,124 +152,127 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.title_card" title="tituli.title_card"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title_card</span></code></a>(title[, subtitle, kicker, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.resolve_halo" title="tituli.resolve_halo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_halo</span></code></a>(halo, *, em, ink)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">halo</span></code> for type of <code class="docutils literal notranslate"><span class="pre">em</span></code> px set in <code class="docutils literal notranslate"><span class="pre">ink</span></code>: the one rule every renderer shares.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.title_card" title="tituli.title_card"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title_card</span></code></a>(title[, subtitle, kicker, ...])</p></td>
 <td><p>An opening card: optional kicker, title, optional subtitle.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.caption" title="tituli.caption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">caption</span></code></a>(text[, attribution, anchor, style, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.caption" title="tituli.caption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">caption</span></code></a>(text[, attribution, anchor, style, ...])</p></td>
 <td><p>A museum label over a picture: what is on screen, plus a tiny credit line.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.lower_third" title="tituli.lower_third"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lower_third</span></code></a>(name[, role, anchor, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.lower_third" title="tituli.lower_third"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lower_third</span></code></a>(name[, role, anchor, ...])</p></td>
 <td><p>Who is speaking: a name and a role, left-anchored, scrimmed if needed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.note" title="tituli.note"><code class="xref py py-obj docutils literal notranslate"><span class="pre">note</span></code></a>(lines, *, frame[, headline, anchor, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.note" title="tituli.note"><code class="xref py py-obj docutils literal notranslate"><span class="pre">note</span></code></a>(lines, *, frame[, headline, anchor, ...])</p></td>
 <td><p>An editorial context card: an optional headline over equal-weight lines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.intertitle" title="tituli.intertitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intertitle</span></code></a>(text, *, frame[, style, engine])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.intertitle" title="tituli.intertitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intertitle</span></code></a>(text, *, frame[, style, engine])</p></td>
 <td><p>A silent-film style card: serif italic prose, centred on the frame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fit" title="tituli.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(text, style, frame_height, *, max_width, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fit" title="tituli.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(text, style, frame_height, *, max_width, ...)</p></td>
 <td><p>Wrap <code class="docutils literal notranslate"><span class="pre">text</span></code> complete, shrinking the type until it fits — never cutting it.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.truncate" title="tituli.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(text, style, frame_height, *, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.truncate" title="tituli.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(text, style, frame_height, *, ...)</p></td>
 <td><p>Wrap and hard-truncate with an ellipsis at <code class="docutils literal notranslate"><span class="pre">max_lines</span></code> lines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.decide_ink" title="tituli.decide_ink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decide_ink</span></code></a>(frame, box, *[, preferred])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.decide_ink" title="tituli.decide_ink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decide_ink</span></code></a>(frame, box, *[, preferred])</p></td>
 <td><p>Choose ink and whether a scrim is needed under <code class="docutils literal notranslate"><span class="pre">box</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.credits_cards" title="tituli.credits_cards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_cards</span></code></a>(credits, *, frame[, style, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.credits_cards" title="tituli.credits_cards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_cards</span></code></a>(credits, *, frame[, style, ...])</p></td>
 <td><p>Paginate the roll into cards that each fit the safe area, centred.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.credits_crawl" title="tituli.credits_crawl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_crawl</span></code></a>(credits, *, frame[, style, engine])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.credits_crawl" title="tituli.credits_crawl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_crawl</span></code></a>(credits, *, frame[, style, engine])</p></td>
 <td><p>One tall layout and its total height in pixels (for <a class="reference internal" href="tituli.video.html#tituli.video.crawl" title="tituli.video.crawl"><code class="xref py py-func docutils literal notranslate"><span class="pre">tituli.video.crawl()</span></code></a>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.credits_frame" title="tituli.credits_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_frame</span></code></a>(size[, style])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.credits_frame" title="tituli.credits_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">credits_frame</span></code></a>(size[, style])</p></td>
 <td><p>The canonical credits frame: near-black, so ink defaults to white.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.on_path" title="tituli.on_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_path</span></code></a>(text, *[, shape, style, box, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.on_path" title="tituli.on_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_path</span></code></a>(text, *[, shape, style, box, ...])</p></td>
 <td><p>Set <code class="docutils literal notranslate"><span class="pre">text</span></code> along a shape inside <code class="docutils literal notranslate"><span class="pre">box</span></code> (default: the safe area, inset).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.rain" title="tituli.rain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rain</span></code></a>(lines, *, frame[, style, box, slants, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.rain" title="tituli.rain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rain</span></code></a>(lines, *, frame[, style, box, slants, ...])</p></td>
 <td><p><em>Il pleut</em>: each line a streak of upright letters falling across the frame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.in_shape" title="tituli.in_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_shape</span></code></a>(text, mask, *, frame[, style, box, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.in_shape" title="tituli.in_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_shape</span></code></a>(text, mask, *, frame[, style, box, ...])</p></td>
 <td><p>Pour prose into a silhouette (light = inside).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.resolve_shape" title="tituli.resolve_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_shape</span></code></a>(shape, box)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.resolve_shape" title="tituli.resolve_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_shape</span></code></a>(shape, box)</p></td>
 <td><p>Turn a name, an SVG <code class="docutils literal notranslate"><span class="pre">d</span></code> string or a Path into a Path fitted to <code class="docutils literal notranslate"><span class="pre">box</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.block" title="tituli.block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block</span></code></a>(text, style, frame, *[, max_width, x, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.block" title="tituli.block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block</span></code></a>(text, style, frame, *[, max_width, x, ...])</p></td>
 <td><p>Lay out prose as lines from the top-left corner <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.stack" title="tituli.stack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack</span></code></a>(items, *, frame[, gap, align, anchor])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.stack" title="tituli.stack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack</span></code></a>(items, *, frame[, gap, align, anchor])</p></td>
 <td><p>Blocks top to bottom, <code class="docutils literal notranslate"><span class="pre">gap</span></code> apart, aligned within the widest.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.grid" title="tituli.grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid</span></code></a>(items, *, frame[, columns, gap, align, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.grid" title="tituli.grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid</span></code></a>(items, *, frame[, columns, gap, align, ...])</p></td>
 <td><p>Blocks in uniform cells, row-major; one row when <code class="docutils literal notranslate"><span class="pre">columns</span></code> is None.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.glossed" title="tituli.glossed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">glossed</span></code></a>(pairs, *, frame[, glyph, gloss, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.glossed" title="tituli.glossed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">glossed</span></code></a>(pairs, *, frame[, glyph, gloss, ...])</p></td>
 <td><p>A row of big glyphs, each with a small reading centred under it.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.along_path" title="tituli.along_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">along_path</span></code></a>(text, path, style, frame, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.along_path" title="tituli.along_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">along_path</span></code></a>(text, path, style, frame, *[, ...])</p></td>
 <td><p>Set <code class="docutils literal notranslate"><span class="pre">text</span></code> glyph by glyph along <code class="docutils literal notranslate"><span class="pre">path</span></code> (the path is the baseline).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.wrap" title="tituli.wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code></a>(text, style, frame_height, *, max_width)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.wrap" title="tituli.wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code></a>(text, style, frame_height, *, max_width)</p></td>
 <td><p>Greedy word wrap on measured widths.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.measure" title="tituli.measure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">measure</span></code></a>(text, style, frame_height, *[, engine])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.measure" title="tituli.measure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">measure</span></code></a>(text, style, frame_height, *[, engine])</p></td>
 <td><p>Width in pixels of <code class="docutils literal notranslate"><span class="pre">text</span></code> set in <code class="docutils literal notranslate"><span class="pre">style</span></code> on a frame of that height.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.fit_size" title="tituli.fit_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_size</span></code></a>(text, style, frame_height, *, max_width)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.fit_size" title="tituli.fit_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_size</span></code></a>(text, style, frame_height, *, max_width)</p></td>
 <td><p>Shrink <code class="docutils literal notranslate"><span class="pre">style.size</span></code> until <code class="docutils literal notranslate"><span class="pre">text</span></code> wraps within the given bounds.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.render" title="tituli.render"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></a>(layout, frame, *[, t, engine])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.render" title="tituli.render"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></a>(layout, frame, *[, t, engine])</p></td>
 <td><p>Render onto the frame: RGBA overlay if it has no background, else RGB.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.render_overlay" title="tituli.render_overlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_overlay</span></code></a>(layout, size, *[, t, engine])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.render_overlay" title="tituli.render_overlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_overlay</span></code></a>(layout, size, *[, t, engine])</p></td>
 <td><p>The layout on a transparent canvas of <code class="docutils literal notranslate"><span class="pre">size</span></code> (RGBA).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.frames" title="tituli.frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frames</span></code></a>(layout, frame, *, duration[, fps, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.frames" title="tituli.frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frames</span></code></a>(layout, frame, *, duration[, fps, ...])</p></td>
 <td><p>Yield one image per video frame, honouring the runs' reveal envelopes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.make_engine" title="tituli.make_engine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_engine</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.make_engine" title="tituli.make_engine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_engine</span></code></a>([name])</p></td>
 <td><p>Resolve an engine by name: <code class="docutils literal notranslate"><span class="pre">"pillow"</span></code> (default) or <code class="docutils literal notranslate"><span class="pre">"harfbuzz"</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.schedule_labels" title="tituli.schedule_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schedule_labels</span></code></a>(spans, label_for, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.schedule_labels" title="tituli.schedule_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schedule_labels</span></code></a>(spans, label_for, *[, ...])</p></td>
 <td><p>One label per span, held <code class="docutils literal notranslate"><span class="pre">hold_s</span></code>, with the three rules built in.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.resolve" title="tituli.resolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve</span></code></a>(overlays, *[, min_readable_s])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.resolve" title="tituli.resolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve</span></code></a>(overlays, *[, min_readable_s])</p></td>
 <td><p>Enforce one overlay per slot at a time: the heavier wins, the lighter yields.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.families" title="tituli.families"><code class="xref py py-obj docutils literal notranslate"><span class="pre">families</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.families" title="tituli.families"><code class="xref py py-obj docutils literal notranslate"><span class="pre">families</span></code></a>()</p></td>
 <td><p>Sorted family names installed on this machine.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.find_font" title="tituli.find_font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_font</span></code></a>(family, *[, weight, italic, condensed])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.find_font" title="tituli.find_font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_font</span></code></a>(family, *[, weight, italic, condensed])</p></td>
 <td><p>First installed family in the preference list, at the closest style.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.resolve_face" title="tituli.resolve_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_face</span></code></a>([family, weight, italic, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.resolve_face" title="tituli.resolve_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_face</span></code></a>([family, weight, italic, ...])</p></td>
 <td><p>Resolve a typeface request to a sized <code class="docutils literal notranslate"><span class="pre">Face</span></code>; never fails.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.face_digest" title="tituli.face_digest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_digest</span></code></a>(face)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.face_digest" title="tituli.face_digest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_digest</span></code></a>(face)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code> of <code class="xref py py-func docutils literal notranslate"><span class="pre">face_bytes()</span></code> and the <a class="reference internal" href="#tituli.Face.applied_variations" title="tituli.Face.applied_variations"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a> — what makes two faces the same face.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.run_outline" title="tituli.run_outline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_outline</span></code></a>(run, *[, precision, engine])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.run_outline" title="tituli.run_outline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_outline</span></code></a>(run, *[, precision, engine])</p></td>
 <td><p>The contours of <code class="docutils literal notranslate"><span class="pre">run</span></code> as one SVG path, placed where the run is drawn.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.contrast_ratio" title="tituli.contrast_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contrast_ratio</span></code></a>(a, b)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.contrast_ratio" title="tituli.contrast_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contrast_ratio</span></code></a>(a, b)</p></td>
 <td><p>WCAG contrast ratio between two colours (1..21).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.ink_for" title="tituli.ink_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ink_for</span></code></a>(*, luminance[, light, dark])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.ink_for" title="tituli.ink_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ink_for</span></code></a>(*, luminance[, light, dark])</p></td>
 <td><p>Pick the ink (light or dark) with more contrast against <code class="docutils literal notranslate"><span class="pre">luminance</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.parse_color" title="tituli.parse_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_color</span></code></a>(color)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.parse_color" title="tituli.parse_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_color</span></code></a>(color)</p></td>
 <td><p>Accept <code class="docutils literal notranslate"><span class="pre">"#rgb"</span></code>, <code class="docutils literal notranslate"><span class="pre">"#rrggbb"</span></code>, <code class="docutils literal notranslate"><span class="pre">"#rrggbbaa"</span></code>, a Pillow name or a tuple.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.safe_area" title="tituli.safe_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">safe_area</span></code></a>(width, height, *[, fraction])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.safe_area" title="tituli.safe_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">safe_area</span></code></a>(width, height, *[, fraction])</p></td>
 <td><p>The centred box holding <code class="docutils literal notranslate"><span class="pre">fraction</span></code> of each dimension.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.reserved_zones" title="tituli.reserved_zones"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reserved_zones</span></code></a>(delivery)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.reserved_zones" title="tituli.reserved_zones"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reserved_zones</span></code></a>(delivery)</p></td>
 <td><p>Normalised boxes a delivery target keeps for itself.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.cover_fit" title="tituli.cover_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cover_fit</span></code></a>(img, size)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.cover_fit" title="tituli.cover_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cover_fit</span></code></a>(img, size)</p></td>
 <td><p>Scale <code class="docutils literal notranslate"><span class="pre">img</span></code> to fill <code class="docutils literal notranslate"><span class="pre">size</span></code> and crop the overflow, centred.</p></td>
 </tr>
 </tbody>
@@ -301,31 +304,34 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 <tr class="row-even"><td><p><a class="reference internal" href="#tituli.Halo" title="tituli.Halo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Halo</span></code></a>([color, spread, blur, gain, opacity])</p></td>
 <td><p>A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Face" title="tituli.Face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Face</span></code></a>(family, style, size, path[, index, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.ResolvedHalo" title="tituli.ResolvedHalo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResolvedHalo</span></code></a>(spread_px, blur_px, gain, ...)</p></td>
+<td><p>A <a class="reference internal" href="#tituli.Halo" title="tituli.Halo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Halo</span></code></a> resolved for one run: pixels, and a concrete colour.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Face" title="tituli.Face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Face</span></code></a>(family, style, size, path[, index, ...])</p></td>
 <td><p>A resolved, sized font ready to measure and draw with Pillow.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Credits" title="tituli.Credits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Credits</span></code></a>([sections, title, closing, meta])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Credits" title="tituli.Credits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Credits</span></code></a>([sections, title, closing, meta])</p></td>
 <td><p>The whole roll.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.CreditsStyle" title="tituli.CreditsStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a>([title, heading, role, name, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.CreditsStyle" title="tituli.CreditsStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a>([title, heading, role, name, ...])</p></td>
 <td><p>The type ramp for a roll.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Entry" title="tituli.Entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Entry</span></code></a>(name[, role])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Entry" title="tituli.Entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Entry</span></code></a>(name[, role])</p></td>
 <td><p>One credit line: <code class="docutils literal notranslate"><span class="pre">role</span></code> + <code class="docutils literal notranslate"><span class="pre">name</span></code>, a bare <code class="docutils literal notranslate"><span class="pre">name</span></code>, or prose.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Section" title="tituli.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>([heading, entries, kind])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Section" title="tituli.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>([heading, entries, kind])</p></td>
 <td><p>A heading over a run of entries.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Label" title="tituli.Label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Label</span></code></a>(text[, attribution, key])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Label" title="tituli.Label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Label</span></code></a>(text[, attribution, key])</p></td>
 <td><p>What goes on a museum label: the thing, and where it came from.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Span" title="tituli.Span"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Span</span></code></a>(start, end, key[, data])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Span" title="tituli.Span"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Span</span></code></a>(start, end, key[, data])</p></td>
 <td><p>A time range of the cut showing one picture.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tituli.TimedOverlay" title="tituli.TimedOverlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a>(layout, start, end[, slot, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.TimedOverlay" title="tituli.TimedOverlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a>(layout, start, end[, slot, ...])</p></td>
 <td><p>A layout (or a thing to lay out) on screen from <code class="docutils literal notranslate"><span class="pre">start</span></code> to <code class="docutils literal notranslate"><span class="pre">end</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tituli.Outline" title="tituli.Outline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Outline</span></code></a>(d, bbox)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tituli.Outline" title="tituli.Outline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Outline</span></code></a>(d, bbox)</p></td>
 <td><p>A run's contours as SVG path data, in frame pixels.</p></td>
 </tr>
 </tbody>
@@ -891,6 +897,17 @@ than scaled.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.</span></span><span class="sig-name descname"><span class="pre">Plate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'box'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">0.5)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Plate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Plate" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Plate'">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
 <p>A backdrop drawn under the runs: a scrim, a box, a rule.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="tituli.ResolvedHalo">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.</span></span><span class="sig-name descname"><span class="pre">ResolvedHalo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spread_px</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur_px</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rgba</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/render.html#ResolvedHalo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.ResolvedHalo" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.ResolvedHalo'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
+<p>A <a class="reference internal" href="#tituli.Halo" title="tituli.Halo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Halo</span></code></a> resolved for one run: pixels, and a concrete colour.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rgba</span></code> is the halo colour (its own, or the ink’s opposite); <code class="docutils literal notranslate"><span class="pre">reach</span></code> is
+how far the glow extends past the glyphs, in px (spread plus
+<code class="xref py py-data docutils literal notranslate"><span class="pre">BLUR_REACH</span></code> blur radii), the padding a renderer must leave around them.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -1553,6 +1570,21 @@ so a render on a fontless CI box still produces a real (if plainer) result.
 </dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="tituli.resolve_halo">
+<span class="sig-prename descclassname"><span class="pre">tituli.</span></span><span class="sig-name descname"><span class="pre">resolve_halo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">halo</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">em</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ink</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/render.html#resolve_halo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.resolve_halo" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.resolve_halo'">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">halo</span></code> for type of <code class="docutils literal notranslate"><span class="pre">em</span></code> px set in <code class="docutils literal notranslate"><span class="pre">ink</span></code>: the one rule every renderer shares.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">resolve_halo</span><span class="p">(</span><span class="n">Halo</span><span class="p">(</span><span class="n">spread</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">blur</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#000000"</span><span class="p">),</span> <span class="n">em</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ink</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">spread_px</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">blur_px</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reach</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">rgba</span>
+</span><span id="line-3"><span class="go">(2, 4.0, 14, (0, 0, 0, 255))</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.ResolvedHalo" title="tituli.render.ResolvedHalo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResolvedHalo</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="tituli.resolve_shape">
 <span class="sig-prename descclassname"><span class="pre">tituli.</span></span><span class="sig-name descname"><span class="pre">resolve_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/calligram.html#resolve_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.resolve_shape" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.resolve_shape'">¶</a></dt>
 <dd><p>Turn a name, an SVG <code class="docutils literal notranslate"><span class="pre">d</span></code> string or a Path into a Path fitted to <code class="docutils literal notranslate"><span class="pre">box</span></code>.</p>
@@ -1816,6 +1848,7 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </ul>
 </li>
 <li><a :data-current="activeSection === '#tituli.Plate'" class="reference internal" href="#tituli.Plate"><code class="docutils literal notranslate"><span class="pre">Plate</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.ResolvedHalo'" class="reference internal" href="#tituli.ResolvedHalo"><code class="docutils literal notranslate"><span class="pre">ResolvedHalo</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Run'" class="reference internal" href="#tituli.Run"><code class="docutils literal notranslate"><span class="pre">Run</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Run.advance'" class="reference internal" href="#tituli.Run.advance"><code class="docutils literal notranslate"><span class="pre">Run.advance</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Run.bbox'" class="reference internal" href="#tituli.Run.bbox"><code class="docutils literal notranslate"><span class="pre">Run.bbox()</span></code></a></li>
@@ -1872,6 +1905,7 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 <li><a :data-current="activeSection === '#tituli.reserved_zones'" class="reference internal" href="#tituli.reserved_zones"><code class="docutils literal notranslate"><span class="pre">reserved_zones()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.resolve'" class="reference internal" href="#tituli.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.resolve_face'" class="reference internal" href="#tituli.resolve_face"><code class="docutils literal notranslate"><span class="pre">resolve_face()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.resolve_halo'" class="reference internal" href="#tituli.resolve_halo"><code class="docutils literal notranslate"><span class="pre">resolve_halo()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.resolve_shape'" class="reference internal" href="#tituli.resolve_shape"><code class="docutils literal notranslate"><span class="pre">resolve_shape()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.run_outline'" class="reference internal" href="#tituli.run_outline"><code class="docutils literal notranslate"><span class="pre">run_outline()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.safe_area'" class="reference internal" href="#tituli.safe_area"><code class="docutils literal notranslate"><span class="pre">safe_area()</span></code></a></li>
@@ -1893,7 +1927,7 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </div>
 </footer>
 </div>
-<script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+<script src="../_static/documentation_options.js?v=63b572e7"></script>
 <script src="../_static/doctools.js?v=fd6eb6e6"></script>
 <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

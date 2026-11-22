@@ -25,8 +25,9 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 
 ### Functions
 
-| [`title_card`](#tituli.title_card)(title[, subtitle, kicker, ...])         | An opening card: optional kicker, title, optional subtitle.                                                                                       |
+| [`resolve_halo`](#tituli.resolve_halo)(halo, \*, em, ink)                    | `halo` for type of `em` px set in `ink`: the one rule every renderer shares.                                                                      |
 |-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`title_card`](#tituli.title_card)(title[, subtitle, kicker, ...])         | An opening card: optional kicker, title, optional subtitle.                                                                                       |
 | [`caption`](#tituli.caption)(text[, attribution, anchor, style, ...])   | A museum label over a picture: what is on screen, plus a tiny credit line.                                                                        |
 | [`lower_third`](#tituli.lower_third)(name[, role, anchor, ...])             | Who is speaking: a name and a role, left-anchored, scrimmed if needed.                                                                            |
 | [`note`](#tituli.note)(lines, \*, frame[, headline, anchor, ...])    | An editorial context card: an optional headline over equal-weight lines.                                                                          |
@@ -69,24 +70,25 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 
 ### Classes
 
-| [`Frame`](#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.               |
-|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [`Layout`](#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels.             |
-| [`Run`](#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.                           |
-| [`Plate`](#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.                           |
-| [`Box`](#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.                      |
-| [`Path`](#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                                    |
-| [`TextStyle`](#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                                           |
-| [`Halo`](#tituli.Halo)([color, spread, blur, gain, opacity])         | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19). |
-| [`Face`](#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.                      |
-| [`Credits`](#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                                    |
-| [`CreditsStyle`](#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                                          |
-| [`Entry`](#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.                         |
-| [`Section`](#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                                   |
-| [`Label`](#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.                    |
-| [`Span`](#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                                       |
-| [`TimedOverlay`](#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.                  |
-| [`Outline`](#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                                |
+| [`Frame`](#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.                                         |
+|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| [`Layout`](#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels.                                       |
+| [`Run`](#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.                                                     |
+| [`Plate`](#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.                                                     |
+| [`Box`](#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.                                                |
+| [`Path`](#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                                                              |
+| [`TextStyle`](#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                                                                     |
+| [`Halo`](#tituli.Halo)([color, spread, blur, gain, opacity])         | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).                           |
+| [`ResolvedHalo`](#tituli.ResolvedHalo)(spread_px, blur_px, gain, ...)        | A [`Halo`](#tituli.Halo) resolved for one run: pixels, and a concrete colour. |
+| [`Face`](#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.                                                |
+| [`Credits`](#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                                                              |
+| [`CreditsStyle`](#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                                                                    |
+| [`Entry`](#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.                                                   |
+| [`Section`](#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                                                             |
+| [`Label`](#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.                                              |
+| [`Span`](#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                                                                 |
+| [`TimedOverlay`](#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.                                            |
+| [`Outline`](#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                                                          |
 
 ### Exceptions
 
@@ -534,6 +536,16 @@ A sine wave along the segment `start -> end`.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
+
+### *class* tituli.ResolvedHalo(spread_px, blur_px, gain, opacity, rgba)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A [`Halo`](#tituli.Halo) resolved for one run: pixels, and a concrete colour.
+
+`rgba` is the halo colour (its own, or the ink’s opposite); `reach` is
+how far the glow extends past the glyphs, in px (spread plus
+`BLUR_REACH` blur radii), the padding a renderer must leave around them.
 
 ### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
@@ -1098,6 +1110,19 @@ True
 
 * **Return type:**
   [`Face`](tituli.fonts.html.md#tituli.fonts.Face)
+
+### tituli.resolve_halo(halo, , em, ink)
+
+`halo` for type of `em` px set in `ink`: the one rule every renderer shares.
+
+```pycon
+>>> r = resolve_halo(Halo(spread=0.05, blur=0.1, color="#000000"), em=40, ink=(255, 255, 255, 255))
+>>> r.spread_px, r.blur_px, r.reach, r.rgba
+(2, 4.0, 14, (0, 0, 0, 255))
+```
+
+* **Return type:**
+  [`ResolvedHalo`](#tituli.ResolvedHalo)
 
 ### tituli.resolve_shape(shape, box)
 

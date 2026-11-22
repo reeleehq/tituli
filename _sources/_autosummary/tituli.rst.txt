@@ -8,6 +8,7 @@
 
    .. autosummary::
    
+      resolve_halo
       title_card
       caption
       lower_third
@@ -61,6 +62,7 @@
       Path
       TextStyle
       Halo
+      ResolvedHalo
       Face
       Credits
       CreditsStyle

@@ -1,38 +1,36 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-10T15:39:38Z",
+  "built_at": "2026-11-22T13:52:02Z",
   "package": {
     "name": "tituli",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "display_name": "tituli",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "ee8546c401c7698ef254c2a80b60cce3c36627d2",
-    "short_commit": "ee8546c",
+    "commit": "bb294216ca8f89e0e25e476faf241a465a034ee1",
+    "short_commit": "bb29421",
     "branch": "main",
-    "tags": [
-      "0.0.16"
-    ],
+    "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/reeleehq/tituli",
-    "commit_url": "https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2",
+    "commit_url": "https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "reeleehq/tituli",
-    "sha": "489b147ab6dcbf6f8a02475eeab11499fda02aa8",
+    "sha": "b57697b97442ea146adab77e86f1c3457778ae1e",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "42845234095",
-    "run_url": "https://github.com/reeleehq/tituli/actions/runs/42845234095",
+    "run_id": "45029517968",
+    "run_url": "https://github.com/reeleehq/tituli/actions/runs/45029517968",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.22",
+    "epythet": "0.2.23",
     "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.16"
@@ -58,15 +56,15 @@
   },
   "site": {
     "modules_documented": 18,
-    "objects_documented": 280
+    "objects_documented": 283
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.16",
+    "latest": "0.0.17",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout ee8546c401c7698ef254c2a80b60cce3c36627d2\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout bb294216ca8f89e0e25e476faf241a465a034ee1\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

@@ -248,7 +248,7 @@
 </table>
 <p>All sizes are fractions of frame height, so a style reads the same at 720p and 4K. The presets (<code class="docutils literal notranslate"><span class="pre">tituli.style</span></code>) are one type ramp shared by overlays and the end card, so a film is one design.</p>
 <section id="scheduling-tituli-owns-it-or-you-do-no-middle">
-<h3>Scheduling: tituli owns it, or you do — no middle<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#scheduling-tituli-owns-it-or-you-do-no-middle" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#scheduling-tituli-owns-it-or-you-do-no-middle'">¶</a></h3>
+<span id="scheduling-tituli-owns-it-or-you-do--no-middle"></span><h3>Scheduling: tituli owns it, or you do — no middle<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#scheduling-tituli-owns-it-or-you-do-no-middle" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#scheduling-tituli-owns-it-or-you-do-no-middle'">¶</a></h3>
 <p>A <strong>reserved zone binds every anchor</strong>, not just <code class="docutils literal notranslate"><span class="pre">anchor="auto"</span></code>: with <code class="docutils literal notranslate"><span class="pre">delivery="youtube"</span></code> a block that would land in the subtitle band is slid the shortest way clear of it, keeping the anchor you named. <code class="docutils literal notranslate"><span class="pre">anchor="bottom-left"</span></code> therefore means “as low as the platform allows”.</p>
 <p><code class="docutils literal notranslate"><span class="pre">schedule_labels</span></code> derives labels from a cut with the three rules built in. A label suppressed by a heavier overlay is <em>truncated</em> to the time before it, kept if what remains is readable, and otherwise skipped <strong>without being recorded as shown</strong> — so the portrait a cold viewer most needs named still gets labelled the next time it appears. <code class="docutils literal notranslate"><span class="pre">resolve()</span></code> applies the identical rule to hand-built overlays (one overlay per slot at a time; equal weights colliding raise). <code class="docutils literal notranslate"><span class="pre">label_for</span></code> returns a <code class="docutils literal notranslate"><span class="pre">Label</span></code> or the explicit <code class="docutils literal notranslate"><span class="pre">UNLABELLED</span></code>; <code class="docutils literal notranslate"><span class="pre">None</span></code> raises — “no caption” is a stated choice, never the cheap default, because an unlabelled still beside a labelled one is an implicit claim.</p>
 </section>
@@ -347,7 +347,7 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 
 </section>
 </section>
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-10 15:39 UTC from <a href="https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2">ee8546c</a> (main) · tituli 0.0.16 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-22 13:52 UTC from <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1">bb29421</a> (main) · tituli 0.0.17 · <a href="about-this-build.html">about this build</a></p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
@@ -381,7 +381,7 @@ NOT seams: the scrim design, the anchor grid, the type ramp, the ffmpeg encode a
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=c7cdf6fe"></script>
+<script src="_static/documentation_options.js?v=63b572e7"></script>
 <script src="_static/doctools.js?v=fd6eb6e6"></script>
 <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="_static/clipboard.min.js?v=a7894cd8"></script>

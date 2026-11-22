@@ -204,7 +204,7 @@
 </span><span id="line-24"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="line-25">
 </span><span id="line-26"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-</span><span id="line-27"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
+</span><span id="line-27"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
 </span><span id="line-28"><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">groupby</span>
 </span><span id="line-29"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Protocol</span>
 </span><span id="line-30">
@@ -223,7 +223,7 @@
 </span><span id="line-43"><span class="n">_GRADIENT_STEPS</span> <span class="o">=</span> <span class="mi">256</span>
 </span><span id="line-44"><span class="n">_CORNER_POWER</span> <span class="o">=</span> <span class="mf">2.2</span>  <span class="c1"># ease of a scrim's falloff (higher = holds longer, drops faster)</span>
 </span><span id="line-45"><span class="c1"># A Gaussian's visible reach, in radii: how far a halo extends past its spread.</span>
-</span><span id="line-46"><span class="n">_BLUR_REACH</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span id="line-46"><span class="n">BLUR_REACH</span> <span class="o">=</span> <span class="mi">3</span>
 </span><span id="line-47">
 </span><span id="line-48">
 </span><span id="line-49"><span class="k">class</span><span class="w"> </span><span class="nc">Engine</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -445,197 +445,238 @@
 </span><span id="line-265">    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">_ALPHA_MAX</span><span class="p">,</span> <span class="n">v</span> <span class="o">*</span> <span class="n">gain</span><span class="p">)</span> <span class="o">*</span> <span class="n">opacity</span><span class="p">))</span>
 </span><span id="line-266">
 </span><span id="line-267">
-</span><span id="line-268"><span class="k">def</span><span class="w"> </span><span class="nf">draw_halo</span><span class="p">(</span>
-</span><span id="line-269">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">halo</span><span class="p">:</span> <span class="n">Halo</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ink</span><span class="p">:</span> <span class="n">RGBA</span>
-</span><span id="line-270"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-271"><span class="w">    </span><span class="sd">"""Composite onto ``canvas`` the halo of the glyphs drawn on ``text`` (same size).</span>
-</span><span id="line-272">
-</span><span id="line-273"><span class="sd">    Only the region the glyphs and their glow reach is filtered, so a caption</span>
-</span><span id="line-274"><span class="sd">    on a 4K frame costs what the caption covers.</span>
+<div class="viewcode-block" id="ResolvedHalo">
+<a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.ResolvedHalo">[docs]</a>
+</span><span id="line-268"><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-269"><span class="k">class</span><span class="w"> </span><span class="nc">ResolvedHalo</span><span class="p">:</span>
+</span><span id="line-270"><span class="w">    </span><span class="sd">"""A :class:`Halo` resolved for one run: pixels, and a concrete colour.</span>
+</span><span id="line-271">
+</span><span id="line-272"><span class="sd">    ``rgba`` is the halo colour (its own, or the ink's opposite); ``reach`` is</span>
+</span><span id="line-273"><span class="sd">    how far the glow extends past the glyphs, in px (spread plus</span>
+</span><span id="line-274"><span class="sd">    :data:`BLUR_REACH` blur radii), the padding a renderer must leave around them.</span>
 </span><span id="line-275"><span class="sd">    """</span>
-</span><span id="line-276">    <span class="n">alpha</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">getchannel</span><span class="p">(</span><span class="s2">"A"</span><span class="p">)</span>
-</span><span id="line-277">    <span class="n">ink_box</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">getbbox</span><span class="p">()</span>
-</span><span id="line-278">    <span class="k">if</span> <span class="n">ink_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-279">        <span class="k">return</span>
-</span><span id="line-280">    <span class="n">spread</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">halo</span><span class="o">.</span><span class="n">spread</span> <span class="o">*</span> <span class="n">em</span><span class="p">))</span>
-</span><span id="line-281">    <span class="n">blur</span> <span class="o">=</span> <span class="n">halo</span><span class="o">.</span><span class="n">blur</span> <span class="o">*</span> <span class="n">em</span>
-</span><span id="line-282">    <span class="n">reach</span> <span class="o">=</span> <span class="n">spread</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">_BLUR_REACH</span> <span class="o">*</span> <span class="n">blur</span><span class="p">)</span>
-</span><span id="line-283">    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">reach</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">reach</span><span class="p">)</span>
-</span><span id="line-284">    <span class="n">x1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">reach</span><span class="p">)</span>
-</span><span id="line-285">    <span class="n">y1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">reach</span><span class="p">)</span>
-</span><span id="line-286">    <span class="n">shine</span> <span class="o">=</span> <span class="n">glow</span><span class="p">(</span>
-</span><span id="line-287">        <span class="n">alpha</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)),</span>
-</span><span id="line-288">        <span class="n">spread</span><span class="o">=</span><span class="n">spread</span><span class="p">,</span>
-</span><span id="line-289">        <span class="n">blur</span><span class="o">=</span><span class="n">blur</span><span class="p">,</span>
-</span><span id="line-290">        <span class="n">gain</span><span class="o">=</span><span class="n">halo</span><span class="o">.</span><span class="n">gain</span><span class="p">,</span>
-</span><span id="line-291">        <span class="n">opacity</span><span class="o">=</span><span class="n">halo</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
-</span><span id="line-292">    <span class="p">)</span>
-</span><span id="line-293">    <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">_halo_color</span><span class="p">(</span><span class="n">halo</span><span class="p">,</span> <span class="n">ink</span><span class="p">)</span>
-</span><span id="line-294">    <span class="n">layer</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">shine</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="line-295">    <span class="n">layer</span><span class="o">.</span><span class="n">putalpha</span><span class="p">(</span><span class="n">shine</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="n">a</span> <span class="o">//</span> <span class="n">_ALPHA_MAX</span><span class="p">))</span>
-</span><span id="line-296">    <span class="n">canvas</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">))</span>
-</span><span id="line-297">
-</span><span id="line-298">
-</span><span id="line-299"><span class="k">def</span><span class="w"> </span><span class="nf">_faded</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
-</span><span id="line-300"><span class="w">    </span><span class="sd">"""``image`` (RGBA) with its alpha scaled by ``factor``."""</span>
-</span><span id="line-301">    <span class="k">if</span> <span class="n">factor</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="line-302">        <span class="k">return</span> <span class="n">image</span>
-</span><span id="line-303">    <span class="n">out</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="line-304">    <span class="n">out</span><span class="o">.</span><span class="n">putalpha</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">getchannel</span><span class="p">(</span><span class="s2">"A"</span><span class="p">)</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)))</span>
-</span><span id="line-305">    <span class="k">return</span> <span class="n">out</span>
-</span><span id="line-306">
-</span><span id="line-307">
-</span><span id="line-308"><span class="k">def</span><span class="w"> </span><span class="nf">_halo_group</span><span class="p">(</span><span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-</span><span id="line-309"><span class="w">    </span><span class="sd">"""Runs glow together when they share a halo, a reveal and a type size."""</span>
-</span><span id="line-310">    <span class="k">return</span> <span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">halo</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">t_in</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">t_full</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-</span><span id="line-311">
-</span><span id="line-312">
-</span><span id="line-313"><span class="k">def</span><span class="w"> </span><span class="nf">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-314">    <span class="n">box</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">getbbox</span><span class="p">()</span>
-</span><span id="line-315">    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-316">        <span class="n">canvas</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">_faded</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">box</span><span class="p">),</span> <span class="n">factor</span><span class="p">),</span> <span class="n">box</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
-</span><span id="line-317">
-</span><span id="line-318">
-</span><span id="line-319"><span class="k">def</span><span class="w"> </span><span class="nf">_draw_haloed</span><span class="p">(</span>
-</span><span id="line-320">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span>
-</span><span id="line-321">    <span class="n">band</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Halo</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Run</span><span class="p">]]],</span>
-</span><span id="line-322">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span><span class="p">,</span>
-</span><span id="line-323">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-324"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-325"><span class="w">    </span><span class="sd">"""Neighbouring haloed groups (one halo, reveal and size each): every halo,</span>
-</span><span id="line-326"><span class="sd">    then every text, so no glow covers a neighbour's ink.</span>
-</span><span id="line-327">
-</span><span id="line-328"><span class="sd">    Each group is drawn fully revealed and faded afterwards: a halo built from</span>
-</span><span id="line-329"><span class="sd">    half-faded glyphs saturates early and shows the letters first as dark</span>
-</span><span id="line-330"><span class="sd">    silhouettes. Groups sharing one reveal factor are faded as one layer; groups</span>
-</span><span id="line-331"><span class="sd">    mid-way through different reveals are faded apart, which darkens their</span>
-</span><span id="line-332"><span class="sd">    overlap slightly until both are fully revealed.</span>
-</span><span id="line-333"><span class="sd">    """</span>
-</span><span id="line-334">    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-335">    <span class="k">for</span> <span class="n">halo</span><span class="p">,</span> <span class="n">runs</span> <span class="ow">in</span> <span class="n">band</span><span class="p">:</span>
-</span><span id="line-336">        <span class="n">f</span> <span class="o">=</span> <span class="n">_envelope</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
-</span><span id="line-337">        <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="line-338">            <span class="k">continue</span>
-</span><span id="line-339">        <span class="n">text</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="line-340">        <span class="n">_draw_runs</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span id="line-341">        <span class="n">shine</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="line-342">        <span class="n">draw_halo</span><span class="p">(</span><span class="n">shine</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">em</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">ink</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
-</span><span id="line-343">        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">shine</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
-</span><span id="line-344">    <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="n">f</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">})</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="line-345">        <span class="n">whole</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="line-346">        <span class="k">for</span> <span class="n">shine</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span><span id="line-347">            <span class="n">whole</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">shine</span><span class="p">)</span>
-</span><span id="line-348">        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-</span><span id="line-349">            <span class="n">whole</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span id="line-350">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">whole</span><span class="p">,</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
-</span><span id="line-351">        <span class="k">return</span>
-</span><span id="line-352">    <span class="k">for</span> <span class="n">shine</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-</span><span id="line-353">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">shine</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-</span><span id="line-354">    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-</span><span id="line-355">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-</span><span id="line-356">
-</span><span id="line-357">
-</span><span id="line-358"><span class="k">def</span><span class="w"> </span><span class="nf">_draw_runs</span><span class="p">(</span>
-</span><span id="line-359">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">runs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Run</span><span class="p">],</span> <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
-</span><span id="line-360"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-361">    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
-</span><span id="line-362">        <span class="n">f</span> <span class="o">=</span> <span class="n">_envelope</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span id="line-363">        <span class="k">if</span> <span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="line-364">            <span class="n">engine</span><span class="o">.</span><span class="n">draw_run</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-</span><span id="line-365">
-</span><span id="line-366">
-</span><span id="line-367"><span class="c1"># ----------------------------------------------------------------------------</span>
-</span><span id="line-368"><span class="c1"># Entry points</span>
-</span><span id="line-369"><span class="c1"># ----------------------------------------------------------------------------</span>
-</span><span id="line-370">
-</span><span id="line-371">
+</span><span id="line-276">
+</span><span id="line-277">    <span class="n">spread_px</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="line-278">    <span class="n">blur_px</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-279">    <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-280">    <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-281">    <span class="n">rgba</span><span class="p">:</span> <span class="n">RGBA</span>
+</span><span id="line-282">
+</span><span id="line-283">    <span class="nd">@property</span>
+</span><span id="line-284">    <span class="k">def</span><span class="w"> </span><span class="nf">reach</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="line-285">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spread_px</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">BLUR_REACH</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">blur_px</span><span class="p">)</span></div>
+
+</span><span id="line-286">
+</span><span id="line-287">
+<div class="viewcode-block" id="resolve_halo">
+<a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.resolve_halo">[docs]</a>
+</span><span id="line-288"><span class="k">def</span><span class="w"> </span><span class="nf">resolve_halo</span><span class="p">(</span><span class="n">halo</span><span class="p">:</span> <span class="n">Halo</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ink</span><span class="p">:</span> <span class="n">RGBA</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResolvedHalo</span><span class="p">:</span>
+</span><span id="line-289"><span class="w">    </span><span class="sd">"""``halo`` for type of ``em`` px set in ``ink``: the one rule every renderer shares.</span>
+</span><span id="line-290">
+</span><span id="line-291"><span class="sd">    &gt;&gt;&gt; r = resolve_halo(Halo(spread=0.05, blur=0.1, color="#000000"), em=40, ink=(255, 255, 255, 255))</span>
+</span><span id="line-292"><span class="sd">    &gt;&gt;&gt; r.spread_px, r.blur_px, r.reach, r.rgba</span>
+</span><span id="line-293"><span class="sd">    (2, 4.0, 14, (0, 0, 0, 255))</span>
+</span><span id="line-294"><span class="sd">    """</span>
+</span><span id="line-295">    <span class="k">return</span> <span class="n">ResolvedHalo</span><span class="p">(</span>
+</span><span id="line-296">        <span class="n">spread_px</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">halo</span><span class="o">.</span><span class="n">spread</span> <span class="o">*</span> <span class="n">em</span><span class="p">)),</span>
+</span><span id="line-297">        <span class="n">blur_px</span><span class="o">=</span><span class="n">halo</span><span class="o">.</span><span class="n">blur</span> <span class="o">*</span> <span class="n">em</span><span class="p">,</span>
+</span><span id="line-298">        <span class="n">gain</span><span class="o">=</span><span class="n">halo</span><span class="o">.</span><span class="n">gain</span><span class="p">,</span>
+</span><span id="line-299">        <span class="n">opacity</span><span class="o">=</span><span class="n">halo</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
+</span><span id="line-300">        <span class="n">rgba</span><span class="o">=</span><span class="n">_halo_color</span><span class="p">(</span><span class="n">halo</span><span class="p">,</span> <span class="n">ink</span><span class="p">),</span>
+</span><span id="line-301">    <span class="p">)</span></div>
+
+</span><span id="line-302">
+</span><span id="line-303">
+</span><span id="line-304"><span class="k">def</span><span class="w"> </span><span class="nf">draw_halo</span><span class="p">(</span>
+</span><span id="line-305">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">halo</span><span class="p">:</span> <span class="n">Halo</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ink</span><span class="p">:</span> <span class="n">RGBA</span>
+</span><span id="line-306"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-307"><span class="w">    </span><span class="sd">"""Composite onto ``canvas`` the halo of the glyphs drawn on ``text`` (same size).</span>
+</span><span id="line-308">
+</span><span id="line-309"><span class="sd">    Only the region the glyphs and their glow reach is filtered, so a caption</span>
+</span><span id="line-310"><span class="sd">    on a 4K frame costs what the caption covers.</span>
+</span><span id="line-311"><span class="sd">    """</span>
+</span><span id="line-312">    <span class="n">alpha</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">getchannel</span><span class="p">(</span><span class="s2">"A"</span><span class="p">)</span>
+</span><span id="line-313">    <span class="n">ink_box</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">getbbox</span><span class="p">()</span>
+</span><span id="line-314">    <span class="k">if</span> <span class="n">ink_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-315">        <span class="k">return</span>
+</span><span id="line-316">    <span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_halo</span><span class="p">(</span><span class="n">halo</span><span class="p">,</span> <span class="n">em</span><span class="o">=</span><span class="n">em</span><span class="p">,</span> <span class="n">ink</span><span class="o">=</span><span class="n">ink</span><span class="p">)</span>
+</span><span id="line-317">    <span class="n">reach</span> <span class="o">=</span> <span class="n">resolved</span><span class="o">.</span><span class="n">reach</span>
+</span><span id="line-318">    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">reach</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">reach</span><span class="p">)</span>
+</span><span id="line-319">    <span class="n">x1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">reach</span><span class="p">)</span>
+</span><span id="line-320">    <span class="n">y1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">ink_box</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">reach</span><span class="p">)</span>
+</span><span id="line-321">    <span class="n">shine</span> <span class="o">=</span> <span class="n">glow</span><span class="p">(</span>
+</span><span id="line-322">        <span class="n">alpha</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)),</span>
+</span><span id="line-323">        <span class="n">spread</span><span class="o">=</span><span class="n">resolved</span><span class="o">.</span><span class="n">spread_px</span><span class="p">,</span>
+</span><span id="line-324">        <span class="n">blur</span><span class="o">=</span><span class="n">resolved</span><span class="o">.</span><span class="n">blur_px</span><span class="p">,</span>
+</span><span id="line-325">        <span class="n">gain</span><span class="o">=</span><span class="n">resolved</span><span class="o">.</span><span class="n">gain</span><span class="p">,</span>
+</span><span id="line-326">        <span class="n">opacity</span><span class="o">=</span><span class="n">resolved</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
+</span><span id="line-327">    <span class="p">)</span>
+</span><span id="line-328">    <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">resolved</span><span class="o">.</span><span class="n">rgba</span>
+</span><span id="line-329">    <span class="n">layer</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">shine</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="line-330">    <span class="n">layer</span><span class="o">.</span><span class="n">putalpha</span><span class="p">(</span><span class="n">shine</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="n">a</span> <span class="o">//</span> <span class="n">_ALPHA_MAX</span><span class="p">))</span>
+</span><span id="line-331">    <span class="n">canvas</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">))</span>
+</span><span id="line-332">
+</span><span id="line-333">
+</span><span id="line-334"><span class="k">def</span><span class="w"> </span><span class="nf">_faded</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+</span><span id="line-335"><span class="w">    </span><span class="sd">"""``image`` (RGBA) with its alpha scaled by ``factor``."""</span>
+</span><span id="line-336">    <span class="k">if</span> <span class="n">factor</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="line-337">        <span class="k">return</span> <span class="n">image</span>
+</span><span id="line-338">    <span class="n">out</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="line-339">    <span class="n">out</span><span class="o">.</span><span class="n">putalpha</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">getchannel</span><span class="p">(</span><span class="s2">"A"</span><span class="p">)</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)))</span>
+</span><span id="line-340">    <span class="k">return</span> <span class="n">out</span>
+</span><span id="line-341">
+</span><span id="line-342">
+</span><span id="line-343"><span class="k">def</span><span class="w"> </span><span class="nf">_halo_group</span><span class="p">(</span><span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+</span><span id="line-344"><span class="w">    </span><span class="sd">"""Runs glow together when they share a halo, a reveal and a type size."""</span>
+</span><span id="line-345">    <span class="k">return</span> <span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">halo</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">t_in</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">t_full</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+</span><span id="line-346">
+</span><span id="line-347">
+</span><span id="line-348"><span class="k">def</span><span class="w"> </span><span class="nf">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-349">    <span class="n">box</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">getbbox</span><span class="p">()</span>
+</span><span id="line-350">    <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-351">        <span class="n">canvas</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">_faded</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">box</span><span class="p">),</span> <span class="n">factor</span><span class="p">),</span> <span class="n">box</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+</span><span id="line-352">
+</span><span id="line-353">
+</span><span id="line-354"><span class="k">def</span><span class="w"> </span><span class="nf">_draw_haloed</span><span class="p">(</span>
+</span><span id="line-355">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span>
+</span><span id="line-356">    <span class="n">band</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Halo</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Run</span><span class="p">]]],</span>
+</span><span id="line-357">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span><span class="p">,</span>
+</span><span id="line-358">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-359"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-360"><span class="w">    </span><span class="sd">"""Neighbouring haloed groups (one halo, reveal and size each): every halo,</span>
+</span><span id="line-361"><span class="sd">    then every text, so no glow covers a neighbour's ink.</span>
+</span><span id="line-362">
+</span><span id="line-363"><span class="sd">    Each group is drawn fully revealed and faded afterwards: a halo built from</span>
+</span><span id="line-364"><span class="sd">    half-faded glyphs saturates early and shows the letters first as dark</span>
+</span><span id="line-365"><span class="sd">    silhouettes. Groups sharing one reveal factor are faded as one layer; groups</span>
+</span><span id="line-366"><span class="sd">    mid-way through different reveals are faded apart, which darkens their</span>
+</span><span id="line-367"><span class="sd">    overlap slightly until both are fully revealed.</span>
+</span><span id="line-368"><span class="sd">    """</span>
+</span><span id="line-369">    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-370">    <span class="k">for</span> <span class="n">halo</span><span class="p">,</span> <span class="n">runs</span> <span class="ow">in</span> <span class="n">band</span><span class="p">:</span>
+</span><span id="line-371">        <span class="n">f</span> <span class="o">=</span> <span class="n">_envelope</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="line-372">        <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="line-373">            <span class="k">continue</span>
+</span><span id="line-374">        <span class="n">text</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="line-375">        <span class="n">_draw_runs</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span id="line-376">        <span class="n">shine</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="line-377">        <span class="n">draw_halo</span><span class="p">(</span><span class="n">shine</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">em</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">ink</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+</span><span id="line-378">        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">shine</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+</span><span id="line-379">    <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="n">f</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">})</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="line-380">        <span class="n">whole</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="line-381">        <span class="k">for</span> <span class="n">shine</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="line-382">            <span class="n">whole</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">shine</span><span class="p">)</span>
+</span><span id="line-383">        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+</span><span id="line-384">            <span class="n">whole</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span><span id="line-385">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">whole</span><span class="p">,</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+</span><span id="line-386">        <span class="k">return</span>
+</span><span id="line-387">    <span class="k">for</span> <span class="n">shine</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+</span><span id="line-388">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">shine</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</span><span id="line-389">    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+</span><span id="line-390">        <span class="n">_paste_faded</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</span><span id="line-391">
+</span><span id="line-392">
+</span><span id="line-393"><span class="k">def</span><span class="w"> </span><span class="nf">_draw_runs</span><span class="p">(</span>
+</span><span id="line-394">    <span class="n">canvas</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">runs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Run</span><span class="p">],</span> <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
+</span><span id="line-395"><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-396">    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+</span><span id="line-397">        <span class="n">f</span> <span class="o">=</span> <span class="n">_envelope</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="line-398">        <span class="k">if</span> <span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="line-399">            <span class="n">engine</span><span class="o">.</span><span class="n">draw_run</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</span><span id="line-400">
+</span><span id="line-401">
+</span><span id="line-402"><span class="c1"># ----------------------------------------------------------------------------</span>
+</span><span id="line-403"><span class="c1"># Entry points</span>
+</span><span id="line-404"><span class="c1"># ----------------------------------------------------------------------------</span>
+</span><span id="line-405">
+</span><span id="line-406">
 <div class="viewcode-block" id="render_overlay">
 <a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.render_overlay">[docs]</a>
-</span><span id="line-372"><span class="k">def</span><span class="w"> </span><span class="nf">render_overlay</span><span class="p">(</span>
-</span><span id="line-373">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
-</span><span id="line-374">    <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
-</span><span id="line-375">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-376">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-377">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-378"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
-</span><span id="line-379"><span class="w">    </span><span class="sd">"""The layout on a transparent canvas of ``size`` (RGBA)."""</span>
-</span><span id="line-380">    <span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span> <span class="ow">or</span> <span class="n">PillowEngine</span><span class="p">()</span>
-</span><span id="line-381">    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">runs</span><span class="p">:</span>
-</span><span id="line-382">        <span class="n">check_measured_by</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
-</span><span id="line-383">    <span class="n">canvas</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span id="line-384">    <span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">plates</span><span class="p">:</span>
-</span><span id="line-385">        <span class="n">draw_plate</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
-</span><span id="line-386">    <span class="n">groups</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">layout</span><span class="o">.</span><span class="n">runs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_halo_group</span><span class="p">)]</span>
-</span><span id="line-387">    <span class="k">for</span> <span class="n">haloed</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="line-388">        <span class="k">if</span> <span class="n">haloed</span><span class="p">:</span>
-</span><span id="line-389">            <span class="n">_draw_haloed</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">band</span><span class="p">),</span> <span class="n">engine</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span id="line-390">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-391">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">runs</span> <span class="ow">in</span> <span class="n">band</span><span class="p">:</span>
-</span><span id="line-392">                <span class="n">_draw_runs</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span id="line-393">    <span class="k">return</span> <span class="n">canvas</span></div>
+</span><span id="line-407"><span class="k">def</span><span class="w"> </span><span class="nf">render_overlay</span><span class="p">(</span>
+</span><span id="line-408">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
+</span><span id="line-409">    <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+</span><span id="line-410">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-411">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-412">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-413"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+</span><span id="line-414"><span class="w">    </span><span class="sd">"""The layout on a transparent canvas of ``size`` (RGBA)."""</span>
+</span><span id="line-415">    <span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span> <span class="ow">or</span> <span class="n">PillowEngine</span><span class="p">()</span>
+</span><span id="line-416">    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">runs</span><span class="p">:</span>
+</span><span id="line-417">        <span class="n">check_measured_by</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+</span><span id="line-418">    <span class="n">canvas</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="line-419">    <span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">plates</span><span class="p">:</span>
+</span><span id="line-420">        <span class="n">draw_plate</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
+</span><span id="line-421">    <span class="n">groups</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">layout</span><span class="o">.</span><span class="n">runs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_halo_group</span><span class="p">)]</span>
+</span><span id="line-422">    <span class="k">for</span> <span class="n">haloed</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="line-423">        <span class="k">if</span> <span class="n">haloed</span><span class="p">:</span>
+</span><span id="line-424">            <span class="n">_draw_haloed</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">band</span><span class="p">),</span> <span class="n">engine</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="line-425">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-426">            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">runs</span> <span class="ow">in</span> <span class="n">band</span><span class="p">:</span>
+</span><span id="line-427">                <span class="n">_draw_runs</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="line-428">    <span class="k">return</span> <span class="n">canvas</span></div>
 
-</span><span id="line-394">
-</span><span id="line-395">
+</span><span id="line-429">
+</span><span id="line-430">
 <div class="viewcode-block" id="render">
 <a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.render">[docs]</a>
-</span><span id="line-396"><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span>
-</span><span id="line-397">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
-</span><span id="line-398">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
-</span><span id="line-399">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-400">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-401">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-402"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
-</span><span id="line-403"><span class="w">    </span><span class="sd">"""Render onto the frame: RGBA overlay if it has no background, else RGB.</span>
-</span><span id="line-404">
-</span><span id="line-405"><span class="sd">    ``engine`` is the rasteriser seam (default Pillow; see :mod:`tituli.shaping`).</span>
-</span><span id="line-406"><span class="sd">    """</span>
-</span><span id="line-407">    <span class="n">overlay</span> <span class="o">=</span> <span class="n">render_overlay</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
-</span><span id="line-408">    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-409">        <span class="n">base</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">)</span>
-</span><span id="line-410">        <span class="n">base</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">overlay</span><span class="p">)</span>
-</span><span id="line-411">        <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGB"</span><span class="p">)</span>
-</span><span id="line-412">    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-413">        <span class="n">base</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
-</span><span id="line-414">        <span class="n">base</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">overlay</span><span class="p">)</span>
-</span><span id="line-415">        <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGB"</span><span class="p">)</span>
-</span><span id="line-416">    <span class="k">return</span> <span class="n">overlay</span></div>
+</span><span id="line-431"><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span>
+</span><span id="line-432">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
+</span><span id="line-433">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
+</span><span id="line-434">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-435">    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-436">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-437"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+</span><span id="line-438"><span class="w">    </span><span class="sd">"""Render onto the frame: RGBA overlay if it has no background, else RGB.</span>
+</span><span id="line-439">
+</span><span id="line-440"><span class="sd">    ``engine`` is the rasteriser seam (default Pillow; see :mod:`tituli.shaping`).</span>
+</span><span id="line-441"><span class="sd">    """</span>
+</span><span id="line-442">    <span class="n">overlay</span> <span class="o">=</span> <span class="n">render_overlay</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+</span><span id="line-443">    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-444">        <span class="n">base</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">)</span>
+</span><span id="line-445">        <span class="n">base</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">overlay</span><span class="p">)</span>
+</span><span id="line-446">        <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGB"</span><span class="p">)</span>
+</span><span id="line-447">    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-448">        <span class="n">base</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"RGBA"</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+</span><span id="line-449">        <span class="n">base</span><span class="o">.</span><span class="n">alpha_composite</span><span class="p">(</span><span class="n">overlay</span><span class="p">)</span>
+</span><span id="line-450">        <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">"RGB"</span><span class="p">)</span>
+</span><span id="line-451">    <span class="k">return</span> <span class="n">overlay</span></div>
 
-</span><span id="line-417">
-</span><span id="line-418">
+</span><span id="line-452">
+</span><span id="line-453">
 <div class="viewcode-block" id="frames">
 <a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.frames">[docs]</a>
-</span><span id="line-419"><span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">(</span>
-</span><span id="line-420">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
-</span><span id="line-421">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
-</span><span id="line-422">    <span class="o">*</span><span class="p">,</span>
-</span><span id="line-423">    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="line-424">    <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
-</span><span id="line-425">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-426">    <span class="n">hold_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-</span><span id="line-427"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
-</span><span id="line-428"><span class="w">    </span><span class="sd">"""Yield one image per video frame, honouring the runs' reveal envelopes.</span>
-</span><span id="line-429">
-</span><span id="line-430"><span class="sd">    ``duration`` is the whole clip; the last reveal completes at</span>
-</span><span id="line-431"><span class="sd">    ``layout.duration_hint`` and the layout then holds. Frames are rendered</span>
-</span><span id="line-432"><span class="sd">    lazily so a long clip never sits in memory at once.</span>
-</span><span id="line-433"><span class="sd">    """</span>
-</span><span id="line-434">    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="n">fps</span><span class="p">))</span>
-</span><span id="line-435">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-</span><span id="line-436">        <span class="k">yield</span> <span class="n">render</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">i</span> <span class="o">/</span> <span class="n">fps</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span></div>
+</span><span id="line-454"><span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">(</span>
+</span><span id="line-455">    <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">,</span>
+</span><span id="line-456">    <span class="n">frame</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span>
+</span><span id="line-457">    <span class="o">*</span><span class="p">,</span>
+</span><span id="line-458">    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-459">    <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+</span><span id="line-460">    <span class="n">engine</span><span class="p">:</span> <span class="n">Engine</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-461">    <span class="n">hold_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="line-462"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
+</span><span id="line-463"><span class="w">    </span><span class="sd">"""Yield one image per video frame, honouring the runs' reveal envelopes.</span>
+</span><span id="line-464">
+</span><span id="line-465"><span class="sd">    ``duration`` is the whole clip; the last reveal completes at</span>
+</span><span id="line-466"><span class="sd">    ``layout.duration_hint`` and the layout then holds. Frames are rendered</span>
+</span><span id="line-467"><span class="sd">    lazily so a long clip never sits in memory at once.</span>
+</span><span id="line-468"><span class="sd">    """</span>
+</span><span id="line-469">    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="n">fps</span><span class="p">))</span>
+</span><span id="line-470">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span id="line-471">        <span class="k">yield</span> <span class="n">render</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">i</span> <span class="o">/</span> <span class="n">fps</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span></div>
 
-</span><span id="line-437">
-</span><span id="line-438">
+</span><span id="line-472">
+</span><span id="line-473">
 <div class="viewcode-block" id="make_engine">
 <a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.make_engine">[docs]</a>
-</span><span id="line-439"><span class="k">def</span><span class="w"> </span><span class="nf">make_engine</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pillow"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Engine</span><span class="p">:</span>
-</span><span id="line-440"><span class="w">    </span><span class="sd">"""Resolve an engine by name: ``"pillow"`` (default) or ``"harfbuzz"``."""</span>
-</span><span id="line-441">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">PillowEngine</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-</span><span id="line-442">        <span class="k">return</span> <span class="n">PillowEngine</span><span class="p">()</span>
-</span><span id="line-443">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"harfbuzz"</span><span class="p">:</span>
-</span><span id="line-444">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.shaping</span><span class="w"> </span><span class="kn">import</span> <span class="n">HarfBuzzEngine</span>
-</span><span id="line-445">
-</span><span id="line-446">        <span class="k">return</span> <span class="n">HarfBuzzEngine</span><span class="p">()</span>
-</span><span id="line-447">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown engine </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; choose 'pillow' or 'harfbuzz'"</span><span class="p">)</span></div>
+</span><span id="line-474"><span class="k">def</span><span class="w"> </span><span class="nf">make_engine</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pillow"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Engine</span><span class="p">:</span>
+</span><span id="line-475"><span class="w">    </span><span class="sd">"""Resolve an engine by name: ``"pillow"`` (default) or ``"harfbuzz"``."""</span>
+</span><span id="line-476">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">PillowEngine</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+</span><span id="line-477">        <span class="k">return</span> <span class="n">PillowEngine</span><span class="p">()</span>
+</span><span id="line-478">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"harfbuzz"</span><span class="p">:</span>
+</span><span id="line-479">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.shaping</span><span class="w"> </span><span class="kn">import</span> <span class="n">HarfBuzzEngine</span>
+</span><span id="line-480">
+</span><span id="line-481">        <span class="k">return</span> <span class="n">HarfBuzzEngine</span><span class="p">()</span>
+</span><span id="line-482">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown engine </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; choose 'pillow' or 'harfbuzz'"</span><span class="p">)</span></div>
 
 </span></code></pre></div>
     </div></div>
@@ -650,7 +691,7 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+    <script src="../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

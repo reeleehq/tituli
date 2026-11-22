@@ -1,4 +1,4 @@
-> built 2026-11-10 15:39 UTC from ee8546c (main) · tituli 0.0.16. Details: build_info.json
+> built 2026-11-22 13:52 UTC from bb29421 (main) · tituli 0.0.17. Details: build_info.json
 
 # index.html.md
 
@@ -1542,8 +1542,9 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 
 ### Functions
 
-| [`title_card`](_autosummary/tituli.html.md#tituli.title_card)(title[, subtitle, kicker, ...])         | An opening card: optional kicker, title, optional subtitle.                                                                                       |
+| [`resolve_halo`](_autosummary/tituli.html.md#tituli.resolve_halo)(halo, \*, em, ink)                    | `halo` for type of `em` px set in `ink`: the one rule every renderer shares.                                                                      |
 |-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`title_card`](_autosummary/tituli.html.md#tituli.title_card)(title[, subtitle, kicker, ...])         | An opening card: optional kicker, title, optional subtitle.                                                                                       |
 | [`caption`](_autosummary/tituli.html.md#tituli.caption)(text[, attribution, anchor, style, ...])   | A museum label over a picture: what is on screen, plus a tiny credit line.                                                                        |
 | [`lower_third`](_autosummary/tituli.html.md#tituli.lower_third)(name[, role, anchor, ...])             | Who is speaking: a name and a role, left-anchored, scrimmed if needed.                                                                            |
 | [`note`](_autosummary/tituli.html.md#tituli.note)(lines, \*, frame[, headline, anchor, ...])    | An editorial context card: an optional headline over equal-weight lines.                                                                          |
@@ -1586,24 +1587,25 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 
 ### Classes
 
-| [`Frame`](_autosummary/tituli.html.md#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.               |
-|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [`Layout`](_autosummary/tituli.html.md#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels.             |
-| [`Run`](_autosummary/tituli.html.md#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.                           |
-| [`Plate`](_autosummary/tituli.html.md#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.                           |
-| [`Box`](_autosummary/tituli.html.md#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.                      |
-| [`Path`](_autosummary/tituli.html.md#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                                    |
-| [`TextStyle`](_autosummary/tituli.html.md#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                                           |
-| [`Halo`](_autosummary/tituli.html.md#tituli.Halo)([color, spread, blur, gain, opacity])         | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19). |
-| [`Face`](_autosummary/tituli.html.md#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.                      |
-| [`Credits`](_autosummary/tituli.html.md#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                                    |
-| [`CreditsStyle`](_autosummary/tituli.html.md#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                                          |
-| [`Entry`](_autosummary/tituli.html.md#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.                         |
-| [`Section`](_autosummary/tituli.html.md#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                                   |
-| [`Label`](_autosummary/tituli.html.md#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.                    |
-| [`Span`](_autosummary/tituli.html.md#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                                       |
-| [`TimedOverlay`](_autosummary/tituli.html.md#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.                  |
-| [`Outline`](_autosummary/tituli.html.md#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                                |
+| [`Frame`](_autosummary/tituli.html.md#tituli.Frame)(width, height[, color, image, avoid, ...])   | Size plus whatever else is known about the picture text will sit on.                                         |
+|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| [`Layout`](_autosummary/tituli.html.md#tituli.Layout)([runs, plates, meta])                       | Everything the renderer needs: runs on top of plates, in frame pixels.                                       |
+| [`Run`](_autosummary/tituli.html.md#tituli.Run)(text, x, y, face, color[, angle, ...])         | A string drawn from a baseline origin, possibly rotated.                                                     |
+| [`Plate`](_autosummary/tituli.html.md#tituli.Plate)(box, color[, kind, radius, solid])           | A backdrop drawn under the runs: a scrim, a box, a rule.                                                     |
+| [`Box`](_autosummary/tituli.html.md#tituli.Box)(x0, y0, x1, y1)                                | A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.                                                |
+| [`Path`](_autosummary/tituli.html.md#tituli.Path)(points)                                       | A polyline with an arc-length parameterisation.                                                              |
+| [`TextStyle`](_autosummary/tituli.html.md#tituli.TextStyle)([family, size, weight, italic, ...])     | How a run of text looks.                                                                                     |
+| [`Halo`](_autosummary/tituli.html.md#tituli.Halo)([color, spread, blur, gain, opacity])         | A soft glow under the glyphs: legibility over footage without a scrim (tituli#19).                           |
+| [`ResolvedHalo`](_autosummary/tituli.html.md#tituli.ResolvedHalo)(spread_px, blur_px, gain, ...)        | A [`Halo`](_autosummary/tituli.html.md#tituli.Halo) resolved for one run: pixels, and a concrete colour. |
+| [`Face`](_autosummary/tituli.html.md#tituli.Face)(family, style, size, path[, index, ...])      | A resolved, sized font ready to measure and draw with Pillow.                                                |
+| [`Credits`](_autosummary/tituli.html.md#tituli.Credits)([sections, title, closing, meta])          | The whole roll.                                                                                              |
+| [`CreditsStyle`](_autosummary/tituli.html.md#tituli.CreditsStyle)([title, heading, role, name, ...])    | The type ramp for a roll.                                                                                    |
+| [`Entry`](_autosummary/tituli.html.md#tituli.Entry)(name[, role])                                | One credit line: `role` + `name`, a bare `name`, or prose.                                                   |
+| [`Section`](_autosummary/tituli.html.md#tituli.Section)([heading, entries, kind])                  | A heading over a run of entries.                                                                             |
+| [`Label`](_autosummary/tituli.html.md#tituli.Label)(text[, attribution, key])                    | What goes on a museum label: the thing, and where it came from.                                              |
+| [`Span`](_autosummary/tituli.html.md#tituli.Span)(start, end, key[, data])                      | A time range of the cut showing one picture.                                                                 |
+| [`TimedOverlay`](_autosummary/tituli.html.md#tituli.TimedOverlay)(layout, start, end[, slot, ...])      | A layout (or a thing to lay out) on screen from `start` to `end`.                                            |
+| [`Outline`](_autosummary/tituli.html.md#tituli.Outline)(d, bbox)                                   | A run's contours as SVG path data, in frame pixels.                                                          |
 
 ### Exceptions
 
@@ -2051,6 +2053,16 @@ A sine wave along the segment `start -> end`.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
+
+### *class* tituli.ResolvedHalo(spread_px, blur_px, gain, opacity, rgba)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A [`Halo`](_autosummary/tituli.html.md#tituli.Halo) resolved for one run: pixels, and a concrete colour.
+
+`rgba` is the halo colour (its own, or the ink’s opposite); `reach` is
+how far the glow extends past the glyphs, in px (spread plus
+`BLUR_REACH` blur radii), the padding a renderer must leave around them.
 
 ### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
@@ -2615,6 +2627,19 @@ True
 
 * **Return type:**
   [`Face`](_autosummary/tituli.fonts.html.md#tituli.fonts.Face)
+
+### tituli.resolve_halo(halo, , em, ink)
+
+`halo` for type of `em` px set in `ink`: the one rule every renderer shares.
+
+```pycon
+>>> r = resolve_halo(Halo(spread=0.05, blur=0.1, color="#000000"), em=40, ink=(255, 255, 255, 255))
+>>> r.spread_px, r.blur_px, r.reach, r.rgba
+(2, 4.0, 14, (0, 0, 0, 255))
+```
+
+* **Return type:**
+  [`ResolvedHalo`](_autosummary/tituli.html.md#tituli.ResolvedHalo)
 
 ### tituli.resolve_shape(shape, box)
 
@@ -3690,7 +3715,7 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-10 15:39 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2"><code>ee8546c</code></a> on branch <code>main</code>, for **tituli 0.0.16** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 13:52 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb29421</code></a> on branch <code>main</code>, for **tituli 0.0.17** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -3699,9 +3724,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/ee8546c401c7698ef254c2a80b60cce3c36627d2"><code>ee8546c401c7698ef254c2a80b60cce3c36627d2</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb294216ca8f89e0e25e476faf241a465a034ee1</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | <code>0.0.16</code>                                                                                                                                    |
+| Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3710,15 +3735,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/42845234095">42845234095</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029517968">45029517968</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>489b147ab6dcbf6f8a02475eeab11499fda02aa8</code> (in the history of the built commit) |
+| Event commit | <code>b57697b97442ea146adab77e86f1c3457778ae1e</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.22  |
+| epythet  | 0.2.23  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -3737,14 +3762,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.16/">0.0.16</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/tituli/0.0.17/">0.0.17</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout ee8546c401c7698ef254c2a80b60cce3c36627d2
-pip install "epythet==0.2.22"
+git checkout bb294216ca8f89e0e25e476faf241a465a034ee1
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
