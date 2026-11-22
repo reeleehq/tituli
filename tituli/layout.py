@@ -128,9 +128,25 @@ class Layout:
     plates: tuple[Plate, ...] = ()
     meta: dict = field(default_factory=dict, compare=False)
 
-    def bbox(self) -> Box:
-        """Bounds of the runs (plates excluded)."""
+    def bbox(self, *, include_halo: bool = False) -> Box:
+        """Bounds of the runs (plates excluded).
+
+        With ``include_halo`` each haloed run's box grows by its halo's reach
+        (:attr:`~tituli.render.ResolvedHalo.reach`), so placement can keep the
+        glow, and not only the glyphs, clear of an edge or a reserved zone.
+        """
         boxes = [r.bbox() for r in self.runs]
+        if include_halo:
+            from tituli.render import resolve_halo
+
+            def grown(r: Run) -> Box:
+                if r.halo is None:
+                    return r.bbox()
+                reach = resolve_halo(r.halo, em=r.face.size, ink=r.color).reach
+                b = r.bbox()
+                return Box(b.x0 - reach, b.y0 - reach, b.x1 + reach, b.y1 + reach)
+
+            boxes = [grown(r) for r in self.runs]
         if not boxes:
             return Box(0, 0, 0, 0)
         out = boxes[0]

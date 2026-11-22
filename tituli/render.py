@@ -356,6 +356,7 @@ def _draw_haloed(
     band: list[tuple[Halo, list[Run]]],
     engine: Engine,
     t: float | None,
+    cache: dict | None = None,
 ) -> None:
     """Neighbouring haloed groups (one halo, reveal and size each): every halo,
     then every text, so no glow covers a neighbour's ink.
@@ -365,19 +366,29 @@ def _draw_haloed(
     silhouettes. Groups sharing one reveal factor are faded as one layer; groups
     mid-way through different reveals are faded apart, which darkens their
     overlap slightly until both are fully revealed.
+
+    A group's glyphs and glow depend on the runs, not on ``t``: with a ``cache``
+    dict (one per clip, as :func:`frames` passes) they are built once and only
+    faded per frame.
     """
     layers = []
     for halo, runs in band:
         f = _envelope(runs[0], t)
         if f == 0:
             continue
-        text = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-        _draw_runs(text, runs, engine, None)
-        shine = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-        draw_halo(shine, text, halo, em=runs[0].face.size, ink=runs[0].color)
+        key = (canvas.size, halo, tuple(runs), id(engine))
+        if cache is not None and key in cache:
+            shine, text = cache[key]
+        else:
+            text = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+            _draw_runs(text, runs, engine, None)
+            shine = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+            draw_halo(shine, text, halo, em=runs[0].face.size, ink=runs[0].color)
+            if cache is not None:
+                cache[key] = (shine, text)
         layers.append((shine, text, f))
     if len({f for _, _, f in layers}) == 1:
-        whole = layers[0][0]
+        whole = layers[0][0].copy()
         for shine, _, _ in layers[1:]:
             whole.alpha_composite(shine)
         for _, text, _ in layers:
@@ -410,8 +421,13 @@ def render_overlay(
     *,
     t: float | None = None,
     engine: Engine | None = None,
+    cache: dict | None = None,
 ) -> Image.Image:
-    """The layout on a transparent canvas of ``size`` (RGBA)."""
+    """The layout on a transparent canvas of ``size`` (RGBA).
+
+    ``cache`` (a dict you keep across calls) holds the halo layers, which do
+    not change with ``t``; :func:`frames` uses one so a clip builds each glow once.
+    """
     engine = engine or PillowEngine()
     for run in layout.runs:
         check_measured_by(run, engine)
@@ -421,7 +437,7 @@ def render_overlay(
     groups = [(k[0], list(g)) for k, g in groupby(layout.runs, key=_halo_group)]
     for haloed, band in groupby(groups, key=lambda group: group[0] is not None):
         if haloed:
-            _draw_haloed(canvas, list(band), engine, t)
+            _draw_haloed(canvas, list(band), engine, t, cache)
         else:
             for _, runs in band:
                 _draw_runs(canvas, runs, engine, t)
@@ -434,12 +450,13 @@ def render(
     *,
     t: float | None = None,
     engine: Engine | None = None,
+    cache: dict | None = None,
 ) -> Image.Image:
     """Render onto the frame: RGBA overlay if it has no background, else RGB.
 
     ``engine`` is the rasteriser seam (default Pillow; see :mod:`tituli.shaping`).
     """
-    overlay = render_overlay(layout, frame.size, t=t, engine=engine)
+    overlay = render_overlay(layout, frame.size, t=t, engine=engine, cache=cache)
     if frame.image is not None:
         base = frame.image.convert("RGBA")
         base.alpha_composite(overlay)
@@ -467,8 +484,9 @@ def frames(
     lazily so a long clip never sits in memory at once.
     """
     n = int(round(duration * fps))
+    cache: dict = {}
     for i in range(n):
-        yield render(layout, frame, t=i / fps, engine=engine)
+        yield render(layout, frame, t=i / fps, engine=engine, cache=cache)
 
 
 def make_engine(name: str = "pillow") -> Engine:
