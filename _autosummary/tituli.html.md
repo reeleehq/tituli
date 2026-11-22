@@ -407,6 +407,28 @@ Translate so the runs’ bbox top-left lands on `box`’s top-left.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
+#### place_in(frame, , anchor='auto', halo=None)
+
+Where `frame` puts this layout: `(anchor name, box of the glyphs)`.
+
+The glow is placed, not only the glyphs: the block `frame.place` is
+asked for includes each haloed run’s reach ([`bbox()`](#tituli.Layout.bbox) with
+`include_halo`), so a halo stays clear of an edge or a reserved zone.
+`halo` is the one the layout is about to get (`with_halo`); runs
+that already carry one count too. The returned box is the glyphs’ own,
+ready for [`moved_to()`](#tituli.Layout.moved_to).
+
+```pycon
+>>> from tituli.layout import block
+>>> from tituli.style import TextStyle
+>>> lay = block("Hi", TextStyle(), Frame.blank((1000, 500)), max_width=900)
+>>> lay.place_in(Frame.blank((1000, 500)), anchor="bottom")[0]
+'bottom'
+```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](tituli.geometry.html.md#tituli.geometry.Box)]
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.

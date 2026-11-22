@@ -1,4 +1,4 @@
-> built 2026-11-22 13:57 UTC from f573914 (main) · tituli 0.0.19. Details: build_info.json
+> built 2026-11-22 19:03 UTC from 5a78e4d (main) · tituli 0.0.20. Details: build_info.json
 
 # index.html.md
 
@@ -1924,6 +1924,28 @@ Translate so the runs’ bbox top-left lands on `box`’s top-left.
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
 
+#### place_in(frame, , anchor='auto', halo=None)
+
+Where `frame` puts this layout: `(anchor name, box of the glyphs)`.
+
+The glow is placed, not only the glyphs: the block `frame.place` is
+asked for includes each haloed run’s reach ([`bbox()`](_autosummary/tituli.html.md#tituli.Layout.bbox) with
+`include_halo`), so a halo stays clear of an edge or a reserved zone.
+`halo` is the one the layout is about to get (`with_halo`); runs
+that already carry one count too. The returned box is the glyphs’ own,
+ready for [`moved_to()`](_autosummary/tituli.html.md#tituli.Layout.moved_to).
+
+```pycon
+>>> from tituli.layout import block
+>>> from tituli.style import TextStyle
+>>> lay = block("Hi", TextStyle(), Frame.blank((1000, 500)), max_width=900)
+>>> lay.place_in(Frame.blank((1000, 500)), anchor="bottom")[0]
+'bottom'
+```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)]
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
@@ -2879,6 +2901,28 @@ Translate so the runs’ bbox top-left lands on `box`’s top-left.
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
 
+#### place_in(frame, , anchor='auto', halo=None)
+
+Where `frame` puts this layout: `(anchor name, box of the glyphs)`.
+
+The glow is placed, not only the glyphs: the block `frame.place` is
+asked for includes each haloed run’s reach ([`bbox()`](_autosummary/tituli.layout.html.md#tituli.layout.Layout.bbox) with
+`include_halo`), so a halo stays clear of an edge or a reserved zone.
+`halo` is the one the layout is about to get (`with_halo`); runs
+that already carry one count too. The returned box is the glyphs’ own,
+ready for [`moved_to()`](_autosummary/tituli.layout.html.md#tituli.layout.Layout.moved_to).
+
+```pycon
+>>> from tituli.layout import block
+>>> from tituli.style import TextStyle
+>>> lay = block("Hi", TextStyle(), Frame.blank((1000, 500)), max_width=900)
+>>> lay.place_in(Frame.blank((1000, 500)), anchor="bottom")[0]
+'bottom'
+```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)]
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
@@ -3726,20 +3770,20 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-22 13:57 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/f57391453bf3bf78f994c4066280e87cddde4604"><code>f573914</code></a> on branch <code>main</code>, for **tituli 0.0.19** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 19:03 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.19) is ahead of the latest release on PyPI (0.0.17): these docs describe unreleased code.
+- The documented version (0.0.20) is ahead of the latest release on PyPI (0.0.19): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/f57391453bf3bf78f994c4066280e87cddde4604"><code>f57391453bf3bf78f994c4066280e87cddde4604</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d4a19706440817b7ccab878e8efbfb1fa3</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | none                                                                                                                                                   |
+| Tags at this commit | <code>0.0.20</code>                                                                                                                                    |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3748,9 +3792,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029937786">45029937786</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45058303811">45058303811</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>6ec4dc0a1ac88bf1bd8bb1fd5b36e6d067e56bbb</code> (in the history of the built commit) |
+| Event commit | <code>7e287478748354f18e8938f204d082a79c4f5521</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3775,13 +3819,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.17/">0.0.17</a>, older than the documented version (0.0.19).
+Latest release: <a href="https://pypi.org/project/tituli/0.0.19/">0.0.19</a>, older than the documented version (0.0.20).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout f57391453bf3bf78f994c4066280e87cddde4604
+git checkout 5a78e4d4a19706440817b7ccab878e8efbfb1fa3
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

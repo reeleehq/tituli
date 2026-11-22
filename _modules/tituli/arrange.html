@@ -323,7 +323,7 @@
 </span><span id="line-143">            <span class="s2">"would run off the frame. Give long blocks a max_width, use smaller "</span>
 </span><span id="line-144">            <span class="s2">"styles or gaps, or split it over two pages"</span>
 </span><span id="line-145">        <span class="p">)</span>
-</span><span id="line-146">    <span class="n">where</span><span class="p">,</span> <span class="n">box</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">place</span><span class="p">((</span><span class="n">bb</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">anchor</span><span class="o">=</span><span class="n">anchor</span><span class="p">)</span>
+</span><span id="line-146">    <span class="n">where</span><span class="p">,</span> <span class="n">box</span> <span class="o">=</span> <span class="n">lay</span><span class="o">.</span><span class="n">place_in</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="n">anchor</span><span class="p">)</span>
 </span><span id="line-147">    <span class="n">out</span> <span class="o">=</span> <span class="n">lay</span><span class="o">.</span><span class="n">moved_to</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
 </span><span id="line-148">    <span class="k">return</span> <span class="n">replace</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">out</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span> <span class="s2">"anchor"</span><span class="p">:</span> <span class="n">where</span><span class="p">,</span> <span class="s2">"box"</span><span class="p">:</span> <span class="n">box</span><span class="p">})</span>
 </span><span id="line-149">
@@ -511,7 +511,7 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=2fd7553c"></script>
+    <script src="../../_static/documentation_options.js?v=056c92e6"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
