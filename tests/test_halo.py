@@ -228,3 +228,26 @@ def test_a_staggered_glyph_reveal_keeps_every_halo_under_every_glyph():
         if ink.getpixel((x, y)) == 255
     ]
     assert cores and all(px == (255, 255, 255) for px in cores)
+
+
+def test_bbox_include_halo_grows_by_reach():
+    from tituli import Halo, resolve_halo
+
+    f = Frame.blank((800, 400))
+    lay = caption("Hello", "x", frame=f).with_halo(Halo())
+    plain, grown = lay.bbox(), lay.bbox(include_halo=True)
+    reaches = [resolve_halo(r.halo, em=r.face.size, ink=r.color).reach for r in lay.runs]
+    assert min(reaches) > 0
+    assert grown.x0 < plain.x0 and grown.y1 > plain.y1
+    assert grown.x0 >= plain.x0 - max(reaches) and grown.y1 <= plain.y1 + max(reaches)
+
+
+def test_frames_cache_gives_identical_frames():
+    from tituli import Halo, frames, render
+    from tituli.compose import caption as cap
+
+    f = Frame.blank((320, 180), color="#202020")
+    lay = cap("Hi", None, frame=f).with_halo(Halo())
+    got = list(frames(lay, f, duration=0.2, fps=10))
+    ref = [render(lay, f, t=i / 10) for i in range(2)]
+    assert all(a.tobytes() == b.tobytes() for a, b in zip(got, ref))
