@@ -24,7 +24,7 @@ when the frame carries a colour or a picture.
 from __future__ import annotations
 
 import math
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from itertools import groupby
 from typing import Callable, Iterator, Protocol
 
@@ -43,7 +43,7 @@ _ALPHA_MAX = 255
 _GRADIENT_STEPS = 256
 _CORNER_POWER = 2.2  # ease of a scrim's falloff (higher = holds longer, drops faster)
 # A Gaussian's visible reach, in radii: how far a halo extends past its spread.
-_BLUR_REACH = 3
+BLUR_REACH = 3
 
 
 class Engine(Protocol):
@@ -265,6 +265,42 @@ def glow(
     return out.point(lambda v: round(min(_ALPHA_MAX, v * gain) * opacity))
 
 
+@dataclass(frozen=True)
+class ResolvedHalo:
+    """A :class:`Halo` resolved for one run: pixels, and a concrete colour.
+
+    ``rgba`` is the halo colour (its own, or the ink's opposite); ``reach`` is
+    how far the glow extends past the glyphs, in px (spread plus
+    :data:`BLUR_REACH` blur radii), the padding a renderer must leave around them.
+    """
+
+    spread_px: int
+    blur_px: float
+    gain: float
+    opacity: float
+    rgba: RGBA
+
+    @property
+    def reach(self) -> int:
+        return self.spread_px + math.ceil(BLUR_REACH * self.blur_px)
+
+
+def resolve_halo(halo: Halo, *, em: float, ink: RGBA) -> ResolvedHalo:
+    """``halo`` for type of ``em`` px set in ``ink``: the one rule every renderer shares.
+
+    >>> r = resolve_halo(Halo(spread=0.05, blur=0.1, color="#000000"), em=40, ink=(255, 255, 255, 255))
+    >>> r.spread_px, r.blur_px, r.reach, r.rgba
+    (2, 4.0, 14, (0, 0, 0, 255))
+    """
+    return ResolvedHalo(
+        spread_px=max(0, round(halo.spread * em)),
+        blur_px=halo.blur * em,
+        gain=halo.gain,
+        opacity=halo.opacity,
+        rgba=_halo_color(halo, ink),
+    )
+
+
 def draw_halo(
     canvas: Image.Image, text: Image.Image, halo: Halo, *, em: float, ink: RGBA
 ) -> None:
@@ -277,20 +313,19 @@ def draw_halo(
     ink_box = alpha.getbbox()
     if ink_box is None:
         return
-    spread = max(0, round(halo.spread * em))
-    blur = halo.blur * em
-    reach = spread + math.ceil(_BLUR_REACH * blur)
+    resolved = resolve_halo(halo, em=em, ink=ink)
+    reach = resolved.reach
     x0, y0 = max(0, ink_box[0] - reach), max(0, ink_box[1] - reach)
     x1 = min(canvas.width, ink_box[2] + reach)
     y1 = min(canvas.height, ink_box[3] + reach)
     shine = glow(
         alpha.crop((x0, y0, x1, y1)),
-        spread=spread,
-        blur=blur,
-        gain=halo.gain,
-        opacity=halo.opacity,
+        spread=resolved.spread_px,
+        blur=resolved.blur_px,
+        gain=resolved.gain,
+        opacity=resolved.opacity,
     )
-    r, g, b, a = _halo_color(halo, ink)
+    r, g, b, a = resolved.rgba
     layer = Image.new("RGBA", shine.size, (r, g, b, 0))
     layer.putalpha(shine.point(lambda v: v * a // _ALPHA_MAX))
     canvas.alpha_composite(layer, (x0, y0))

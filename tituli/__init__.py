@@ -49,7 +49,15 @@ from tituli.frame import DELIVERY_RESERVED, Frame, cover_fit, reserved_zones
 from tituli.geometry import ANCHORS, TITLE_SAFE, Box, Path, safe_area
 from tituli.layout import Layout, Plate, Run, along_path, block, fit_size, measure, wrap
 from tituli.outlines import MissingGlyphError, Outline, run_outline
-from tituli.render import frames, make_engine, render, render_overlay
+from tituli.render import (
+    BLUR_REACH,
+    ResolvedHalo,
+    frames,
+    make_engine,
+    render,
+    render_overlay,
+    resolve_halo,
+)
 from tituli.schedule import (
     UNLABELLED,
     Label,
@@ -81,6 +89,9 @@ __all__ = [
     "Path",
     "TextStyle",
     "Halo",
+    "ResolvedHalo",
+    "resolve_halo",
+    "BLUR_REACH",
     "Face",
     "title_card",
     "caption",
