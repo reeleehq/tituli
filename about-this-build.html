@@ -130,9 +130,12 @@
 <section id="about-this-build">
 <h1>About this build<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#about-this-build">¶</a></h1>
 <p>This documentation was built on <strong>2026-11-22 13:52 UTC</strong> from commit <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb29421</code></a> on branch <code>main</code>, for <strong>tituli 0.0.17</strong> (from <code>pyproject.toml</code>).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The documentation and the package may be misaligned:</p>
+<ul class="simple">
+<li><p>The documented version (0.0.17) is behind the latest release on PyPI (0.0.18): <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tituli</span></code> gives newer code than these docs describe.</p></li>
+</ul>
 </div>
 <section id="source">
 <h2>Source<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#source" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#source'">¶</a></h2>
@@ -174,13 +177,13 @@
 <td><p><code>reeleehq/tituli</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Run</p></td>
-<td><p><a href="https://github.com/reeleehq/tituli/actions/runs/45029517968">45029517968</a></p></td>
+<td><p><a href="https://github.com/reeleehq/tituli/actions/runs/45029604164">45029604164</a></p></td>
 </tr>
 <tr class="row-even"><td><p>Ref</p></td>
 <td><p><code>refs/heads/main</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Event commit</p></td>
-<td><p><code>b57697b97442ea146adab77e86f1c3457778ae1e</code> (in the history of the built commit)</p></td>
+<td><p><code>83246815540504e53310e9b359cd3cf4260190a8</code> (in the history of the built commit)</p></td>
 </tr>
 </tbody>
 </table>
@@ -244,7 +247,7 @@
 </section>
 <section id="package-on-pypi">
 <h2>Package on PyPI<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#package-on-pypi" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#package-on-pypi'">¶</a></h2>
-<p>Latest release: <a href="https://pypi.org/project/tituli/0.0.17/">0.0.17</a>, the same as the documented version.</p>
+<p>Latest release: <a href="https://pypi.org/project/tituli/0.0.18/">0.0.18</a>, newer than the documented version (0.0.17).</p>
 </section>
 <section id="site"><h2>Site</h2><table class="docutils align-default"><tbody><tr><td><p>Modules documented</p></td><td><p>18</p></td></tr><tr><td><p>Objects documented</p></td><td><p>283</p></td></tr></tbody></table></section>
 <section id="reproduce">

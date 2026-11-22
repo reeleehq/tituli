@@ -3717,8 +3717,10 @@ Transparent PNGs are flattened onto black.
 
 This documentation was built on **2026-11-22 13:52 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb29421</code></a> on branch <code>main</code>, for **tituli 0.0.17** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.17) is behind the latest release on PyPI (0.0.18): `pip install tituli` gives newer code than these docs describe.
 
 ## Source
 
@@ -3735,9 +3737,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029517968">45029517968</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029604164">45029604164</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>b57697b97442ea146adab77e86f1c3457778ae1e</code> (in the history of the built commit) |
+| Event commit | <code>83246815540504e53310e9b359cd3cf4260190a8</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3762,7 +3764,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.17/">0.0.17</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/tituli/0.0.18/">0.0.18</a>, newer than the documented version (0.0.17).
 
 ## Reproduce
 
