@@ -50,8 +50,8 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 | [`wrap`](#tituli.wrap)(text, style, frame_height, \*, max_width)     | Greedy word wrap on measured widths.                                                                                                              |
 | [`measure`](#tituli.measure)(text, style, frame_height, \*[, engine])   | Width in pixels of `text` set in `style` on a frame of that height.                                                                               |
 | [`fit_size`](#tituli.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                                   |
-| [`render`](#tituli.render)(layout, frame, \*[, t, engine])             | Render onto the frame: RGBA overlay if it has no background, else RGB.                                                                            |
-| [`render_overlay`](#tituli.render_overlay)(layout, size, \*[, t, engine])      | The layout on a transparent canvas of `size` (RGBA).                                                                                              |
+| [`render`](#tituli.render)(layout, frame, \*[, t, engine, cache])      | Render onto the frame: RGBA overlay if it has no background, else RGB.                                                                            |
+| [`render_overlay`](#tituli.render_overlay)(layout, size, \*[, t, engine, ...]) | The layout on a transparent canvas of `size` (RGBA).                                                                                              |
 | [`frames`](#tituli.frames)(layout, frame, \*, duration[, fps, ...])    | Yield one image per video frame, honouring the runs' reveal envelopes.                                                                            |
 | [`make_engine`](#tituli.make_engine)([name])                                | Resolve an engine by name: `"pillow"` (default) or `"harfbuzz"`.                                                                                  |
 | [`schedule_labels`](#tituli.schedule_labels)(spans, label_for, \*[, ...])       | One label per span, held `hold_s`, with the three rules built in.                                                                                 |
@@ -385,9 +385,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Everything the renderer needs: runs on top of plates, in frame pixels.
 
-#### bbox()
+#### bbox(, include_halo=False)
 
 Bounds of the runs (plates excluded).
+
+With `include_halo` each haloed run’s box grows by its halo’s reach
+(`reach`), so placement can keep the
+glow, and not only the glyphs, clear of an edge or a reserved zone.
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)
@@ -1047,7 +1051,7 @@ coordinates — the defaults are Apollinaire’s.
 * **Return type:**
   [`Layout`](tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.render(layout, frame, , t=None, engine=None)
+### tituli.render(layout, frame, , t=None, engine=None, cache=None)
 
 Render onto the frame: RGBA overlay if it has no background, else RGB.
 
@@ -1056,9 +1060,12 @@ Render onto the frame: RGBA overlay if it has no background, else RGB.
 * **Return type:**
   `Image`
 
-### tituli.render_overlay(layout, size, , t=None, engine=None)
+### tituli.render_overlay(layout, size, , t=None, engine=None, cache=None)
 
 The layout on a transparent canvas of `size` (RGBA).
+
+`cache` (a dict you keep across calls) holds the halo layers, which do
+not change with `t`; [`frames()`](#tituli.frames) uses one so a clip builds each glow once.
 
 * **Return type:**
   `Image`

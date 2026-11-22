@@ -62,9 +62,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Everything the renderer needs: runs on top of plates, in frame pixels.
 
-#### bbox()
+#### bbox(, include_halo=False)
 
 Bounds of the runs (plates excluded).
+
+With `include_halo` each haloed run’s box grows by its halo’s reach
+(`reach`), so placement can keep the
+glow, and not only the glyphs, clear of an edge or a reserved zone.
 
 * **Return type:**
   [`Box`](tituli.geometry.html.md#tituli.geometry.Box)

@@ -1,4 +1,4 @@
-> built 2026-11-22 13:52 UTC from bb29421 (main) · tituli 0.0.17. Details: build_info.json
+> built 2026-11-22 13:57 UTC from f573914 (main) · tituli 0.0.19. Details: build_info.json
 
 # index.html.md
 
@@ -1567,8 +1567,8 @@ text-overlay body schema), `tituli[cli]` (`python -m tituli`).
 | [`wrap`](_autosummary/tituli.html.md#tituli.wrap)(text, style, frame_height, \*, max_width)     | Greedy word wrap on measured widths.                                                                                                              |
 | [`measure`](_autosummary/tituli.html.md#tituli.measure)(text, style, frame_height, \*[, engine])   | Width in pixels of `text` set in `style` on a frame of that height.                                                                               |
 | [`fit_size`](_autosummary/tituli.html.md#tituli.fit_size)(text, style, frame_height, \*, max_width) | Shrink `style.size` until `text` wraps within the given bounds.                                                                                   |
-| [`render`](_autosummary/tituli.html.md#tituli.render)(layout, frame, \*[, t, engine])             | Render onto the frame: RGBA overlay if it has no background, else RGB.                                                                            |
-| [`render_overlay`](_autosummary/tituli.html.md#tituli.render_overlay)(layout, size, \*[, t, engine])      | The layout on a transparent canvas of `size` (RGBA).                                                                                              |
+| [`render`](_autosummary/tituli.html.md#tituli.render)(layout, frame, \*[, t, engine, cache])      | Render onto the frame: RGBA overlay if it has no background, else RGB.                                                                            |
+| [`render_overlay`](_autosummary/tituli.html.md#tituli.render_overlay)(layout, size, \*[, t, engine, ...]) | The layout on a transparent canvas of `size` (RGBA).                                                                                              |
 | [`frames`](_autosummary/tituli.html.md#tituli.frames)(layout, frame, \*, duration[, fps, ...])    | Yield one image per video frame, honouring the runs' reveal envelopes.                                                                            |
 | [`make_engine`](_autosummary/tituli.html.md#tituli.make_engine)([name])                                | Resolve an engine by name: `"pillow"` (default) or `"harfbuzz"`.                                                                                  |
 | [`schedule_labels`](_autosummary/tituli.html.md#tituli.schedule_labels)(spans, label_for, \*[, ...])       | One label per span, held `hold_s`, with the three rules built in.                                                                                 |
@@ -1902,9 +1902,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Everything the renderer needs: runs on top of plates, in frame pixels.
 
-#### bbox()
+#### bbox(, include_halo=False)
 
 Bounds of the runs (plates excluded).
+
+With `include_halo` each haloed run’s box grows by its halo’s reach
+(`reach`), so placement can keep the
+glow, and not only the glyphs, clear of an edge or a reserved zone.
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
@@ -2564,7 +2568,7 @@ coordinates — the defaults are Apollinaire’s.
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
 
-### tituli.render(layout, frame, , t=None, engine=None)
+### tituli.render(layout, frame, , t=None, engine=None, cache=None)
 
 Render onto the frame: RGBA overlay if it has no background, else RGB.
 
@@ -2573,9 +2577,12 @@ Render onto the frame: RGBA overlay if it has no background, else RGB.
 * **Return type:**
   `Image`
 
-### tituli.render_overlay(layout, size, , t=None, engine=None)
+### tituli.render_overlay(layout, size, , t=None, engine=None, cache=None)
 
 The layout on a transparent canvas of `size` (RGBA).
+
+`cache` (a dict you keep across calls) holds the halo layers, which do
+not change with `t`; [`frames()`](_autosummary/tituli.html.md#tituli.frames) uses one so a clip builds each glow once.
 
 * **Return type:**
   `Image`
@@ -2850,9 +2857,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Everything the renderer needs: runs on top of plates, in frame pixels.
 
-#### bbox()
+#### bbox(, include_halo=False)
 
 Bounds of the runs (plates excluded).
+
+With `include_halo` each haloed run’s box grows by its halo’s reach
+(`reach`), so placement can keep the
+glow, and not only the glyphs, clear of an edge or a reserved zone.
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
@@ -3715,18 +3726,18 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-22 13:52 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb29421</code></a> on branch <code>main</code>, for **tituli 0.0.17** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 13:57 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/f57391453bf3bf78f994c4066280e87cddde4604"><code>f573914</code></a> on branch <code>main</code>, for **tituli 0.0.19** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.17) is behind the latest release on PyPI (0.0.18): `pip install tituli` gives newer code than these docs describe.
+- The documented version (0.0.19) is ahead of the latest release on PyPI (0.0.17): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/bb294216ca8f89e0e25e476faf241a465a034ee1"><code>bb294216ca8f89e0e25e476faf241a465a034ee1</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/f57391453bf3bf78f994c4066280e87cddde4604"><code>f57391453bf3bf78f994c4066280e87cddde4604</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
 | Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
@@ -3737,9 +3748,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029604164">45029604164</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45029937786">45029937786</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>83246815540504e53310e9b359cd3cf4260190a8</code> (in the history of the built commit) |
+| Event commit | <code>6ec4dc0a1ac88bf1bd8bb1fd5b36e6d067e56bbb</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3764,13 +3775,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.18/">0.0.18</a>, newer than the documented version (0.0.17).
+Latest release: <a href="https://pypi.org/project/tituli/0.0.17/">0.0.17</a>, older than the documented version (0.0.19).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout bb294216ca8f89e0e25e476faf241a465a034ee1
+git checkout f57391453bf3bf78f994c4066280e87cddde4604
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
