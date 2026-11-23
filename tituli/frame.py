@@ -228,10 +228,12 @@ class Frame:
 
     @property
     def size(self) -> Size:
+        """The ``(width, height)`` of the frame."""
         return (self.width, self.height)
 
     @property
     def bounds(self) -> Box:
+        """The frame as a :class:`Box` starting at the origin."""
         return Box(0, 0, self.width, self.height)
 
     @property
@@ -241,6 +243,7 @@ class Frame:
 
     @property
     def knows_pixels(self) -> bool:
+        """Whether the frame carries pixel data."""
         return self.image is not None
 
     def with_avoid(self, avoid: Avoid) -> "Frame":

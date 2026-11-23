@@ -132,6 +132,7 @@ class HarfBuzzEngine:
         return {**_DEFAULT_FEATURES, **{tag: True for tag in face.features}}
 
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None:
+        """Draw ``run`` onto ``canvas`` at the given opacity."""
         import freetype
 
         face = run.face

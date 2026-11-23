@@ -60,6 +60,7 @@ class Label:
 
     @property
     def identity(self) -> str:
+        """The overlay's key, or its text when it has none."""
         return self.key or self.text
 
 
@@ -106,12 +107,15 @@ class TimedOverlay:
 
     @property
     def duration(self) -> float:
+        """Length in seconds (``end - start``)."""
         return self.end - self.start
 
     def overlaps(self, other: "TimedOverlay") -> bool:
+        """Whether the two overlays overlap in time."""
         return self.start < other.end and other.start < self.end
 
     def with_layout(self, layout: Layout) -> "TimedOverlay":
+        """A copy of the overlay carrying ``layout``."""
         return replace(self, layout=layout, meta=dict(self.meta))
 
 
