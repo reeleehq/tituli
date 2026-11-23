@@ -788,9 +788,8 @@ def glyph_columns(
 ) -> Layout:
     """Upright glyphs stepping down slanted streaks — Apollinaire's *Il pleut*.
 
-    Line ``k`` becomes a streak: glyph ``i`` sits at ``(u, v) = (head_offsets[k]
-    + i * slants[k], i)`` on an abstract slot grid, fitted to ``box`` in one
-    step, so the shape is aspect-independent. Letters stay upright. This is the
+    Line ``k`` becomes a streak: glyph ``i`` sits at ``(u, v) = (head_offsets[k] + i * slants[k], i)``
+    on an abstract slot grid, fitted to ``box`` in one step, so the shape is aspect-independent. Letters stay upright. This is the
     solver muvid's ``calligram`` archetype introduced, generalised over real
     glyph metrics and any frame — the streaks are :class:`Path` lines, which is
     how it stays one preset of :func:`along_path` rather than a second family.
