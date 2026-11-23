@@ -1,4 +1,4 @@
-> built 2026-11-23 00:40 UTC from 629e95b (main) · tituli 0.0.20. Details: build_info.json
+> built 2026-11-23 07:34 UTC from 5a8e317 (main) · tituli 0.0.20. Details: build_info.json
 
 # index.html.md
 
@@ -3445,19 +3445,11 @@ of frame height, like `size` itself).
 
 Upright glyphs stepping down slanted streaks — Apollinaire’s *Il pleut*.
 
-Line `k` becomes a streak: glyph `i` sits at 
-
-```
-``
-```
-
-(u, v) = (head_offsets[k]
-
-+ i \* slants[k], i)\`\` on an abstract slot grid, fitted to `box` in one
-  step, so the shape is aspect-independent. Letters stay upright. This is the
-  solver muvid’s `calligram` archetype introduced, generalised over real
-  glyph metrics and any frame — the streaks are `Path` lines, which is
-  how it stays one preset of [`along_path()`](_autosummary/tituli.layout.html.md#tituli.layout.along_path) rather than a second family.
+Line `k` becomes a streak: glyph `i` sits at `(u, v) = (head_offsets[k] + i * slants[k], i)`
+on an abstract slot grid, fitted to `box` in one step, so the shape is aspect-independent. Letters stay upright. This is the
+solver muvid’s `calligram` archetype introduced, generalised over real
+glyph metrics and any frame — the streaks are `Path` lines, which is
+how it stays one preset of [`along_path()`](_autosummary/tituli.layout.html.md#tituli.layout.along_path) rather than a second family.
 
 `slants` and `head_offsets` are cycled if shorter than `lines`.
 `engine` is the one that will draw it; it centres each glyph in its slot.
@@ -4177,7 +4169,7 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-23 00:40 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-23 07:34 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -4186,7 +4178,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b100a3269a2c982e3abfad0960632f8449</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317641a4104089a0d3e061b072482dbf3a74</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
 | Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
@@ -4197,15 +4189,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45089927756">45089927756</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45131819355">45131819355</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>629e95b100a3269a2c982e3abfad0960632f8449</code> (in the history of the built commit) |
+| Event commit | <code>5a8e317641a4104089a0d3e061b072482dbf3a74</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.23  |
+| epythet  | 0.2.24  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -4230,8 +4222,8 @@ Latest release: <a href="https://pypi.org/project/tituli/0.0.20/">0.0.20</a>, th
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout 629e95b100a3269a2c982e3abfad0960632f8449
-pip install "epythet==0.2.23"
+git checkout 5a8e317641a4104089a0d3e061b072482dbf3a74
+pip install "epythet==0.2.24"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

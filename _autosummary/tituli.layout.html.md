@@ -299,19 +299,11 @@ of frame height, like `size` itself).
 
 Upright glyphs stepping down slanted streaks — Apollinaire’s *Il pleut*.
 
-Line `k` becomes a streak: glyph `i` sits at 
-
-```
-``
-```
-
-(u, v) = (head_offsets[k]
-
-+ i \* slants[k], i)\`\` on an abstract slot grid, fitted to `box` in one
-  step, so the shape is aspect-independent. Letters stay upright. This is the
-  solver muvid’s `calligram` archetype introduced, generalised over real
-  glyph metrics and any frame — the streaks are `Path` lines, which is
-  how it stays one preset of [`along_path()`](#tituli.layout.along_path) rather than a second family.
+Line `k` becomes a streak: glyph `i` sits at `(u, v) = (head_offsets[k] + i * slants[k], i)`
+on an abstract slot grid, fitted to `box` in one step, so the shape is aspect-independent. Letters stay upright. This is the
+solver muvid’s `calligram` archetype introduced, generalised over real
+glyph metrics and any frame — the streaks are `Path` lines, which is
+how it stays one preset of [`along_path()`](#tituli.layout.along_path) rather than a second family.
 
 `slants` and `head_offsets` are cycled if shorter than `lines`.
 `engine` is the one that will draw it; it centres each glyph in its slot.

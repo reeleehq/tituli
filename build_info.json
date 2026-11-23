@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-23T00:40:54Z",
+  "built_at": "2026-11-23T07:34:41Z",
   "package": {
     "name": "tituli",
     "version": "0.0.20",
@@ -9,28 +9,28 @@
   },
   "git": {
     "available": true,
-    "commit": "629e95b100a3269a2c982e3abfad0960632f8449",
-    "short_commit": "629e95b",
+    "commit": "5a8e317641a4104089a0d3e061b072482dbf3a74",
+    "short_commit": "5a8e317",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/reeleehq/tituli",
-    "commit_url": "https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449",
+    "commit_url": "https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "reeleehq/tituli",
-    "sha": "629e95b100a3269a2c982e3abfad0960632f8449",
+    "sha": "5a8e317641a4104089a0d3e061b072482dbf3a74",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "45089927756",
-    "run_url": "https://github.com/reeleehq/tituli/actions/runs/45089927756",
+    "run_id": "45131819355",
+    "run_url": "https://github.com/reeleehq/tituli/actions/runs/45131819355",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.23",
+    "epythet": "0.2.24",
     "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.16"
@@ -64,7 +64,7 @@
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout 629e95b100a3269a2c982e3abfad0960632f8449\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/reeleehq/tituli && cd tituli\ngit checkout 5a8e317641a4104089a0d3e061b072482dbf3a74\npip install \"epythet==0.2.24\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,
