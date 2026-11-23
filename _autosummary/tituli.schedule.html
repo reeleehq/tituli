@@ -190,6 +190,11 @@ implicit claim about what it is, so “no caption” must be said, never default
 <p>What goes on a museum label: the thing, and where it came from.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.schedule.Label.identity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">identity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.schedule.Label.identity" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.schedule.Label.identity'">¶</a></dt>
+<dd><p>The overlay’s key, or its text when it has none.</p>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.schedule.Span">
@@ -216,6 +221,31 @@ like any layout. <code class="docutils literal notranslate"><span class="pre">fa
 (<code class="docutils literal notranslate"><span class="pre">fade_in=0</span></code> for a title that must be up on the first frame).</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.schedule.TimedOverlay.duration">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">duration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.schedule.TimedOverlay.duration" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.schedule.TimedOverlay.duration'">¶</a></dt>
+<dd><p>Length in seconds (<code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">-</span> <span class="pre">start</span></code>).</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.schedule.TimedOverlay.overlaps">
+<span class="sig-name descname"><span class="pre">overlaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/schedule.html#TimedOverlay.overlaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.schedule.TimedOverlay.overlaps" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.schedule.TimedOverlay.overlaps'">¶</a></dt>
+<dd><p>Whether the two overlays overlap in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.schedule.TimedOverlay.with_layout">
+<span class="sig-name descname"><span class="pre">with_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/schedule.html#TimedOverlay.with_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.schedule.TimedOverlay.with_layout" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.schedule.TimedOverlay.with_layout'">¶</a></dt>
+<dd><p>A copy of the overlay carrying <code class="docutils literal notranslate"><span class="pre">layout</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.schedule.TimedOverlay" title="tituli.schedule.TimedOverlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.schedule.resolve">
@@ -255,9 +285,17 @@ skipped label is <em>not recorded as shown</em>, so it gets its next chance.</p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#tituli.schedule.Label'" class="reference internal" href="#tituli.schedule.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.schedule.Label'" class="reference internal" href="#tituli.schedule.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.schedule.Label.identity'" class="reference internal" href="#tituli.schedule.Label.identity"><code class="docutils literal notranslate"><span class="pre">Label.identity</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.schedule.Span'" class="reference internal" href="#tituli.schedule.Span"><code class="docutils literal notranslate"><span class="pre">Span</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.schedule.TimedOverlay'" class="reference internal" href="#tituli.schedule.TimedOverlay"><code class="docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.schedule.TimedOverlay'" class="reference internal" href="#tituli.schedule.TimedOverlay"><code class="docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.schedule.TimedOverlay.duration'" class="reference internal" href="#tituli.schedule.TimedOverlay.duration"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.duration</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.schedule.TimedOverlay.overlaps'" class="reference internal" href="#tituli.schedule.TimedOverlay.overlaps"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.overlaps()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.schedule.TimedOverlay.with_layout'" class="reference internal" href="#tituli.schedule.TimedOverlay.with_layout"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.with_layout()</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.schedule.resolve'" class="reference internal" href="#tituli.schedule.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.schedule.schedule_labels'" class="reference internal" href="#tituli.schedule.schedule_labels"><code class="docutils literal notranslate"><span class="pre">schedule_labels()</span></code></a></li>
 </ul>

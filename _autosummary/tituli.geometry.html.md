@@ -44,6 +44,14 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.
 
+#### *property* area *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The area, zero for an empty or inverted box.
+
+#### *property* center *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[float](https://docs.python.org/3/builtins/functions.html#float), [float](https://docs.python.org/3/builtins/functions.html#float)]*
+
+The centre point of the box.
+
 #### *classmethod* from_norm(nb, width, height)
 
 Scale a normalised `(x, y, w, h)` into a frame of that size.
@@ -58,9 +66,20 @@ Build from an origin and a size.
 * **Return type:**
   [`Box`](#tituli.geometry.Box)
 
+#### *property* height *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The height (`y1 - y0`).
+
 #### inset(dx, dy=None)
 
 Shrink by `dx` horizontally and `dy` (default `dx`) vertically.
+
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)
+
+#### intersection(other)
+
+The overlapping box (zero-area or inverted when the boxes are disjoint).
 
 * **Return type:**
   [`Box`](#tituli.geometry.Box)
@@ -77,6 +96,13 @@ Fraction of *this* box’s area covered by `other`.
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
+#### rounded()
+
+Integer bounds `(x0, y0, x1, y1)`, rounded outwards.
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
+
 #### to_norm(width, height)
 
 The inverse of [`from_norm()`](#tituli.geometry.Box.from_norm).
@@ -84,14 +110,32 @@ The inverse of [`from_norm()`](#tituli.geometry.Box.from_norm).
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
+#### translate(dx, dy)
+
+A copy of the box moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)
+
+#### union(other)
+
+The smallest box containing both boxes.
+
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The width (`x1 - x0`).
+
 ### *class* tituli.geometry.Path(points)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A polyline with an arc-length parameterisation.
 
-Build one with the constructors (`line()`, [`arc()`](#tituli.geometry.Path.arc), [`wave()`](#tituli.geometry.Path.wave),
-[`bezier()`](#tituli.geometry.Path.bezier), `polyline()`, [`from_svg()`](#tituli.geometry.Path.from_svg), [`from_function()`](#tituli.geometry.Path.from_function)) and
+Build one with the constructors ([`line()`](#tituli.geometry.Path.line), [`arc()`](#tituli.geometry.Path.arc), [`wave()`](#tituli.geometry.Path.wave),
+[`bezier()`](#tituli.geometry.Path.bezier), [`polyline()`](#tituli.geometry.Path.polyline), [`from_svg()`](#tituli.geometry.Path.from_svg), [`from_function()`](#tituli.geometry.Path.from_function)) and
 query it by distance along the curve: `point(s)` and `angle(s)` (degrees,
 clockwise-positive on screen because y points down).
 
@@ -108,6 +152,13 @@ Circular arc; angles in degrees, 0 = right, 90 = down (screen coords).
 
 * **Return type:**
   [`Path`](#tituli.geometry.Path)
+
+#### bbox()
+
+The bounding [`Box`](#tituli.geometry.Box) of the points.
+
+* **Return type:**
+  [`Box`](#tituli.geometry.Box)
 
 #### *classmethod* bezier(\*controls, samples=512)
 
@@ -163,12 +214,51 @@ Arcs (`A`) are not supported — approximate them with a Bézier.
 * **Return type:**
   [`Path`](#tituli.geometry.Path)
 
+#### *property* length *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The total length of the path.
+
+#### *classmethod* line(start, end)
+
+A straight path from `start` to `end`.
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
+
 #### point(s)
 
 Position at arc length `s` (clamped to the path).
 
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+#### *classmethod* polyline(points)
+
+A path through `points`.
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
+
+#### scaled(sx, sy=None)
+
+A path scaled by `sx` horizontally and `sy` vertically (default `sx`).
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
+
+#### transformed(fn)
+
+A path with `fn` applied to every point.
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Path`](#tituli.geometry.Path)
 
 #### *classmethod* wave(start, end, , amplitude, cycles=1.0, samples=512)
 

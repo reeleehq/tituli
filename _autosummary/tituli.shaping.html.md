@@ -27,6 +27,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Draw runs through HarfBuzz + FreeType. Falls back to Pillow for the embedded font.
 
+#### draw_run(canvas, run, opacity)
+
+Draw `run` onto `canvas` at the given opacity.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
 #### length(face, text)
 
 Advance of `text` as this engine shapes it (kerning, ligatures).

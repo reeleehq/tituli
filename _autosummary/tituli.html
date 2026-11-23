@@ -354,6 +354,16 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 <p>A pixel-space rectangle <code class="docutils literal notranslate"><span class="pre">(x0,</span> <span class="pre">y0,</span> <span class="pre">x1,</span> <span class="pre">y1)</span></code>; edges are floats.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Box.area">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">area</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.area" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.area'">¶</a></dt>
+<dd><p>The area, zero for an empty or inverted box.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Box.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">tuple</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">]</span></span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.center" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.center'">¶</a></dt>
+<dd><p>The centre point of the box.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Box.from_norm">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.from_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.from_norm" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.from_norm'">¶</a></dt>
@@ -374,10 +384,25 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 </dd>
 </dl>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Box.height">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">height</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.height" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.height'">¶</a></dt>
+<dd><p>The height (<code class="docutils literal notranslate"><span class="pre">y1</span> <span class="pre">-</span> <span class="pre">y0</span></code>).</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Box.inset">
 <span class="sig-name descname"><span class="pre">inset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.inset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.inset" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.inset'">¶</a></dt>
 <dd><p>Shrink by <code class="docutils literal notranslate"><span class="pre">dx</span></code> horizontally and <code class="docutils literal notranslate"><span class="pre">dy</span></code> (default <code class="docutils literal notranslate"><span class="pre">dx</span></code>) vertically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Box.intersection">
+<span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.intersection" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.intersection'">¶</a></dt>
+<dd><p>The overlapping box (zero-area or inverted when the boxes are disjoint).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
@@ -399,6 +424,16 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="tituli.Box.rounded">
+<span class="sig-name descname"><span class="pre">rounded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.rounded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.rounded" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.rounded'">¶</a></dt>
+<dd><p>Integer bounds <code class="docutils literal notranslate"><span class="pre">(x0,</span> <span class="pre">y0,</span> <span class="pre">x1,</span> <span class="pre">y1)</span></code>, rounded outwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="tituli.Box.to_norm">
 <span class="sig-name descname"><span class="pre">to_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.to_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.to_norm" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.to_norm'">¶</a></dt>
 <dd><p>The inverse of <a class="reference internal" href="#tituli.Box.from_norm" title="tituli.Box.from_norm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_norm()</span></code></a>.</p>
@@ -407,6 +442,31 @@ text-overlay body schema), <code class="docutils literal notranslate"><span clas
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Box.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.translate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.translate" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.translate'">¶</a></dt>
+<dd><p>A copy of the box moved by <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">dy)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Box.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Box.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.union" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.union'">¶</a></dt>
+<dd><p>The smallest box containing both boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Box.width">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">width</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Box.width" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Box.width'">¶</a></dt>
+<dd><p>The width (<code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">-</span> <span class="pre">x0</span></code>).</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
@@ -445,6 +505,11 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 </dd>
 </dl>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Credits.line_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">line_count</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">int</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Credits.line_count" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Credits.line_count'">¶</a></dt>
+<dd><p>The number of entry lines, closing lines included.</p>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.CreditsStyle">
@@ -453,6 +518,16 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 <p>The type ramp for a roll. One object so a film is one design.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.CreditsStyle.inked">
+<span class="sig-name descname"><span class="pre">inked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/credits.html#CreditsStyle.inked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.CreditsStyle.inked" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.CreditsStyle.inked'">¶</a></dt>
+<dd><p>A copy of the style with every text style recoloured to <code class="docutils literal notranslate"><span class="pre">ink</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.credits.html#tituli.credits.CreditsStyle" title="tituli.credits.CreditsStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Entry">
@@ -461,6 +536,16 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 <p>One credit line: <code class="docutils literal notranslate"><span class="pre">role</span></code> + <code class="docutils literal notranslate"><span class="pre">name</span></code>, a bare <code class="docutils literal notranslate"><span class="pre">name</span></code>, or prose.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Entry.of">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/credits.html#Entry.of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Entry.of" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Entry.of'">¶</a></dt>
+<dd><p>Coerce <code class="docutils literal notranslate"><span class="pre">item</span></code> (an entry, a string or a dict) to an <a class="reference internal" href="#tituli.Entry" title="tituli.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.credits.html#tituli.credits.Entry" title="tituli.credits.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Face">
@@ -560,6 +645,11 @@ at the axis default still differs from <code class="docutils literal notranslate
 </dd>
 </dl>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Frame.bounds">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bounds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><span class="pre">Box</span></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.bounds" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.bounds'">¶</a></dt>
+<dd><p>The frame as a <a class="reference internal" href="#tituli.Box" title="tituli.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a> starting at the origin.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Frame.from_image">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">avoid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delivery</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/frame.html#Frame.from_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.from_image" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.from_image'">¶</a></dt>
@@ -579,6 +669,11 @@ frame first. <code class="docutils literal notranslate"><span class="pre">delive
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.frame.html#tituli.frame.Frame" title="tituli.frame.Frame"><code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></a></span></p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Frame.knows_pixels">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">knows_pixels</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">bool</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.knows_pixels" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.knows_pixels'">¶</a></dt>
+<dd><p>Whether the frame carries pixel data.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Frame.luminance_stats">
@@ -650,6 +745,11 @@ subject wins; ties fall to preference order.</p>
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">safe</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><span class="pre">Box</span></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.safe" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.safe'">¶</a></dt>
 <dd><p>The title-safe box (SMPTE ST 2046-1, 90 %).</p>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Frame.size">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">size</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">tuple</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">int</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">int</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a><span class="p"><span class="pre">]</span></span></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.size" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.size'">¶</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">(width,</span> <span class="pre">height)</span></code> of the frame.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Frame.with_avoid">
 <span class="sig-name descname"><span class="pre">with_avoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avoid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/frame.html#Frame.with_avoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Frame.with_avoid" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Frame.with_avoid'">¶</a></dt>
@@ -695,6 +795,11 @@ EB Garamond italic over sand); on heavy type that one fills the counters.</p>
 <p>What goes on a museum label: the thing, and where it came from.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Label.identity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">identity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Label.identity" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Label.identity'">¶</a></dt>
+<dd><p>The overlay’s key, or its text when it has none.</p>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Layout">
@@ -755,6 +860,16 @@ ready for <a class="reference internal" href="#tituli.Layout.moved_to" title="ti
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="tituli.Layout.recolored">
+<span class="sig-name descname"><span class="pre">recolored</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout.recolored"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Layout.recolored" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Layout.recolored'">¶</a></dt>
+<dd><p>A copy with every run drawn in <code class="docutils literal notranslate"><span class="pre">color</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Layout" title="tituli.layout.Layout"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="tituli.Layout.staggered">
 <span class="sig-name descname"><span class="pre">staggered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout.staggered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Layout.staggered" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Layout.staggered'">¶</a></dt>
 <dd><p>Reveal runs one after another: run <code class="docutils literal notranslate"><span class="pre">i</span></code> starts at <code class="docutils literal notranslate"><span class="pre">start</span> <span class="pre">+</span> <span class="pre">i*step</span></code>.</p>
@@ -765,9 +880,29 @@ ready for <a class="reference internal" href="#tituli.Layout.moved_to" title="ti
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="tituli.Layout.translated">
+<span class="sig-name descname"><span class="pre">translated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout.translated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Layout.translated" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Layout.translated'">¶</a></dt>
+<dd><p>A copy moved by <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">dy)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Layout" title="tituli.layout.Layout"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="tituli.Layout.with_halo">
 <span class="sig-name descname"><span class="pre">with_halo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">halo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Halo(color=None,</span> <span class="pre">spread=0.03,</span> <span class="pre">blur=0.1,</span> <span class="pre">gain=2.0,</span> <span class="pre">opacity=0.65)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout.with_halo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Layout.with_halo" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Layout.with_halo'">¶</a></dt>
 <dd><p>Every run with <code class="docutils literal notranslate"><span class="pre">halo</span></code> under it (<code class="docutils literal notranslate"><span class="pre">None</span></code> removes it).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Layout" title="tituli.layout.Layout"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Layout.with_plates">
+<span class="sig-name descname"><span class="pre">with_plates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">plates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Layout.with_plates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Layout.with_plates" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Layout.with_plates'">¶</a></dt>
+<dd><p>A copy of the layout with <code class="docutils literal notranslate"><span class="pre">plates</span></code> added.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Layout" title="tituli.layout.Layout"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layout</span></code></a></span></p>
@@ -805,8 +940,8 @@ ready for <a class="reference internal" href="#tituli.Layout.moved_to" title="ti
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tituli.</span></span><span class="sig-name descname"><span class="pre">Path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path'">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></p>
 <p>A polyline with an arc-length parameterisation.</p>
-<p>Build one with the constructors (<code class="xref py py-meth docutils literal notranslate"><span class="pre">line()</span></code>, <a class="reference internal" href="#tituli.Path.arc" title="tituli.Path.arc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arc()</span></code></a>, <a class="reference internal" href="#tituli.Path.wave" title="tituli.Path.wave"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wave()</span></code></a>,
-<a class="reference internal" href="#tituli.Path.bezier" title="tituli.Path.bezier"><code class="xref py py-meth docutils literal notranslate"><span class="pre">bezier()</span></code></a>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">polyline()</span></code>, <a class="reference internal" href="#tituli.Path.from_svg" title="tituli.Path.from_svg"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_svg()</span></code></a>, <a class="reference internal" href="#tituli.Path.from_function" title="tituli.Path.from_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_function()</span></code></a>) and
+<p>Build one with the constructors (<a class="reference internal" href="#tituli.Path.line" title="tituli.Path.line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">line()</span></code></a>, <a class="reference internal" href="#tituli.Path.arc" title="tituli.Path.arc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arc()</span></code></a>, <a class="reference internal" href="#tituli.Path.wave" title="tituli.Path.wave"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wave()</span></code></a>,
+<a class="reference internal" href="#tituli.Path.bezier" title="tituli.Path.bezier"><code class="xref py py-meth docutils literal notranslate"><span class="pre">bezier()</span></code></a>, <a class="reference internal" href="#tituli.Path.polyline" title="tituli.Path.polyline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">polyline()</span></code></a>, <a class="reference internal" href="#tituli.Path.from_svg" title="tituli.Path.from_svg"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_svg()</span></code></a>, <a class="reference internal" href="#tituli.Path.from_function" title="tituli.Path.from_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_function()</span></code></a>) and
 query it by distance along the curve: <code class="docutils literal notranslate"><span class="pre">point(s)</span></code> and <code class="docutils literal notranslate"><span class="pre">angle(s)</span></code> (degrees,
 clockwise-positive on screen because y points down).</p>
 <dl class="field-list simple">
@@ -828,6 +963,16 @@ clockwise-positive on screen because y points down).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.bbox" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.bbox'">¶</a></dt>
+<dd><p>The bounding <a class="reference internal" href="#tituli.Box" title="tituli.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a> of the points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Box" title="tituli.geometry.Box"><code class="xref py py-class docutils literal notranslate"><span class="pre">Box</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -897,6 +1042,21 @@ than scaled.</p>
 </dd>
 </dl>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Path.length">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">length</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.length" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.length'">¶</a></dt>
+<dd><p>The total length of the path.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.line">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.line" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.line'">¶</a></dt>
+<dd><p>A straight path from <code class="docutils literal notranslate"><span class="pre">start</span></code> to <code class="docutils literal notranslate"><span class="pre">end</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.Path.point">
 <span class="sig-name descname"><span class="pre">point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.point" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.point'">¶</a></dt>
@@ -904,6 +1064,46 @@ than scaled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.polyline">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">polyline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.polyline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.polyline" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.polyline'">¶</a></dt>
+<dd><p>A path through <code class="docutils literal notranslate"><span class="pre">points</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.scaled">
+<span class="sig-name descname"><span class="pre">scaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.scaled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.scaled" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.scaled'">¶</a></dt>
+<dd><p>A path scaled by <code class="docutils literal notranslate"><span class="pre">sx</span></code> horizontally and <code class="docutils literal notranslate"><span class="pre">sy</span></code> vertically (default <code class="docutils literal notranslate"><span class="pre">sx</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.transformed">
+<span class="sig-name descname"><span class="pre">transformed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.transformed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.transformed" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.transformed'">¶</a></dt>
+<dd><p>A path with <code class="docutils literal notranslate"><span class="pre">fn</span></code> applied to every point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Path.translated">
+<span class="sig-name descname"><span class="pre">translated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/geometry.html#Path.translated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Path.translated" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Path.translated'">¶</a></dt>
+<dd><p>A copy moved by <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">dy)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.geometry.html#tituli.geometry.Path" title="tituli.geometry.Path"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -925,6 +1125,16 @@ than scaled.</p>
 <p>A backdrop drawn under the runs: a scrim, a box, a rule.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Plate.translated">
+<span class="sig-name descname"><span class="pre">translated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Plate.translated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Plate.translated" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Plate.translated'">¶</a></dt>
+<dd><p>A copy moved by <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">dy)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Plate" title="tituli.layout.Plate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plate</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.ResolvedHalo">
@@ -936,6 +1146,11 @@ how far the glow extends past the glyphs, in px (spread plus
 <code class="xref py py-data docutils literal notranslate"><span class="pre">BLUR_REACH</span></code> blur radii), the padding a renderer must leave around them.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.ResolvedHalo.reach">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reach</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">int</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.ResolvedHalo.reach" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.ResolvedHalo.reach'">¶</a></dt>
+<dd><p>How far, in pixels, the effect extends beyond the glyph (spread plus blur reach).</p>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Run">
@@ -984,6 +1199,26 @@ Cleared whenever <code class="docutils literal notranslate"><span class="pre">ad
 </dd>
 </dl>
 </dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.Run.translated">
+<span class="sig-name descname"><span class="pre">translated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/layout.html#Run.translated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Run.translated" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Run.translated'">¶</a></dt>
+<dd><p>A copy moved by <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">dy)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.layout.html#tituli.layout.Run" title="tituli.layout.Run"><code class="xref py py-class docutils literal notranslate"><span class="pre">Run</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Run.width">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">width</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Run.width" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Run.width'">¶</a></dt>
+<dd><p>the measured advance when known, else the text’s length plus tracking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The width</p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Section">
@@ -994,6 +1229,16 @@ Cleared whenever <code class="docutils literal notranslate"><span class="pre">ad
 <code class="docutils literal notranslate"><span class="pre">"prose"</span></code> wrapped small text (licences, thanks).</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.Section.resolved_kind">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">resolved_kind</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.Section.resolved_kind" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.Section.resolved_kind'">¶</a></dt>
+<dd><p>the given kind, or <code class="docutils literal notranslate"><span class="pre">pairs</span></code>/<code class="docutils literal notranslate"><span class="pre">prose</span></code>/<code class="docutils literal notranslate"><span class="pre">list</span></code> inferred from the entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The section layout</p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.Span">
@@ -1043,6 +1288,16 @@ a label that is <em>wrong</em> rather than absent.</p>
 <p>How a run of text looks. All fields keyword-only; build variants with <code class="docutils literal notranslate"><span class="pre">with_</span></code>.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.TextStyle.apply_case">
+<span class="sig-name descname"><span class="pre">apply_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/style.html#TextStyle.apply_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.TextStyle.apply_case" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.TextStyle.apply_case'">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">text</span></code> converted to this style’s case rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="tituli.TextStyle.face">
 <span class="sig-name descname"><span class="pre">face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_height</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/style.html#TextStyle.face"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.TextStyle.face" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.TextStyle.face'">¶</a></dt>
@@ -1105,6 +1360,31 @@ like any layout. <code class="docutils literal notranslate"><span class="pre">fa
 (<code class="docutils literal notranslate"><span class="pre">fade_in=0</span></code> for a title that must be up on the first frame).</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.TimedOverlay.duration">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">duration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">float</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.TimedOverlay.duration" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.TimedOverlay.duration'">¶</a></dt>
+<dd><p>Length in seconds (<code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">-</span> <span class="pre">start</span></code>).</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.TimedOverlay.overlaps">
+<span class="sig-name descname"><span class="pre">overlaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/schedule.html#TimedOverlay.overlaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.TimedOverlay.overlaps" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.TimedOverlay.overlaps'">¶</a></dt>
+<dd><p>Whether the two overlays overlap in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" rel="nofollow noopener" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.TimedOverlay.with_layout">
+<span class="sig-name descname"><span class="pre">with_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/schedule.html#TimedOverlay.with_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.TimedOverlay.with_layout" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.TimedOverlay.with_layout'">¶</a></dt>
+<dd><p>A copy of the overlay carrying <code class="docutils literal notranslate"><span class="pre">layout</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="tituli.schedule.html#tituli.schedule.TimedOverlay" title="tituli.schedule.TimedOverlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.along_path">
@@ -1809,20 +2089,35 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li><a :data-current="activeSection === '#tituli.Box'" class="reference internal" href="#tituli.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.Box.area'" class="reference internal" href="#tituli.Box.area"><code class="docutils literal notranslate"><span class="pre">Box.area</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.center'" class="reference internal" href="#tituli.Box.center"><code class="docutils literal notranslate"><span class="pre">Box.center</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Box.from_norm'" class="reference internal" href="#tituli.Box.from_norm"><code class="docutils literal notranslate"><span class="pre">Box.from_norm()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Box.from_size'" class="reference internal" href="#tituli.Box.from_size"><code class="docutils literal notranslate"><span class="pre">Box.from_size()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.height'" class="reference internal" href="#tituli.Box.height"><code class="docutils literal notranslate"><span class="pre">Box.height</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Box.inset'" class="reference internal" href="#tituli.Box.inset"><code class="docutils literal notranslate"><span class="pre">Box.inset()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.intersection'" class="reference internal" href="#tituli.Box.intersection"><code class="docutils literal notranslate"><span class="pre">Box.intersection()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Box.overlap_fraction'" class="reference internal" href="#tituli.Box.overlap_fraction"><code class="docutils literal notranslate"><span class="pre">Box.overlap_fraction()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.rounded'" class="reference internal" href="#tituli.Box.rounded"><code class="docutils literal notranslate"><span class="pre">Box.rounded()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Box.to_norm'" class="reference internal" href="#tituli.Box.to_norm"><code class="docutils literal notranslate"><span class="pre">Box.to_norm()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.translate'" class="reference internal" href="#tituli.Box.translate"><code class="docutils literal notranslate"><span class="pre">Box.translate()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.union'" class="reference internal" href="#tituli.Box.union"><code class="docutils literal notranslate"><span class="pre">Box.union()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Box.width'" class="reference internal" href="#tituli.Box.width"><code class="docutils literal notranslate"><span class="pre">Box.width</span></code></a></li>
 </ul>
 </li>
 <li><a :data-current="activeSection === '#tituli.Credits'" class="reference internal" href="#tituli.Credits"><code class="docutils literal notranslate"><span class="pre">Credits</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Credits.from_dict'" class="reference internal" href="#tituli.Credits.from_dict"><code class="docutils literal notranslate"><span class="pre">Credits.from_dict()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Credits.from_lines'" class="reference internal" href="#tituli.Credits.from_lines"><code class="docutils literal notranslate"><span class="pre">Credits.from_lines()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Credits.line_count'" class="reference internal" href="#tituli.Credits.line_count"><code class="docutils literal notranslate"><span class="pre">Credits.line_count</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#tituli.CreditsStyle'" class="reference internal" href="#tituli.CreditsStyle"><code class="docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.Entry'" class="reference internal" href="#tituli.Entry"><code class="docutils literal notranslate"><span class="pre">Entry</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.CreditsStyle'" class="reference internal" href="#tituli.CreditsStyle"><code class="docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.CreditsStyle.inked'" class="reference internal" href="#tituli.CreditsStyle.inked"><code class="docutils literal notranslate"><span class="pre">CreditsStyle.inked()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#tituli.Entry'" class="reference internal" href="#tituli.Entry"><code class="docutils literal notranslate"><span class="pre">Entry</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.Entry.of'" class="reference internal" href="#tituli.Entry.of"><code class="docutils literal notranslate"><span class="pre">Entry.of()</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.Face'" class="reference internal" href="#tituli.Face"><code class="docutils literal notranslate"><span class="pre">Face</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Face.applied_features'" class="reference internal" href="#tituli.Face.applied_features"><code class="docutils literal notranslate"><span class="pre">Face.applied_features</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Face.applied_variations'" class="reference internal" href="#tituli.Face.applied_variations"><code class="docutils literal notranslate"><span class="pre">Face.applied_variations</span></code></a></li>
@@ -1838,26 +2133,35 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </li>
 <li><a :data-current="activeSection === '#tituli.Frame'" class="reference internal" href="#tituli.Frame"><code class="docutils literal notranslate"><span class="pre">Frame</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Frame.blank'" class="reference internal" href="#tituli.Frame.blank"><code class="docutils literal notranslate"><span class="pre">Frame.blank()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Frame.bounds'" class="reference internal" href="#tituli.Frame.bounds"><code class="docutils literal notranslate"><span class="pre">Frame.bounds</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.from_image'" class="reference internal" href="#tituli.Frame.from_image"><code class="docutils literal notranslate"><span class="pre">Frame.from_image()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Frame.knows_pixels'" class="reference internal" href="#tituli.Frame.knows_pixels"><code class="docutils literal notranslate"><span class="pre">Frame.knows_pixels</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.luminance_stats'" class="reference internal" href="#tituli.Frame.luminance_stats"><code class="docutils literal notranslate"><span class="pre">Frame.luminance_stats()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.luminance_under'" class="reference internal" href="#tituli.Frame.luminance_under"><code class="docutils literal notranslate"><span class="pre">Frame.luminance_under()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.over'" class="reference internal" href="#tituli.Frame.over"><code class="docutils literal notranslate"><span class="pre">Frame.over()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.overlap'" class="reference internal" href="#tituli.Frame.overlap"><code class="docutils literal notranslate"><span class="pre">Frame.overlap()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.place'" class="reference internal" href="#tituli.Frame.place"><code class="docutils literal notranslate"><span class="pre">Frame.place()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.safe'" class="reference internal" href="#tituli.Frame.safe"><code class="docutils literal notranslate"><span class="pre">Frame.safe</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Frame.size'" class="reference internal" href="#tituli.Frame.size"><code class="docutils literal notranslate"><span class="pre">Frame.size</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.with_avoid'" class="reference internal" href="#tituli.Frame.with_avoid"><code class="docutils literal notranslate"><span class="pre">Frame.with_avoid()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Frame.with_delivery'" class="reference internal" href="#tituli.Frame.with_delivery"><code class="docutils literal notranslate"><span class="pre">Frame.with_delivery()</span></code></a></li>
 </ul>
 </li>
 <li><a :data-current="activeSection === '#tituli.Halo'" class="reference internal" href="#tituli.Halo"><code class="docutils literal notranslate"><span class="pre">Halo</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.Label'" class="reference internal" href="#tituli.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Label'" class="reference internal" href="#tituli.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.Label.identity'" class="reference internal" href="#tituli.Label.identity"><code class="docutils literal notranslate"><span class="pre">Label.identity</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.Layout'" class="reference internal" href="#tituli.Layout"><code class="docutils literal notranslate"><span class="pre">Layout</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Layout.bbox'" class="reference internal" href="#tituli.Layout.bbox"><code class="docutils literal notranslate"><span class="pre">Layout.bbox()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.duration_hint'" class="reference internal" href="#tituli.Layout.duration_hint"><code class="docutils literal notranslate"><span class="pre">Layout.duration_hint</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.moved_to'" class="reference internal" href="#tituli.Layout.moved_to"><code class="docutils literal notranslate"><span class="pre">Layout.moved_to()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.place_in'" class="reference internal" href="#tituli.Layout.place_in"><code class="docutils literal notranslate"><span class="pre">Layout.place_in()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Layout.recolored'" class="reference internal" href="#tituli.Layout.recolored"><code class="docutils literal notranslate"><span class="pre">Layout.recolored()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.staggered'" class="reference internal" href="#tituli.Layout.staggered"><code class="docutils literal notranslate"><span class="pre">Layout.staggered()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Layout.translated'" class="reference internal" href="#tituli.Layout.translated"><code class="docutils literal notranslate"><span class="pre">Layout.translated()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.with_halo'" class="reference internal" href="#tituli.Layout.with_halo"><code class="docutils literal notranslate"><span class="pre">Layout.with_halo()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Layout.with_plates'" class="reference internal" href="#tituli.Layout.with_plates"><code class="docutils literal notranslate"><span class="pre">Layout.with_plates()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Layout.with_timing'" class="reference internal" href="#tituli.Layout.with_timing"><code class="docutils literal notranslate"><span class="pre">Layout.with_timing()</span></code></a></li>
 </ul>
 </li>
@@ -1866,26 +2170,44 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 <li><a :data-current="activeSection === '#tituli.Path'" class="reference internal" href="#tituli.Path"><code class="docutils literal notranslate"><span class="pre">Path</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Path.angle'" class="reference internal" href="#tituli.Path.angle"><code class="docutils literal notranslate"><span class="pre">Path.angle()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.arc'" class="reference internal" href="#tituli.Path.arc"><code class="docutils literal notranslate"><span class="pre">Path.arc()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.bbox'" class="reference internal" href="#tituli.Path.bbox"><code class="docutils literal notranslate"><span class="pre">Path.bbox()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.bezier'" class="reference internal" href="#tituli.Path.bezier"><code class="docutils literal notranslate"><span class="pre">Path.bezier()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.circle'" class="reference internal" href="#tituli.Path.circle"><code class="docutils literal notranslate"><span class="pre">Path.circle()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.closed'" class="reference internal" href="#tituli.Path.closed"><code class="docutils literal notranslate"><span class="pre">Path.closed</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.fit'" class="reference internal" href="#tituli.Path.fit"><code class="docutils literal notranslate"><span class="pre">Path.fit()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.from_function'" class="reference internal" href="#tituli.Path.from_function"><code class="docutils literal notranslate"><span class="pre">Path.from_function()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.from_svg'" class="reference internal" href="#tituli.Path.from_svg"><code class="docutils literal notranslate"><span class="pre">Path.from_svg()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.length'" class="reference internal" href="#tituli.Path.length"><code class="docutils literal notranslate"><span class="pre">Path.length</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.line'" class="reference internal" href="#tituli.Path.line"><code class="docutils literal notranslate"><span class="pre">Path.line()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.point'" class="reference internal" href="#tituli.Path.point"><code class="docutils literal notranslate"><span class="pre">Path.point()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.polyline'" class="reference internal" href="#tituli.Path.polyline"><code class="docutils literal notranslate"><span class="pre">Path.polyline()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.scaled'" class="reference internal" href="#tituli.Path.scaled"><code class="docutils literal notranslate"><span class="pre">Path.scaled()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.transformed'" class="reference internal" href="#tituli.Path.transformed"><code class="docutils literal notranslate"><span class="pre">Path.transformed()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Path.translated'" class="reference internal" href="#tituli.Path.translated"><code class="docutils literal notranslate"><span class="pre">Path.translated()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Path.wave'" class="reference internal" href="#tituli.Path.wave"><code class="docutils literal notranslate"><span class="pre">Path.wave()</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#tituli.Plate'" class="reference internal" href="#tituli.Plate"><code class="docutils literal notranslate"><span class="pre">Plate</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.ResolvedHalo'" class="reference internal" href="#tituli.ResolvedHalo"><code class="docutils literal notranslate"><span class="pre">ResolvedHalo</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Plate'" class="reference internal" href="#tituli.Plate"><code class="docutils literal notranslate"><span class="pre">Plate</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.Plate.translated'" class="reference internal" href="#tituli.Plate.translated"><code class="docutils literal notranslate"><span class="pre">Plate.translated()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#tituli.ResolvedHalo'" class="reference internal" href="#tituli.ResolvedHalo"><code class="docutils literal notranslate"><span class="pre">ResolvedHalo</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.ResolvedHalo.reach'" class="reference internal" href="#tituli.ResolvedHalo.reach"><code class="docutils literal notranslate"><span class="pre">ResolvedHalo.reach</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.Run'" class="reference internal" href="#tituli.Run"><code class="docutils literal notranslate"><span class="pre">Run</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.Run.advance'" class="reference internal" href="#tituli.Run.advance"><code class="docutils literal notranslate"><span class="pre">Run.advance</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Run.bbox'" class="reference internal" href="#tituli.Run.bbox"><code class="docutils literal notranslate"><span class="pre">Run.bbox()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Run.halo'" class="reference internal" href="#tituli.Run.halo"><code class="docutils literal notranslate"><span class="pre">Run.halo</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.Run.measured_by'" class="reference internal" href="#tituli.Run.measured_by"><code class="docutils literal notranslate"><span class="pre">Run.measured_by</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Run.translated'" class="reference internal" href="#tituli.Run.translated"><code class="docutils literal notranslate"><span class="pre">Run.translated()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Run.width'" class="reference internal" href="#tituli.Run.width"><code class="docutils literal notranslate"><span class="pre">Run.width</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#tituli.Section'" class="reference internal" href="#tituli.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.Section'" class="reference internal" href="#tituli.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.Section.resolved_kind'" class="reference internal" href="#tituli.Section.resolved_kind"><code class="docutils literal notranslate"><span class="pre">Section.resolved_kind</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.Span'" class="reference internal" href="#tituli.Span"><code class="docutils literal notranslate"><span class="pre">Span</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.TextDoesNotFit'" class="reference internal" href="#tituli.TextDoesNotFit"><code class="docutils literal notranslate"><span class="pre">TextDoesNotFit</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.TextDoesNotFit.text'" class="reference internal" href="#tituli.TextDoesNotFit.text"><code class="docutils literal notranslate"><span class="pre">TextDoesNotFit.text</span></code></a></li>
@@ -1895,13 +2217,19 @@ never cut). A no-break space (U+00A0) binds two words in any mode.</p>
 </ul>
 </li>
 <li><a :data-current="activeSection === '#tituli.TextStyle'" class="reference internal" href="#tituli.TextStyle"><code class="docutils literal notranslate"><span class="pre">TextStyle</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.TextStyle.apply_case'" class="reference internal" href="#tituli.TextStyle.apply_case"><code class="docutils literal notranslate"><span class="pre">TextStyle.apply_case()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.TextStyle.face'" class="reference internal" href="#tituli.TextStyle.face"><code class="docutils literal notranslate"><span class="pre">TextStyle.face()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.TextStyle.features'" class="reference internal" href="#tituli.TextStyle.features"><code class="docutils literal notranslate"><span class="pre">TextStyle.features</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.TextStyle.px'" class="reference internal" href="#tituli.TextStyle.px"><code class="docutils literal notranslate"><span class="pre">TextStyle.px()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.TextStyle.with_'" class="reference internal" href="#tituli.TextStyle.with_"><code class="docutils literal notranslate"><span class="pre">TextStyle.with_()</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#tituli.TimedOverlay'" class="reference internal" href="#tituli.TimedOverlay"><code class="docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.TimedOverlay'" class="reference internal" href="#tituli.TimedOverlay"><code class="docutils literal notranslate"><span class="pre">TimedOverlay</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.TimedOverlay.duration'" class="reference internal" href="#tituli.TimedOverlay.duration"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.duration</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.TimedOverlay.overlaps'" class="reference internal" href="#tituli.TimedOverlay.overlaps"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.overlaps()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.TimedOverlay.with_layout'" class="reference internal" href="#tituli.TimedOverlay.with_layout"><code class="docutils literal notranslate"><span class="pre">TimedOverlay.with_layout()</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.along_path'" class="reference internal" href="#tituli.along_path"><code class="docutils literal notranslate"><span class="pre">along_path()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.block'" class="reference internal" href="#tituli.block"><code class="docutils literal notranslate"><span class="pre">block()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.caption'" class="reference internal" href="#tituli.caption"><code class="docutils literal notranslate"><span class="pre">caption()</span></code></a></li>

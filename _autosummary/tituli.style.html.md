@@ -48,6 +48,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 How a run of text looks. All fields keyword-only; build variants with `with_`.
 
+#### apply_case(text)
+
+`text` converted to this style’s case rule.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
 #### face(frame_height)
 
 The resolved, sized font for this style.

@@ -51,6 +51,10 @@ Rung (a) when `color` is None, rung (b) when it is given.
 * **Return type:**
   [`Frame`](#tituli.frame.Frame)
 
+#### *property* bounds *: [Box](tituli.geometry.html.md#tituli.geometry.Box)*
+
+The frame as a `Box` starting at the origin.
+
 #### *classmethod* from_image(image, , avoid=None, size=None, delivery=None)
 
 Rung (c), and rung (d) when `avoid` is given.
@@ -69,6 +73,10 @@ frame first. `delivery` names a target whose reserved zones
 
 * **Return type:**
   [`Frame`](#tituli.frame.Frame)
+
+#### *property* knows_pixels *: [bool](https://docs.python.org/3/builtins/functions.html#bool)*
+
+Whether the frame carries pixel data.
 
 #### luminance_stats(box)
 
@@ -127,6 +135,10 @@ subject wins; ties fall to preference order.
 #### *property* safe *: [Box](tituli.geometry.html.md#tituli.geometry.Box)*
 
 The title-safe box (SMPTE ST 2046-1, 90 %).
+
+#### *property* size *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[int](https://docs.python.org/3/builtins/functions.html#int), [int](https://docs.python.org/3/builtins/functions.html#int)]*
+
+The `(width, height)` of the frame.
 
 #### with_avoid(avoid)
 

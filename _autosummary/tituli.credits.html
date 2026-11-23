@@ -217,6 +217,11 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 </dd>
 </dl>
 </dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.credits.Credits.line_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">line_count</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">int</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.credits.Credits.line_count" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.credits.Credits.line_count'">¶</a></dt>
+<dd><p>The number of entry lines, closing lines included.</p>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.credits.CreditsStyle">
@@ -225,6 +230,16 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 <p>The type ramp for a roll. One object so a film is one design.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.credits.CreditsStyle.inked">
+<span class="sig-name descname"><span class="pre">inked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/credits.html#CreditsStyle.inked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.credits.CreditsStyle.inked" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.credits.CreditsStyle.inked'">¶</a></dt>
+<dd><p>A copy of the style with every text style recoloured to <code class="docutils literal notranslate"><span class="pre">ink</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.credits.CreditsStyle" title="tituli.credits.CreditsStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.credits.Entry">
@@ -233,6 +248,16 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 <p>One credit line: <code class="docutils literal notranslate"><span class="pre">role</span></code> + <code class="docutils literal notranslate"><span class="pre">name</span></code>, a bare <code class="docutils literal notranslate"><span class="pre">name</span></code>, or prose.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tituli.credits.Entry.of">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tituli/credits.html#Entry.of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.credits.Entry.of" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.credits.Entry.of'">¶</a></dt>
+<dd><p>Coerce <code class="docutils literal notranslate"><span class="pre">item</span></code> (an entry, a string or a dict) to an <a class="reference internal" href="#tituli.credits.Entry" title="tituli.credits.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#tituli.credits.Entry" title="tituli.credits.Entry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Entry</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="tituli.credits.Section">
@@ -243,6 +268,16 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 <code class="docutils literal notranslate"><span class="pre">"prose"</span></code> wrapped small text (licences, thanks).</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tituli.credits.Section.resolved_kind">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">resolved_kind</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" rel="nofollow noopener" title="(in Python v3.15)"><span class="pre">str</span><svg fill="currentColor" height="1em" stroke="none" viewbox="0 96 960 960" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M188 868q-11-11-11-28t11-28l436-436H400q-17 0-28.5-11.5T360 336q0-17 11.5-28.5T400 296h320q17 0 28.5 11.5T760 336v320q0 17-11.5 28.5T720 696q-17 0-28.5-11.5T680 656V432L244 868q-11 11-28 11t-28-11Z"></path></svg></a></span><a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#tituli.credits.Section.resolved_kind" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tituli.credits.Section.resolved_kind'">¶</a></dt>
+<dd><p>the given kind, or <code class="docutils literal notranslate"><span class="pre">pairs</span></code>/<code class="docutils literal notranslate"><span class="pre">prose</span></code>/<code class="docutils literal notranslate"><span class="pre">list</span></code> inferred from the entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The section layout</p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tituli.credits.credits_cards">
@@ -287,11 +322,21 @@ its bottom, so the crawl enters from an empty frame and leaves to one.</p>
 <li><a :data-current="activeSection === '#tituli.credits.Credits'" class="reference internal" href="#tituli.credits.Credits"><code class="docutils literal notranslate"><span class="pre">Credits</span></code></a><ul>
 <li><a :data-current="activeSection === '#tituli.credits.Credits.from_dict'" class="reference internal" href="#tituli.credits.Credits.from_dict"><code class="docutils literal notranslate"><span class="pre">Credits.from_dict()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.credits.Credits.from_lines'" class="reference internal" href="#tituli.credits.Credits.from_lines"><code class="docutils literal notranslate"><span class="pre">Credits.from_lines()</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.credits.Credits.line_count'" class="reference internal" href="#tituli.credits.Credits.line_count"><code class="docutils literal notranslate"><span class="pre">Credits.line_count</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#tituli.credits.CreditsStyle'" class="reference internal" href="#tituli.credits.CreditsStyle"><code class="docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.credits.Entry'" class="reference internal" href="#tituli.credits.Entry"><code class="docutils literal notranslate"><span class="pre">Entry</span></code></a></li>
-<li><a :data-current="activeSection === '#tituli.credits.Section'" class="reference internal" href="#tituli.credits.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
+<li><a :data-current="activeSection === '#tituli.credits.CreditsStyle'" class="reference internal" href="#tituli.credits.CreditsStyle"><code class="docutils literal notranslate"><span class="pre">CreditsStyle</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.credits.CreditsStyle.inked'" class="reference internal" href="#tituli.credits.CreditsStyle.inked"><code class="docutils literal notranslate"><span class="pre">CreditsStyle.inked()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#tituli.credits.Entry'" class="reference internal" href="#tituli.credits.Entry"><code class="docutils literal notranslate"><span class="pre">Entry</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.credits.Entry.of'" class="reference internal" href="#tituli.credits.Entry.of"><code class="docutils literal notranslate"><span class="pre">Entry.of()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#tituli.credits.Section'" class="reference internal" href="#tituli.credits.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a><ul>
+<li><a :data-current="activeSection === '#tituli.credits.Section.resolved_kind'" class="reference internal" href="#tituli.credits.Section.resolved_kind"><code class="docutils literal notranslate"><span class="pre">Section.resolved_kind</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#tituli.credits.credits_cards'" class="reference internal" href="#tituli.credits.credits_cards"><code class="docutils literal notranslate"><span class="pre">credits_cards()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.credits.credits_crawl'" class="reference internal" href="#tituli.credits.credits_crawl"><code class="docutils literal notranslate"><span class="pre">credits_crawl()</span></code></a></li>
 <li><a :data-current="activeSection === '#tituli.credits.credits_frame'" class="reference internal" href="#tituli.credits.credits_frame"><code class="docutils literal notranslate"><span class="pre">credits_frame()</span></code></a></li>

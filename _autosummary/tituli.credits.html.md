@@ -67,17 +67,35 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 * **Return type:**
   [`Credits`](#tituli.credits.Credits)
 
+#### *property* line_count *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+The number of entry lines, closing lines included.
+
 ### *class* tituli.credits.CreditsStyle(title=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.06, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.005, leading=1.2, case='as-is', align='center', opacity=1.0, features=()), heading=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.024, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.22, leading=1.2, case='upper', align='center', opacity=0.75, features=()), role=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='right', opacity=0.8, features=()), name=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), line=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='center', opacity=1.0, features=()), ink=(255, 255, 255), background=(8, 8, 10))
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 The type ramp for a roll. One object so a film is one design.
 
+#### inked()
+
+A copy of the style with every text style recoloured to `ink`.
+
+* **Return type:**
+  [`CreditsStyle`](#tituli.credits.CreditsStyle)
+
 ### *class* tituli.credits.Entry(name, role='')
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One credit line: `role` + `name`, a bare `name`, or prose.
+
+#### *classmethod* of(item)
+
+Coerce `item` (an entry, a string or a dict) to an [`Entry`](#tituli.credits.Entry).
+
+* **Return type:**
+  [`Entry`](#tituli.credits.Entry)
 
 ### *class* tituli.credits.Section(heading='', entries=(), kind='auto')
 
@@ -87,6 +105,13 @@ A heading over a run of entries. `kind` picks the treatment:
 
 `"pairs"` role/name on a gutter (cast, crew); `"list"` centred names;
 `"prose"` wrapped small text (licences, thanks).
+
+#### *property* resolved_kind *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+the given kind, or `pairs`/`prose`/`list` inferred from the entries.
+
+* **Type:**
+  The section layout
 
 ### tituli.credits.credits_cards(credits, , frame, style=CreditsStyle(title=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.06, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.005, leading=1.2, case='as-is', align='center', opacity=1.0, features=()), heading=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.024, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.22, leading=1.2, case='upper', align='center', opacity=0.75, features=()), role=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='right', opacity=0.8, features=()), name=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), line=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='center', opacity=1.0, features=()), ink=(255, 255, 255), background=(8, 8, 10)), max_cards=None, engine=None)
 

@@ -49,6 +49,10 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 What goes on a museum label: the thing, and where it came from.
 
+#### *property* identity *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+The overlay’s key, or its text when it has none.
+
 ### *class* tituli.schedule.Span(start, end, key, data=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
@@ -73,6 +77,24 @@ contend for a slot — the heavier suppresses the lighter, never stacks.
 PIL image or a path) — a title page made elsewhere, a logo plate — timed
 like any layout. `fade_in` / `fade_out` override `fade` for one end
 (`fade_in=0` for a title that must be up on the first frame).
+
+#### *property* duration *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+Length in seconds (`end - start`).
+
+#### overlaps(other)
+
+Whether the two overlays overlap in time.
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
+#### with_layout(layout)
+
+A copy of the overlay carrying `layout`.
+
+* **Return type:**
+  [`TimedOverlay`](#tituli.schedule.TimedOverlay)
 
 ### tituli.schedule.resolve(overlays, , min_readable_s=1.5)
 

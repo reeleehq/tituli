@@ -106,6 +106,13 @@ ready for [`moved_to()`](#tituli.layout.Layout.moved_to).
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](tituli.geometry.html.md#tituli.geometry.Box)]
 
+#### recolored(color)
+
+A copy with every run drawn in `color`.
+
+* **Return type:**
+  [`Layout`](#tituli.layout.Layout)
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
@@ -113,9 +120,23 @@ Reveal runs one after another: run `i` starts at `start + i*step`.
 * **Return type:**
   [`Layout`](#tituli.layout.Layout)
 
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Layout`](#tituli.layout.Layout)
+
 #### with_halo(halo=Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65))
 
 Every run with `halo` under it (`None` removes it).
+
+* **Return type:**
+  [`Layout`](#tituli.layout.Layout)
+
+#### with_plates(\*plates)
+
+A copy of the layout with `plates` added.
 
 * **Return type:**
   [`Layout`](#tituli.layout.Layout)
@@ -132,6 +153,13 @@ Give every run the same reveal envelope.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Plate`](#tituli.layout.Plate)
 
 ### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
@@ -168,6 +196,20 @@ Cleared whenever `advance` is `None`.
 
 * **Type:**
   Name of the engine that measured `advance` (`None`
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Run`](#tituli.layout.Run)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+the measured advance when known, else the text’s length plus tracking.
+
+* **Type:**
+  The width
 
 ### tituli.layout.along_path(text, path, style, frame, , start=0.0, align='start', offset=0.0, upright=False, color=None, tags=(), engine=None)
 

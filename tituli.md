@@ -1,4 +1,4 @@
-> built 2026-11-22 19:03 UTC from 5a78e4d (main) · tituli 0.0.20. Details: build_info.json
+> built 2026-11-23 00:40 UTC from 629e95b (main) · tituli 0.0.20. Details: build_info.json
 
 # index.html.md
 
@@ -706,17 +706,35 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 * **Return type:**
   [`Credits`](_autosummary/tituli.credits.html.md#tituli.credits.Credits)
 
+#### *property* line_count *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+The number of entry lines, closing lines included.
+
 ### *class* tituli.credits.CreditsStyle(title=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.06, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.005, leading=1.2, case='as-is', align='center', opacity=1.0, features=()), heading=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.024, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.22, leading=1.2, case='upper', align='center', opacity=0.75, features=()), role=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='right', opacity=0.8, features=()), name=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), line=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='center', opacity=1.0, features=()), ink=(255, 255, 255), background=(8, 8, 10))
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 The type ramp for a roll. One object so a film is one design.
 
+#### inked()
+
+A copy of the style with every text style recoloured to `ink`.
+
+* **Return type:**
+  [`CreditsStyle`](_autosummary/tituli.credits.html.md#tituli.credits.CreditsStyle)
+
 ### *class* tituli.credits.Entry(name, role='')
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One credit line: `role` + `name`, a bare `name`, or prose.
+
+#### *classmethod* of(item)
+
+Coerce `item` (an entry, a string or a dict) to an [`Entry`](_autosummary/tituli.credits.html.md#tituli.credits.Entry).
+
+* **Return type:**
+  [`Entry`](_autosummary/tituli.credits.html.md#tituli.credits.Entry)
 
 ### *class* tituli.credits.Section(heading='', entries=(), kind='auto')
 
@@ -726,6 +744,13 @@ A heading over a run of entries. `kind` picks the treatment:
 
 `"pairs"` role/name on a gutter (cast, crew); `"list"` centred names;
 `"prose"` wrapped small text (licences, thanks).
+
+#### *property* resolved_kind *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+the given kind, or `pairs`/`prose`/`list` inferred from the entries.
+
+* **Type:**
+  The section layout
 
 ### tituli.credits.credits_cards(credits, , frame, style=CreditsStyle(title=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.06, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.005, leading=1.2, case='as-is', align='center', opacity=1.0, features=()), heading=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.024, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.22, leading=1.2, case='upper', align='center', opacity=0.75, features=()), role=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='right', opacity=0.8, features=()), name=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), line=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='center', opacity=1.0, features=()), ink=(255, 255, 255), background=(8, 8, 10)), max_cards=None, engine=None)
 
@@ -1189,6 +1214,10 @@ Rung (a) when `color` is None, rung (b) when it is given.
 * **Return type:**
   [`Frame`](_autosummary/tituli.frame.html.md#tituli.frame.Frame)
 
+#### *property* bounds *: [Box](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)*
+
+The frame as a `Box` starting at the origin.
+
 #### *classmethod* from_image(image, , avoid=None, size=None, delivery=None)
 
 Rung (c), and rung (d) when `avoid` is given.
@@ -1207,6 +1236,10 @@ frame first. `delivery` names a target whose reserved zones
 
 * **Return type:**
   [`Frame`](_autosummary/tituli.frame.html.md#tituli.frame.Frame)
+
+#### *property* knows_pixels *: [bool](https://docs.python.org/3/builtins/functions.html#bool)*
+
+Whether the frame carries pixel data.
 
 #### luminance_stats(box)
 
@@ -1265,6 +1298,10 @@ subject wins; ties fall to preference order.
 #### *property* safe *: [Box](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)*
 
 The title-safe box (SMPTE ST 2046-1, 90 %).
+
+#### *property* size *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[int](https://docs.python.org/3/builtins/functions.html#int), [int](https://docs.python.org/3/builtins/functions.html#int)]*
+
+The `(width, height)` of the frame.
 
 #### with_avoid(avoid)
 
@@ -1355,6 +1392,14 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.
 
+#### *property* area *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The area, zero for an empty or inverted box.
+
+#### *property* center *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[float](https://docs.python.org/3/builtins/functions.html#float), [float](https://docs.python.org/3/builtins/functions.html#float)]*
+
+The centre point of the box.
+
 #### *classmethod* from_norm(nb, width, height)
 
 Scale a normalised `(x, y, w, h)` into a frame of that size.
@@ -1369,9 +1414,20 @@ Build from an origin and a size.
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
 
+#### *property* height *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The height (`y1 - y0`).
+
 #### inset(dx, dy=None)
 
 Shrink by `dx` horizontally and `dy` (default `dx`) vertically.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### intersection(other)
+
+The overlapping box (zero-area or inverted when the boxes are disjoint).
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
@@ -1388,6 +1444,13 @@ Fraction of *this* box’s area covered by `other`.
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
+#### rounded()
+
+Integer bounds `(x0, y0, x1, y1)`, rounded outwards.
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
+
 #### to_norm(width, height)
 
 The inverse of [`from_norm()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box.from_norm).
@@ -1395,14 +1458,32 @@ The inverse of [`from_norm()`](_autosummary/tituli.geometry.html.md#tituli.geome
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
+#### translate(dx, dy)
+
+A copy of the box moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### union(other)
+
+The smallest box containing both boxes.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The width (`x1 - x0`).
+
 ### *class* tituli.geometry.Path(points)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A polyline with an arc-length parameterisation.
 
-Build one with the constructors (`line()`, [`arc()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.arc), [`wave()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.wave),
-[`bezier()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.bezier), `polyline()`, [`from_svg()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.from_svg), [`from_function()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.from_function)) and
+Build one with the constructors ([`line()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.line), [`arc()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.arc), [`wave()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.wave),
+[`bezier()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.bezier), [`polyline()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.polyline), [`from_svg()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.from_svg), [`from_function()`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path.from_function)) and
 query it by distance along the curve: `point(s)` and `angle(s)` (degrees,
 clockwise-positive on screen because y points down).
 
@@ -1419,6 +1500,13 @@ Circular arc; angles in degrees, 0 = right, 90 = down (screen coords).
 
 * **Return type:**
   [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### bbox()
+
+The bounding [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box) of the points.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
 
 #### *classmethod* bezier(\*controls, samples=512)
 
@@ -1474,12 +1562,51 @@ Arcs (`A`) are not supported — approximate them with a Bézier.
 * **Return type:**
   [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
 
+#### *property* length *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The total length of the path.
+
+#### *classmethod* line(start, end)
+
+A straight path from `start` to `end`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
 #### point(s)
 
 Position at arc length `s` (clamped to the path).
 
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+#### *classmethod* polyline(points)
+
+A path through `points`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### scaled(sx, sy=None)
+
+A path scaled by `sx` horizontally and `sy` vertically (default `sx`).
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### transformed(fn)
+
+A path with `fn` applied to every point.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
 
 #### *classmethod* wave(start, end, , amplitude, cycles=1.0, samples=512)
 
@@ -1619,6 +1746,14 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A pixel-space rectangle `(x0, y0, x1, y1)`; edges are floats.
 
+#### *property* area *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The area, zero for an empty or inverted box.
+
+#### *property* center *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[float](https://docs.python.org/3/builtins/functions.html#float), [float](https://docs.python.org/3/builtins/functions.html#float)]*
+
+The centre point of the box.
+
 #### *classmethod* from_norm(nb, width, height)
 
 Scale a normalised `(x, y, w, h)` into a frame of that size.
@@ -1633,9 +1768,20 @@ Build from an origin and a size.
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
 
+#### *property* height *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The height (`y1 - y0`).
+
 #### inset(dx, dy=None)
 
 Shrink by `dx` horizontally and `dy` (default `dx`) vertically.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### intersection(other)
+
+The overlapping box (zero-area or inverted when the boxes are disjoint).
 
 * **Return type:**
   [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
@@ -1652,12 +1798,37 @@ Fraction of *this* box’s area covered by `other`.
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
 
+#### rounded()
+
+Integer bounds `(x0, y0, x1, y1)`, rounded outwards.
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int), [`int`](https://docs.python.org/3/builtins/functions.html#int)]
+
 #### to_norm(width, height)
 
 The inverse of [`from_norm()`](_autosummary/tituli.html.md#tituli.Box.from_norm).
 
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+#### translate(dx, dy)
+
+A copy of the box moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### union(other)
+
+The smallest box containing both boxes.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The width (`x1 - x0`).
 
 ### *class* tituli.Credits(sections=(), title='', closing=(), meta=dict())
 
@@ -1690,17 +1861,35 @@ entries (“Portrait of Eliza Hamilton”, “Ralph Earl, 1787 · public domain�
 * **Return type:**
   [`Credits`](_autosummary/tituli.credits.html.md#tituli.credits.Credits)
 
+#### *property* line_count *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+The number of entry lines, closing lines included.
+
 ### *class* tituli.CreditsStyle(title=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.06, weight=700, italic=False, condensed=False, color=(255, 255, 255), tracking=-0.005, leading=1.2, case='as-is', align='center', opacity=1.0, features=()), heading=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.024, weight=500, italic=False, condensed=False, color=(255, 255, 255), tracking=0.22, leading=1.2, case='upper', align='center', opacity=0.75, features=()), role=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.026, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.03, leading=1.2, case='as-is', align='right', opacity=0.8, features=()), name=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.032, weight=600, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.2, case='as-is', align='left', opacity=1.0, features=()), line=TextStyle(family=('Helvetica Neue', 'Inter', 'Helvetica', 'Avenir Next', 'Roboto', 'Univers', 'Liberation Sans', 'DejaVu Sans', 'Arial'), size=0.03, weight=400, italic=False, condensed=False, color=(255, 255, 255), tracking=0.0, leading=1.4, case='as-is', align='center', opacity=1.0, features=()), ink=(255, 255, 255), background=(8, 8, 10))
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 The type ramp for a roll. One object so a film is one design.
 
+#### inked()
+
+A copy of the style with every text style recoloured to `ink`.
+
+* **Return type:**
+  [`CreditsStyle`](_autosummary/tituli.credits.html.md#tituli.credits.CreditsStyle)
+
 ### *class* tituli.Entry(name, role='')
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One credit line: `role` + `name`, a bare `name`, or prose.
+
+#### *classmethod* of(item)
+
+Coerce `item` (an entry, a string or a dict) to an [`Entry`](_autosummary/tituli.html.md#tituli.Entry).
+
+* **Return type:**
+  [`Entry`](_autosummary/tituli.credits.html.md#tituli.credits.Entry)
 
 ### *class* tituli.Face(family, style, size, path, index=0, features=(), wght=None)
 
@@ -1782,6 +1971,10 @@ Rung (a) when `color` is None, rung (b) when it is given.
 * **Return type:**
   [`Frame`](_autosummary/tituli.frame.html.md#tituli.frame.Frame)
 
+#### *property* bounds *: [Box](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)*
+
+The frame as a [`Box`](_autosummary/tituli.html.md#tituli.Box) starting at the origin.
+
 #### *classmethod* from_image(image, , avoid=None, size=None, delivery=None)
 
 Rung (c), and rung (d) when `avoid` is given.
@@ -1800,6 +1993,10 @@ frame first. `delivery` names a target whose reserved zones
 
 * **Return type:**
   [`Frame`](_autosummary/tituli.frame.html.md#tituli.frame.Frame)
+
+#### *property* knows_pixels *: [bool](https://docs.python.org/3/builtins/functions.html#bool)*
+
+Whether the frame carries pixel data.
 
 #### luminance_stats(box)
 
@@ -1859,6 +2056,10 @@ subject wins; ties fall to preference order.
 
 The title-safe box (SMPTE ST 2046-1, 90 %).
 
+#### *property* size *: [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[int](https://docs.python.org/3/builtins/functions.html#int), [int](https://docs.python.org/3/builtins/functions.html#int)]*
+
+The `(width, height)` of the frame.
+
 #### with_avoid(avoid)
 
 Same frame with (additional) regions to keep clear.
@@ -1895,6 +2096,10 @@ EB Garamond italic over sand); on heavy type that one fills the counters.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 What goes on a museum label: the thing, and where it came from.
+
+#### *property* identity *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+The overlay’s key, or its text when it has none.
 
 ### *class* tituli.Layout(runs=(), plates=(), meta=dict())
 
@@ -1946,6 +2151,13 @@ ready for [`moved_to()`](_autosummary/tituli.html.md#tituli.Layout.moved_to).
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)]
 
+#### recolored(color)
+
+A copy with every run drawn in `color`.
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
@@ -1953,9 +2165,23 @@ Reveal runs one after another: run `i` starts at `start + i*step`.
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
 
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
 #### with_halo(halo=Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65))
 
 Every run with `halo` under it (`None` removes it).
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
+#### with_plates(\*plates)
+
+A copy of the layout with `plates` added.
 
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
@@ -1987,8 +2213,8 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A polyline with an arc-length parameterisation.
 
-Build one with the constructors (`line()`, [`arc()`](_autosummary/tituli.html.md#tituli.Path.arc), [`wave()`](_autosummary/tituli.html.md#tituli.Path.wave),
-[`bezier()`](_autosummary/tituli.html.md#tituli.Path.bezier), `polyline()`, [`from_svg()`](_autosummary/tituli.html.md#tituli.Path.from_svg), [`from_function()`](_autosummary/tituli.html.md#tituli.Path.from_function)) and
+Build one with the constructors ([`line()`](_autosummary/tituli.html.md#tituli.Path.line), [`arc()`](_autosummary/tituli.html.md#tituli.Path.arc), [`wave()`](_autosummary/tituli.html.md#tituli.Path.wave),
+[`bezier()`](_autosummary/tituli.html.md#tituli.Path.bezier), [`polyline()`](_autosummary/tituli.html.md#tituli.Path.polyline), [`from_svg()`](_autosummary/tituli.html.md#tituli.Path.from_svg), [`from_function()`](_autosummary/tituli.html.md#tituli.Path.from_function)) and
 query it by distance along the curve: `point(s)` and `angle(s)` (degrees,
 clockwise-positive on screen because y points down).
 
@@ -2005,6 +2231,13 @@ Circular arc; angles in degrees, 0 = right, 90 = down (screen coords).
 
 * **Return type:**
   [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### bbox()
+
+The bounding [`Box`](_autosummary/tituli.html.md#tituli.Box) of the points.
+
+* **Return type:**
+  [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)
 
 #### *classmethod* bezier(\*controls, samples=512)
 
@@ -2060,12 +2293,51 @@ Arcs (`A`) are not supported — approximate them with a Bézier.
 * **Return type:**
   [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
 
+#### *property* length *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+The total length of the path.
+
+#### *classmethod* line(start, end)
+
+A straight path from `start` to `end`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
 #### point(s)
 
 Position at arc length `s` (clamped to the path).
 
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`float`](https://docs.python.org/3/builtins/functions.html#float), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+#### *classmethod* polyline(points)
+
+A path through `points`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### scaled(sx, sy=None)
+
+A path scaled by `sx` horizontally and `sy` vertically (default `sx`).
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### transformed(fn)
+
+A path with `fn` applied to every point.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Path`](_autosummary/tituli.geometry.html.md#tituli.geometry.Path)
 
 #### *classmethod* wave(start, end, , amplitude, cycles=1.0, samples=512)
 
@@ -2080,6 +2352,13 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
 
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Plate`](_autosummary/tituli.layout.html.md#tituli.layout.Plate)
+
 ### *class* tituli.ResolvedHalo(spread_px, blur_px, gain, opacity, rgba)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
@@ -2089,6 +2368,10 @@ A [`Halo`](_autosummary/tituli.html.md#tituli.Halo) resolved for one run: pixels
 `rgba` is the halo colour (its own, or the ink’s opposite); `reach` is
 how far the glow extends past the glyphs, in px (spread plus
 `BLUR_REACH` blur radii), the padding a renderer must leave around them.
+
+#### *property* reach *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+How far, in pixels, the effect extends beyond the glyph (spread plus blur reach).
 
 ### *class* tituli.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
@@ -2126,6 +2409,20 @@ Cleared whenever `advance` is `None`.
 * **Type:**
   Name of the engine that measured `advance` (`None`
 
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Run`](_autosummary/tituli.layout.html.md#tituli.layout.Run)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+the measured advance when known, else the text’s length plus tracking.
+
+* **Type:**
+  The width
+
 ### *class* tituli.Section(heading='', entries=(), kind='auto')
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
@@ -2134,6 +2431,13 @@ A heading over a run of entries. `kind` picks the treatment:
 
 `"pairs"` role/name on a gutter (cast, crew); `"list"` centred names;
 `"prose"` wrapped small text (licences, thanks).
+
+#### *property* resolved_kind *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+the given kind, or `pairs`/`prose`/`list` inferred from the entries.
+
+* **Type:**
+  The section layout
 
 ### *class* tituli.Span(start, end, key, data=None)
 
@@ -2177,6 +2481,13 @@ how many were allowed.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 How a run of text looks. All fields keyword-only; build variants with `with_`.
+
+#### apply_case(text)
+
+`text` converted to this style’s case rule.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 #### face(frame_height)
 
@@ -2228,6 +2539,24 @@ contend for a slot — the heavier suppresses the lighter, never stacks.
 PIL image or a path) — a title page made elsewhere, a logo plate — timed
 like any layout. `fade_in` / `fade_out` override `fade` for one end
 (`fade_in=0` for a title that must be up on the first frame).
+
+#### *property* duration *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+Length in seconds (`end - start`).
+
+#### overlaps(other)
+
+Whether the two overlays overlap in time.
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
+#### with_layout(layout)
+
+A copy of the overlay carrying `layout`.
+
+* **Return type:**
+  [`TimedOverlay`](_autosummary/tituli.schedule.html.md#tituli.schedule.TimedOverlay)
 
 ### tituli.along_path(text, path, style, frame, , start=0.0, align='start', offset=0.0, upright=False, color=None, tags=(), engine=None)
 
@@ -2923,6 +3252,13 @@ ready for [`moved_to()`](_autosummary/tituli.layout.html.md#tituli.layout.Layout
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Box`](_autosummary/tituli.geometry.html.md#tituli.geometry.Box)]
 
+#### recolored(color)
+
+A copy with every run drawn in `color`.
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
 #### staggered(, start=0.0, step, ramp)
 
 Reveal runs one after another: run `i` starts at `start + i*step`.
@@ -2930,9 +3266,23 @@ Reveal runs one after another: run `i` starts at `start + i*step`.
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
 
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
 #### with_halo(halo=Halo(color=None, spread=0.03, blur=0.1, gain=2.0, opacity=0.65))
 
 Every run with `halo` under it (`None` removes it).
+
+* **Return type:**
+  [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
+
+#### with_plates(\*plates)
+
+A copy of the layout with `plates` added.
 
 * **Return type:**
   [`Layout`](_autosummary/tituli.layout.html.md#tituli.layout.Layout)
@@ -2949,6 +3299,13 @@ Give every run the same reveal envelope.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A backdrop drawn under the runs: a scrim, a box, a rule.
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Plate`](_autosummary/tituli.layout.html.md#tituli.layout.Plate)
 
 ### *class* tituli.layout.Run(text, x, y, face, color, angle=0.0, opacity=1.0, tracking=0.0, unit='line', index=0, t_in=None, t_full=None, tags=(), advance=None, measured_by=None, halo=None)
 
@@ -2985,6 +3342,20 @@ Cleared whenever `advance` is `None`.
 
 * **Type:**
   Name of the engine that measured `advance` (`None`
+
+#### translated(dx, dy)
+
+A copy moved by `(dx, dy)`.
+
+* **Return type:**
+  [`Run`](_autosummary/tituli.layout.html.md#tituli.layout.Run)
+
+#### *property* width *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+the measured advance when known, else the text’s length plus tracking.
+
+* **Type:**
+  The width
 
 ### tituli.layout.along_path(text, path, style, frame, , start=0.0, align='start', offset=0.0, upright=False, color=None, tags=(), engine=None)
 
@@ -3291,6 +3662,10 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 What goes on a museum label: the thing, and where it came from.
 
+#### *property* identity *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+The overlay’s key, or its text when it has none.
+
 ### *class* tituli.schedule.Span(start, end, key, data=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
@@ -3315,6 +3690,24 @@ contend for a slot — the heavier suppresses the lighter, never stacks.
 PIL image or a path) — a title page made elsewhere, a logo plate — timed
 like any layout. `fade_in` / `fade_out` override `fade` for one end
 (`fade_in=0` for a title that must be up on the first frame).
+
+#### *property* duration *: [float](https://docs.python.org/3/builtins/functions.html#float)*
+
+Length in seconds (`end - start`).
+
+#### overlaps(other)
+
+Whether the two overlays overlap in time.
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
+#### with_layout(layout)
+
+A copy of the overlay carrying `layout`.
+
+* **Return type:**
+  [`TimedOverlay`](_autosummary/tituli.schedule.html.md#tituli.schedule.TimedOverlay)
 
 ### tituli.schedule.resolve(overlays, , min_readable_s=1.5)
 
@@ -3376,6 +3769,13 @@ optional at top level.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Draw runs through HarfBuzz + FreeType. Falls back to Pillow for the embedded font.
+
+#### draw_run(canvas, run, opacity)
+
+Draw `run` onto `canvas` at the given opacity.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 #### length(face, text)
 
@@ -3450,6 +3850,13 @@ EB Garamond italic over sand); on heavy type that one fills the counters.
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 How a run of text looks. All fields keyword-only; build variants with `with_`.
+
+#### apply_case(text)
+
+`text` converted to this style’s case rule.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 #### face(frame_height)
 
@@ -3770,20 +4177,18 @@ Transparent PNGs are flattened onto black.
 
 # About this build
 
-This documentation was built on **2026-11-22 19:03 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-23 00:40 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.20) is ahead of the latest release on PyPI (0.0.19): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d4a19706440817b7ccab878e8efbfb1fa3</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b100a3269a2c982e3abfad0960632f8449</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
-| Tags at this commit | <code>0.0.20</code>                                                                                                                                    |
+| Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
 | Remote              | <code>https://github.com/reeleehq/tituli</code>                                                                                                        |
 
@@ -3792,9 +4197,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45058303811">45058303811</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45089927756">45089927756</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>7e287478748354f18e8938f204d082a79c4f5521</code> (in the history of the built commit) |
+| Event commit | <code>629e95b100a3269a2c982e3abfad0960632f8449</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -3819,13 +4224,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.19/">0.0.19</a>, older than the documented version (0.0.20).
+Latest release: <a href="https://pypi.org/project/tituli/0.0.20/">0.0.20</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout 5a78e4d4a19706440817b7ccab878e8efbfb1fa3
+git checkout 629e95b100a3269a2c982e3abfad0960632f8449
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

@@ -5,21 +5,19 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-11-22 19:03 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-23 00:40 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
 
-:::{warning}
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.20) is ahead of the latest release on PyPI (0.0.19): these docs describe unreleased code.
+:::{note}
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 :::
 
 ## Source
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/reeleehq/tituli/commit/5a78e4d4a19706440817b7ccab878e8efbfb1fa3"><code>5a78e4d4a19706440817b7ccab878e8efbfb1fa3</code></a> |
+| Commit | <a href="https://github.com/reeleehq/tituli/commit/629e95b100a3269a2c982e3abfad0960632f8449"><code>629e95b100a3269a2c982e3abfad0960632f8449</code></a> |
 | Branch | <code>main</code> |
-| Tags at this commit | <code>0.0.20</code> |
+| Tags at this commit | none |
 | Working tree | clean |
 | Remote | <code>https://github.com/reeleehq/tituli</code> |
 
@@ -28,9 +26,9 @@ The documentation and the package may be misaligned:
 | | |
 |---|---|
 | Repository | <code>reeleehq/tituli</code> |
-| Run | <a href="https://github.com/reeleehq/tituli/actions/runs/45058303811">45058303811</a> |
+| Run | <a href="https://github.com/reeleehq/tituli/actions/runs/45089927756">45089927756</a> |
 | Ref | <code>refs/heads/main</code> |
-| Event commit | <code>7e287478748354f18e8938f204d082a79c4f5521</code> (in the history of the built commit) |
+| Event commit | <code>629e95b100a3269a2c982e3abfad0960632f8449</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -55,13 +53,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.19/">0.0.19</a>, older than the documented version (0.0.20).
+Latest release: <a href="https://pypi.org/project/tituli/0.0.20/">0.0.20</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout 5a78e4d4a19706440817b7ccab878e8efbfb1fa3
+git checkout 629e95b100a3269a2c982e3abfad0960632f8449
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
