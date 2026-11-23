@@ -73,18 +73,22 @@ class Box:
 
     @property
     def width(self) -> float:
+        """The width (``x1 - x0``)."""
         return self.x1 - self.x0
 
     @property
     def height(self) -> float:
+        """The height (``y1 - y0``)."""
         return self.y1 - self.y0
 
     @property
     def center(self) -> Point:
+        """The centre point of the box."""
         return ((self.x0 + self.x1) / 2, (self.y0 + self.y1) / 2)
 
     @property
     def area(self) -> float:
+        """The area, zero for an empty or inverted box."""
         return max(0.0, self.width) * max(0.0, self.height)
 
     def inset(self, dx: float, dy: float | None = None) -> "Box":
@@ -93,9 +97,11 @@ class Box:
         return Box(self.x0 + dx, self.y0 + dy, self.x1 - dx, self.y1 - dy)
 
     def translate(self, dx: float, dy: float) -> "Box":
+        """A copy of the box moved by ``(dx, dy)``."""
         return Box(self.x0 + dx, self.y0 + dy, self.x1 + dx, self.y1 + dy)
 
     def intersection(self, other: "Box") -> "Box":
+        """The overlapping box (zero-area or inverted when the boxes are disjoint)."""
         return Box(
             max(self.x0, other.x0),
             max(self.y0, other.y0),
@@ -114,6 +120,7 @@ class Box:
         return self.intersection(other).area / self.area
 
     def union(self, other: "Box") -> "Box":
+        """The smallest box containing both boxes."""
         return Box(
             min(self.x0, other.x0),
             min(self.y0, other.y0),
@@ -122,6 +129,7 @@ class Box:
         )
 
     def rounded(self) -> tuple[int, int, int, int]:
+        """Integer bounds ``(x0, y0, x1, y1)``, rounded outwards."""
         return (
             int(math.floor(self.x0)),
             int(math.floor(self.y0)),
@@ -205,6 +213,7 @@ class Path:
 
     @property
     def length(self) -> float:
+        """The total length of the path."""
         return self._cumulative[-1]
 
     @property
@@ -245,16 +254,20 @@ class Path:
         return math.atan2(y1 - y0, x1 - x0) * _DEG
 
     def transformed(self, fn: Callable[[Point], Point]) -> "Path":
+        """A path with ``fn`` applied to every point."""
         return Path(tuple(fn(p) for p in self.points))
 
     def scaled(self, sx: float, sy: float | None = None) -> "Path":
+        """A path scaled by ``sx`` horizontally and ``sy`` vertically (default ``sx``)."""
         sy = sx if sy is None else sy
         return self.transformed(lambda p: (p[0] * sx, p[1] * sy))
 
     def translated(self, dx: float, dy: float) -> "Path":
+        """A copy moved by ``(dx, dy)``."""
         return self.transformed(lambda p: (p[0] + dx, p[1] + dy))
 
     def bbox(self) -> Box:
+        """The bounding :class:`Box` of the points."""
         xs = [p[0] for p in self.points]
         ys = [p[1] for p in self.points]
         return Box(min(xs), min(ys), max(xs), max(ys))
@@ -281,10 +294,12 @@ class Path:
 
     @classmethod
     def line(cls, start: Point, end: Point) -> "Path":
+        """A straight path from ``start`` to ``end``."""
         return cls((tuple(start), tuple(end)))  # type: ignore[arg-type]
 
     @classmethod
     def polyline(cls, points: Iterable[Point]) -> "Path":
+        """A path through ``points``."""
         return cls(tuple((float(x), float(y)) for x, y in points))
 
     @classmethod

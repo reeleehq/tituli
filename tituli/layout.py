@@ -87,6 +87,7 @@ class Run:
 
     @property
     def width(self) -> float:
+        """The width: the measured advance when known, else the text's length plus tracking."""
         if self.advance is not None:
             return self.advance
         return self.face.length(self.text) + self.tracking * max(0, len(self.text) - 1)
@@ -101,6 +102,7 @@ class Run:
         )
 
     def translated(self, dx: float, dy: float) -> "Run":
+        """A copy moved by ``(dx, dy)``."""
         return replace(self, x=self.x + dx, y=self.y + dy)
 
 
@@ -117,6 +119,7 @@ class Plate:
     solid: tuple[float, float] = (0.5, 0.5)
 
     def translated(self, dx: float, dy: float) -> "Plate":
+        """A copy moved by ``(dx, dy)``."""
         return replace(self, box=self.box.translate(dx, dy))
 
 
@@ -155,6 +158,7 @@ class Layout:
         return out
 
     def translated(self, dx: float, dy: float) -> "Layout":
+        """A copy moved by ``(dx, dy)``."""
         return Layout(
             tuple(r.translated(dx, dy) for r in self.runs),
             tuple(p.translated(dx, dy) for p in self.plates),
@@ -206,6 +210,7 @@ class Layout:
         )
 
     def with_plates(self, *plates: Plate) -> "Layout":
+        """A copy of the layout with ``plates`` added."""
         return Layout(self.runs, self.plates + tuple(plates), dict(self.meta))
 
     def with_halo(self, halo: Halo | None = Halo()) -> "Layout":
@@ -227,6 +232,7 @@ class Layout:
         return replace(self, runs=runs)
 
     def recolored(self, color: RGBA) -> "Layout":
+        """A copy with every run drawn in ``color``."""
         return replace(self, runs=tuple(replace(r, color=color) for r in self.runs))
 
     @property

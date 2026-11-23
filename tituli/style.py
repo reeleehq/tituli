@@ -127,6 +127,7 @@ class TextStyle:
         )
 
     def apply_case(self, text: str) -> str:
+        """``text`` converted to this style's case rule."""
         if self.case == "upper":
             return text.upper()
         if self.case == "lower":

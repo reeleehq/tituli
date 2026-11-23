@@ -59,7 +59,9 @@ class Engine(Protocol):
 
     name: str
 
-    def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None: ...
+    def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None:
+        """Draw ``run`` onto ``canvas`` at the given opacity."""
+        ...
 
     def length(self, face: Face, text: str) -> float:
         """Advance of ``text`` in pixels, before tracking."""
@@ -84,9 +86,11 @@ class PillowEngine:
     name = FACE_ENGINE
 
     def length(self, face: Face, text: str) -> float:
+        """The advance length of ``text`` in ``face``."""
         return face.length(text)
 
     def draw_run(self, canvas: Image.Image, run: Run, opacity: float) -> None:
+        """Draw ``run`` onto ``canvas`` at the given opacity."""
         color = _scaled_alpha(run.color, run.opacity * opacity)
         if color[3] == 0 or not run.text:
             return
@@ -282,6 +286,7 @@ class ResolvedHalo:
 
     @property
     def reach(self) -> int:
+        """How far, in pixels, the effect extends beyond the glyph (spread plus blur reach)."""
         return self.spread_px + math.ceil(BLUR_REACH * self.blur_px)
 
 

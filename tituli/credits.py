@@ -83,6 +83,7 @@ class Entry:
 
     @classmethod
     def of(cls, item: Any) -> "Entry":
+        """Coerce ``item`` (an entry, a string or a dict) to an :class:`Entry`."""
         if isinstance(item, Entry):
             return item
         if isinstance(item, str):
@@ -108,6 +109,7 @@ class Section:
 
     @property
     def resolved_kind(self) -> str:
+        """The section layout: the given kind, or ``pairs``/``prose``/``list`` inferred from the entries."""
         if self.kind != "auto":
             return self.kind
         if any(e.role for e in self.entries):
@@ -167,6 +169,7 @@ class Credits:
 
     @property
     def line_count(self) -> int:
+        """The number of entry lines, closing lines included."""
         return sum(len(s.entries) for s in self.sections) + len(self.closing)
 
 
@@ -183,6 +186,7 @@ class CreditsStyle:
     background: Any = CREDITS_BLACK
 
     def inked(self) -> "CreditsStyle":
+        """A copy of the style with every text style recoloured to ``ink``."""
         c = parse_color(self.ink)
         return CreditsStyle(
             *(
