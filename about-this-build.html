@@ -129,10 +129,13 @@
 
 <section id="about-this-build">
 <h1>About this build<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#about-this-build">¶</a></h1>
-<p>This documentation was built on <strong>2026-11-23 07:34 UTC</strong> from commit <a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317</code></a> on branch <code>main</code>, for <strong>tituli 0.0.20</strong> (from <code>pyproject.toml</code>).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.</p>
+<p>This documentation was built on <strong>2026-11-26 17:37 UTC</strong> from commit <a href="https://github.com/reeleehq/tituli/commit/4a06565bb9d0b4fc863e9dc3f9f622606e559c7c"><code>4a06565</code></a> on branch <code>main</code>, for <strong>tituli 0.0.22</strong> (from <code>pyproject.toml</code>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The documentation and the package may be misaligned:</p>
+<ul class="simple">
+<li><p>The documented version (0.0.22) is ahead of the latest release on PyPI (0.0.21): these docs describe unreleased code.</p></li>
+</ul>
 </div>
 <section id="source">
 <h2>Source<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#source" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#source'">¶</a></h2>
@@ -144,7 +147,7 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Commit</p></td>
-<td><p><a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317641a4104089a0d3e061b072482dbf3a74</code></a></p></td>
+<td><p><a href="https://github.com/reeleehq/tituli/commit/4a06565bb9d0b4fc863e9dc3f9f622606e559c7c"><code>4a06565bb9d0b4fc863e9dc3f9f622606e559c7c</code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Branch</p></td>
 <td><p><code>main</code></p></td>
@@ -174,13 +177,13 @@
 <td><p><code>reeleehq/tituli</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Run</p></td>
-<td><p><a href="https://github.com/reeleehq/tituli/actions/runs/45131819355">45131819355</a></p></td>
+<td><p><a href="https://github.com/reeleehq/tituli/actions/runs/45868938718">45868938718</a></p></td>
 </tr>
 <tr class="row-even"><td><p>Ref</p></td>
 <td><p><code>refs/heads/main</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Event commit</p></td>
-<td><p><code>5a8e317641a4104089a0d3e061b072482dbf3a74</code> (in the history of the built commit)</p></td>
+<td><p><code>4197c75c1971f5b6481fb2627a8790391497298f</code> (in the history of the built commit)</p></td>
 </tr>
 </tbody>
 </table>
@@ -195,7 +198,7 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>epythet</p></td>
-<td><p>0.2.24</p></td>
+<td><p>0.2.25</p></td>
 </tr>
 <tr class="row-odd"><td><p>Sphinx</p></td>
 <td><p>9.1.1</p></td>
@@ -244,14 +247,14 @@
 </section>
 <section id="package-on-pypi">
 <h2>Package on PyPI<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#package-on-pypi" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#package-on-pypi'">¶</a></h2>
-<p>Latest release: <a href="https://pypi.org/project/tituli/0.0.20/">0.0.20</a>, the same as the documented version.</p>
+<p>Latest release: <a href="https://pypi.org/project/tituli/0.0.21/">0.0.21</a>, older than the documented version (0.0.22).</p>
 </section>
 <section id="site"><h2>Site</h2><table class="docutils align-default"><tbody><tr><td><p>Modules documented</p></td><td><p>18</p></td></tr><tr><td><p>Objects documented</p></td><td><p>353</p></td></tr></tbody></table></section>
 <section id="reproduce">
 <h2>Reproduce<a @click.prevent="window.navigator.clipboard.writeText($el.href); $el.setAttribute('data-tooltip', 'Copied!'); setTimeout(() =&gt; $el.setAttribute('data-tooltip', 'Copy link to this element'), 2000)" aria-label="Copy link to this element" class="headerlink" data-tooltip="Copy link to this element" href="#reproduce" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#reproduce'">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/reeleehq/tituli<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tituli
-</span><span id="line-2">git<span class="w"> </span>checkout<span class="w"> </span>5a8e317641a4104089a0d3e061b072482dbf3a74
-</span><span id="line-3">pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"epythet==0.2.24"</span>
+</span><span id="line-2">git<span class="w"> </span>checkout<span class="w"> </span>4a06565bb9d0b4fc863e9dc3f9f622606e559c7c
+</span><span id="line-3">pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"epythet==0.2.25"</span>
 </span><span id="line-4">epythet<span class="w"> </span>quickstart<span class="w"> </span>.<span class="w"> </span>--ignore<span class="w"> </span>tests/<span class="w"> </span>scrap/<span class="w"> </span>examples/
 </span></code></pre></div>
 </div>
@@ -280,7 +283,7 @@
 </div>
 </footer>
 </div>
-<script src="_static/documentation_options.js?v=056c92e6"></script>
+<script src="_static/documentation_options.js?v=96ec9c95"></script>
 <script src="_static/doctools.js?v=fd6eb6e6"></script>
 <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
 <script src="_static/clipboard.min.js?v=a7894cd8"></script>

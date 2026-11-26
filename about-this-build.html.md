@@ -2,16 +2,18 @@
 
 # About this build
 
-This documentation was built on **2026-11-23 07:34 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317</code></a> on branch <code>main</code>, for **tituli 0.0.20** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-26 17:37 UTC** from commit <a href="https://github.com/reeleehq/tituli/commit/4a06565bb9d0b4fc863e9dc3f9f622606e559c7c"><code>4a06565</code></a> on branch <code>main</code>, for **tituli 0.0.22** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.22) is ahead of the latest release on PyPI (0.0.21): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                        |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/reeleehq/tituli/commit/5a8e317641a4104089a0d3e061b072482dbf3a74"><code>5a8e317641a4104089a0d3e061b072482dbf3a74</code></a> |
+| Commit              | <a href="https://github.com/reeleehq/tituli/commit/4a06565bb9d0b4fc863e9dc3f9f622606e559c7c"><code>4a06565bb9d0b4fc863e9dc3f9f622606e559c7c</code></a> |
 | Branch              | <code>main</code>                                                                                                                                      |
 | Tags at this commit | none                                                                                                                                                   |
 | Working tree        | clean                                                                                                                                                  |
@@ -22,15 +24,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>reeleehq/tituli</code>                                                               |
-| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45131819355">45131819355</a>      |
+| Run          | <a href="https://github.com/reeleehq/tituli/actions/runs/45868938718">45868938718</a>      |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>5a8e317641a4104089a0d3e061b072482dbf3a74</code> (in the history of the built commit) |
+| Event commit | <code>4197c75c1971f5b6481fb2627a8790391497298f</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.24  |
+| epythet  | 0.2.25  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -49,14 +51,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/tituli/0.0.20/">0.0.20</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/tituli/0.0.21/">0.0.21</a>, older than the documented version (0.0.22).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/reeleehq/tituli && cd tituli
-git checkout 5a8e317641a4104089a0d3e061b072482dbf3a74
-pip install "epythet==0.2.24"
+git checkout 4a06565bb9d0b4fc863e9dc3f9f622606e559c7c
+pip install "epythet==0.2.25"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

@@ -682,24 +682,25 @@
 </span><span id="line-488"><span class="sd">    ``layout.duration_hint`` and the layout then holds. Frames are rendered</span>
 </span><span id="line-489"><span class="sd">    lazily so a long clip never sits in memory at once.</span>
 </span><span id="line-490"><span class="sd">    """</span>
-</span><span id="line-491">    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="n">fps</span><span class="p">))</span>
-</span><span id="line-492">    <span class="n">cache</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="line-493">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-</span><span id="line-494">        <span class="k">yield</span> <span class="n">render</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">i</span> <span class="o">/</span> <span class="n">fps</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">)</span></div>
+</span><span id="line-491">    <span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span> <span class="ow">or</span> <span class="n">PillowEngine</span><span class="p">()</span>  <span class="c1"># once: the glow cache keys on the engine</span>
+</span><span id="line-492">    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="n">fps</span><span class="p">))</span>
+</span><span id="line-493">    <span class="n">cache</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-494">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span id="line-495">        <span class="k">yield</span> <span class="n">render</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">i</span> <span class="o">/</span> <span class="n">fps</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">)</span></div>
 
-</span><span id="line-495">
 </span><span id="line-496">
+</span><span id="line-497">
 <div class="viewcode-block" id="make_engine">
 <a class="viewcode-back" href="../../_autosummary/tituli.html#tituli.make_engine">[docs]</a>
-</span><span id="line-497"><span class="k">def</span><span class="w"> </span><span class="nf">make_engine</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pillow"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Engine</span><span class="p">:</span>
-</span><span id="line-498"><span class="w">    </span><span class="sd">"""Resolve an engine by name: ``"pillow"`` (default) or ``"harfbuzz"``."""</span>
-</span><span id="line-499">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">PillowEngine</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-</span><span id="line-500">        <span class="k">return</span> <span class="n">PillowEngine</span><span class="p">()</span>
-</span><span id="line-501">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"harfbuzz"</span><span class="p">:</span>
-</span><span id="line-502">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.shaping</span><span class="w"> </span><span class="kn">import</span> <span class="n">HarfBuzzEngine</span>
-</span><span id="line-503">
-</span><span id="line-504">        <span class="k">return</span> <span class="n">HarfBuzzEngine</span><span class="p">()</span>
-</span><span id="line-505">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown engine </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; choose 'pillow' or 'harfbuzz'"</span><span class="p">)</span></div>
+</span><span id="line-498"><span class="k">def</span><span class="w"> </span><span class="nf">make_engine</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pillow"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Engine</span><span class="p">:</span>
+</span><span id="line-499"><span class="w">    </span><span class="sd">"""Resolve an engine by name: ``"pillow"`` (default) or ``"harfbuzz"``."""</span>
+</span><span id="line-500">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">PillowEngine</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+</span><span id="line-501">        <span class="k">return</span> <span class="n">PillowEngine</span><span class="p">()</span>
+</span><span id="line-502">    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"harfbuzz"</span><span class="p">:</span>
+</span><span id="line-503">        <span class="kn">from</span><span class="w"> </span><span class="nn">tituli.shaping</span><span class="w"> </span><span class="kn">import</span> <span class="n">HarfBuzzEngine</span>
+</span><span id="line-504">
+</span><span id="line-505">        <span class="k">return</span> <span class="n">HarfBuzzEngine</span><span class="p">()</span>
+</span><span id="line-506">    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown engine </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; choose 'pillow' or 'harfbuzz'"</span><span class="p">)</span></div>
 
 </span></code></pre></div>
     </div></div>
@@ -714,7 +715,7 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=056c92e6"></script>
+    <script src="../../_static/documentation_options.js?v=96ec9c95"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
