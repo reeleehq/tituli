@@ -488,6 +488,7 @@ def frames(
     ``layout.duration_hint`` and the layout then holds. Frames are rendered
     lazily so a long clip never sits in memory at once.
     """
+    engine = engine or PillowEngine()  # once: the glow cache keys on the engine
     n = int(round(duration * fps))
     cache: dict = {}
     for i in range(n):

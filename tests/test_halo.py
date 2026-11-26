@@ -276,3 +276,32 @@ def test_place_in_returns_the_glyph_box_inside_the_grown_one():
     grown = lay.with_halo(Halo()).bbox(include_halo=True)
     assert box.width == pytest.approx(lay.bbox().width)
     assert box.y0 - (lay.bbox().y0 - grown.y0) >= f.safe.y0 - 1e-6
+
+
+@pytest.mark.parametrize("anchor", ["bottom-right", "top-right"])
+def test_a_right_anchored_caption_halo_stays_in_the_safe_area(anchor):
+    f = Frame.blank((1280, 720))
+    lay = caption(
+        "Hi",
+        "a long attribution line that sets the width of the stack",
+        frame=f,
+        anchor=anchor,
+        halo=Halo(spread=0.1, blur=0.4),
+    )
+    glow = lay.bbox(include_halo=True)
+    assert glow.x1 <= f.safe.x1 + 1e-6
+    assert glow.y0 >= f.safe.y0 - 1e-6 and glow.y1 <= f.safe.y1 + 1e-6
+
+
+def test_a_right_anchored_note_halo_stays_in_the_safe_area():
+    from tituli import note
+
+    f = Frame.blank((1280, 720))
+    lay = note(
+        ["a long note line that sets the width of the stack"],
+        frame=f,
+        headline="Hi",
+        anchor="bottom-right",
+        halo=Halo(spread=0.1, blur=0.4),
+    )
+    assert lay.bbox(include_halo=True).x1 <= f.safe.x1 + 1e-6
