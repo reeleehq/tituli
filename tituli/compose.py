@@ -394,6 +394,31 @@ def title_card(
     )
 
 
+def _place_aligned(parts, frame, *, max_width, anchor, halo, engine):
+    """Stack ``parts``, align them by the side the stack lands on, and place the result.
+
+    Alignment follows the side, and alignment changes the stack's width (and its
+    glow's), so the final, re-aligned stack is placed again at the side it chose:
+    placing the left-aligned one would let a right-anchored halo cross the safe area.
+    Returns ``(layout, anchor name, box of the glyphs)``.
+    """
+
+    def stack(align):
+        return _stack(parts, frame, max_width=max_width, align=align, engine=engine)
+
+    lay = stack("left")
+    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
+    if "right" in where:
+        align = "right"
+    elif where in ("top", "center", "bottom"):
+        align = "center"
+    else:
+        return lay, where, box
+    lay = stack(align)
+    where, box = lay.place_in(frame, anchor=where, halo=_halo_arg(halo))
+    return lay, where, box
+
+
 def caption(
     text: str,
     attribution: str = "",
@@ -449,32 +474,14 @@ def caption(
         if attribution
         else ("", attribution_style)
     )
-    # Try the layout at each candidate anchor's alignment; alignment follows the side.
-    lay = _stack(
+    lay, where, box = _place_aligned(
         [(body, style), (credit, attribution_style)],
         frame,
         max_width=max_w,
-        align="left",
+        anchor=anchor,
+        halo=halo,
         engine=engine,
     )
-    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
-    if "right" in where:
-        lay = _stack(
-            [(body, style), (credit, attribution_style)],
-            frame,
-            max_width=max_w,
-            align="right",
-            engine=engine,
-        )
-    elif where in ("top", "center", "bottom"):
-        lay = _stack(
-            [(body, style), (credit, attribution_style)],
-            frame,
-            max_width=max_w,
-            align="center",
-            engine=engine,
-        )
-    bb = lay.bbox()
     lay = lay.moved_to(box)
     em = style.face(frame.height).size
     out = _finish(
@@ -614,12 +621,9 @@ def note(
         _set(headline, headline_style, 2) if headline else ("", headline_style)
     )
     parts = [(head, headline_style)] + [(b, line_style) for b in body]
-    align = "left"
-    lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
-    where, box = lay.place_in(frame, anchor=anchor, halo=_halo_arg(halo))
-    if "right" in where or where in ("top", "center", "bottom"):
-        align = "right" if "right" in where else "center"
-        lay = _stack(parts, frame, max_width=max_w, align=align, engine=engine)
+    lay, where, box = _place_aligned(
+        parts, frame, max_width=max_w, anchor=anchor, halo=halo, engine=engine
+    )
     lay = lay.moved_to(box)
     em = (headline_style if head else line_style).face(frame.height).size
     out = _finish(
